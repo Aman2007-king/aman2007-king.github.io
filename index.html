@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
-    <title>AiFileStudio Power | Official Suite</title>
+    <title>AiFileStudio Power | Pro Document Suite</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -17,7 +16,7 @@
 
     <style>
         :root { --bg: #050507; --card: #0d0d10; --accent: #3b82f6; --text: #f0f0f0; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; transition: background 0.3s; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; transition: 0.3s; overflow-x: hidden; }
         aside { 
             width: 260px; background: #0a0a0c; border-right: 1px solid #1c1c21; 
             display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50;
@@ -28,7 +27,7 @@
             aside.active { transform: translateX(0); }
             main { margin-left: 0 !important; padding: 20px !important; }
         }
-        .nav-item { padding: 12px 20px; font-size: 13px; font-weight: 600; color: #888; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
+        .nav-item { padding: 10px 20px; font-size: 13px; font-weight: 500; color: #888; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
         .nav-item:hover { background: #16161a; color: white; }
         .nav-item.active { background: #16161a; color: var(--accent); border-right: 3px solid var(--accent); }
         main { margin-left: 260px; padding: 40px; min-height: 100vh; }
@@ -50,107 +49,93 @@
     </div>
 
     <aside id="main-sidebar">
-        <div class="p-8 border-b border-gray-900 hidden md:block">
+        <div class="p-6 border-b border-gray-900 hidden md:block text-center">
             <h1 class="text-xl font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
         </div>
-        <div class="py-6 flex-1 overflow-y-auto">
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mb-2 tracking-widest">Creative Tools</p>
-            <div class="nav-item active" onclick="showTab('ai')"><i class="fas fa-magic"></i> AI Generator</div>
-            <div class="nav-item" onclick="showTab('resize')"><i class="fas fa-expand-arrows-alt"></i> Image Resizer</div>
-            
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">PDF & Text</p>
-            <div class="nav-item" onclick="showTab('merge')"><i class="fas fa-layer-group"></i> Merge PDFs</div>
-            <div class="nav-item" onclick="showTab('pdf')"><i class="fas fa-file-pdf"></i> JPG to PDF</div>
-            <div class="nav-item" onclick="showTab('ocr')"><i class="fas fa-font"></i> OCR Text</div>
+        <div class="py-4 flex-1 overflow-y-auto">
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mb-2 tracking-widest">Creative</p>
+            <div class="nav-item active" onclick="showTab('ai')"><i class="fas fa-magic"></i> AI Art</div>
+            <div class="nav-item" onclick="showTab('resize')"><i class="fas fa-expand"></i> Resize</div>
+            <div class="nav-item" onclick="showTab('convert')"><i class="fas fa-sync"></i> JPG to PNG</div>
 
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Web Utilities</p>
-            <div class="nav-item" onclick="showTab('pass')"><i class="fas fa-shield-halved"></i> Secure Key Gen</div>
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">PDF Toolkit</p>
+            <div class="nav-item" onclick="showTab('merge')"><i class="fas fa-layer-group"></i> Merge PDF</div>
+            <div class="nav-item" onclick="showTab('split')"><i class="fas fa-scissors"></i> Split PDF</div>
+            <div class="nav-item" onclick="showTab('rotate')"><i class="fas fa-redo"></i> Rotate PDF</div>
+            <div class="nav-item" onclick="showTab('pdf')"><i class="fas fa-images"></i> JPG to PDF</div>
+
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">Utils</p>
+            <div class="nav-item" onclick="showTab('ocr')"><i class="fas fa-font"></i> OCR Text</div>
+            <div class="nav-item" onclick="showTab('pass')"><i class="fas fa-key"></i> Key Gen</div>
             <div class="nav-item" onclick="showTab('qr')"><i class="fas fa-qrcode"></i> QR Studio</div>
 
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Legal & Help</p>
-            <div class="nav-item" onclick="openModal('privacyModal')"><i class="fas fa-lock"></i> Privacy Policy</div>
-            <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact Us</div>
-            <div class="nav-item" onclick="toggleTheme()"><i id="theme-icon" class="fas fa-moon"></i> Change Theme</div>
+            <div class="mt-6 pt-4 border-t border-gray-900">
+                <div class="nav-item" onclick="openModal('privacyModal')"><i class="fas fa-shield-alt"></i> Privacy</div>
+                <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact</div>
+            </div>
 
-            <div class="px-4 mt-10">
-                <p class="text-[9px] text-gray-600 uppercase mb-2 text-center">Sponsored</p>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1186506015762858"
-                     data-ad-slot="8734574320"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+            <div class="px-4 mt-6">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1186506015762858" data-ad-slot="8734574320" data-ad-format="auto" data-full-width-responsive="true"></ins>
             </div>
         </div>
     </aside>
 
     <main onclick="closeSidebarMobile()">
-        <div id="tab-title" class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold" id="current-title">AI Image Generator</h2>
-            <p class="text-gray-500 text-sm" id="current-subtitle">High-speed local processing.</p>
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold" id="current-title">AI Art Studio</h2>
+            <p class="text-gray-500 text-sm" id="current-subtitle">Local high-speed processing.</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-8">
-            <div class="cyber-card">
-                <div id="standard-inputs">
-                    <div id="text-input-box">
-                        <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Data / Prompt</label>
-                        <textarea id="main-input" placeholder="Type instructions or paste URL here..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-24"></textarea>
-                    </div>
-                    <div id="file-input-box">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload Media</label>
-                        <input type="file" id="main-file" multiple class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white">
-                    </div>
-                </div>
-
-                <div id="password-ui" class="hidden">
-                    <div id="pass-display-box" class="p-6 bg-black rounded-xl text-center text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
-                    <label class="flex justify-between text-[10px] font-bold text-gray-500 uppercase mb-2">Length: <span id="len-val" class="text-blue-500">16</span></label>
-                    <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full h-1 bg-gray-800 accent-blue-500 mb-4" oninput="document.getElementById('len-val').innerText = this.value">
-                </div>
-
-                <button id="action-btn" onclick="processTask()" class="mt-6 w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all shadow-lg">Run Engine</button>
+        <div class="cyber-card">
+            <div id="standard-inputs">
+                <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Parameter / Prompt</label>
+                <textarea id="main-input" placeholder="Type here..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
+                
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload Files</label>
+                <input type="file" id="main-file" multiple class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
 
-            <div id="result-card" class="cyber-card hidden">
-                <div id="loader-box" class="flex flex-col items-center py-10">
-                    <div class="loader mb-4"></div>
-                    <p class="text-xs font-mono text-gray-500 uppercase">Processing Locally...</p>
-                </div>
-                <div id="preview-area" class="flex flex-col items-center w-full"></div>
+            <div id="password-ui" class="hidden text-center">
+                <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
+                <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
             </div>
+
+            <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
+        </div>
+
+        <div id="result-card" class="cyber-card mt-8 hidden text-center">
+            <div id="loader-box" class="flex flex-col items-center py-10">
+                <div class="loader mb-4"></div>
+                <p class="text-xs font-mono text-gray-500">ENGINE RUNNING...</p>
+            </div>
+            <div id="preview-area" class="flex flex-col items-center w-full"></div>
         </div>
     </main>
 
     <div id="privacyModal" class="modal">
         <div class="modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-blue-500">Privacy Policy</h2>
-                <button onclick="closeModal('privacyModal')" class="text-gray-500 hover:text-white text-2xl">&times;</button>
-            </div>
-            <div class="text-gray-400 text-xs space-y-4 leading-relaxed">
-                <p>At <strong>AiFileStudio.PRO</strong>, we take your privacy seriously. Most of our tools (PDF merging, Resizing, Password Generation) process files locally in your browser. This means your files never reach our servers.</p>
-                <p><strong>Data Collection:</strong> We do not store personal images or documents. We use Google AdSense which may collect cookies to provide personalized ads.</p>
-                <p><strong>Third Parties:</strong> We use Pollinations AI for image generation. Please refer to their terms when using the AI tool.</p>
-            </div>
+            <h2 class="text-xl font-bold text-blue-500 mb-4">Privacy Policy</h2>
+            <p class="text-gray-400 text-xs leading-relaxed">
+                At AiFileStudio.PRO, we take your privacy seriously. Most of our tools (PDF merging, Resizing, Password Generation) process files locally in your browser. This means your files never reach our servers.<br><br>
+                Data Collection: We do not store personal images or documents. We use Google AdSense which may collect cookies to provide personalized ads.<br><br>
+                Third Parties: We use Pollinations AI for image generation. Please refer to their terms when using the AI tool.
+            </p>
+            <button onclick="closeModal('privacyModal')" class="mt-6 text-blue-500 text-sm font-bold">Close</button>
         </div>
     </div>
 
     <div id="contactModal" class="modal">
         <div class="modal-content text-center">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-blue-500">Contact Us</h2>
-                <button onclick="closeModal('contactModal')" class="text-gray-500 hover:text-white text-2xl">&times;</button>
-            </div>
-            <p class="text-blue-400 font-mono text-lg">ry650506@gmail.com</p>
+            <h2 class="text-xl font-bold text-blue-500 mb-4">Contact Us</h2>
+            <p class="text-blue-400 font-mono">ry650506@gmail.com</p>
+            <button onclick="closeModal('contactModal')" class="mt-6 text-gray-500 text-sm">Close</button>
         </div>
     </div>
 
     <script>
-        // Init AdSense
         (adsbygoogle = window.adsbygoogle || []).push({});
-
         let currentMode = 'ai';
+
         function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
         function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
         function openModal(id) { document.getElementById(id).style.display = "block"; }
@@ -160,19 +145,24 @@
             currentMode = mode;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(window.event) window.event.currentTarget.classList.add('active');
+            
             const config = {
-                'ai': ['AI Art Studio', 'Create images from text descriptions.', true],
-                'resize': ['Image Resizer', 'Enter desired width (px) in the box.', true],
-                'merge': ['PDF Merger', 'Upload 2 or more PDF files to combine.', true],
-                'pdf': ['JPG to PDF', 'Turn your images into a PDF file.', true],
-                'ocr': ['OCR Engine', 'Convert images into editable text.', true],
-                'pass': ['Secure Key Gen', 'Generate 100% private, secure keys.', false],
-                'qr': ['QR Studio', 'Generate QR codes for links/text.', true]
+                'ai': ['AI Art Studio', 'Create images from descriptions.'],
+                'resize': ['Image Resizer', 'Enter Width (px) in the box.'],
+                'convert': ['JPG to PNG', 'Convert format locally.'],
+                'merge': ['Merge PDF', 'Combine multiple PDF files.'],
+                'split': ['Split PDF', 'Enter page numbers to extract (e.g. 1, 2).'],
+                'rotate': ['Rotate PDF', 'Rotates all pages 90 degrees.'],
+                'pdf': ['JPG to PDF', 'Images to PDF document.'],
+                'ocr': ['OCR Engine', 'Extract text from image.'],
+                'pass': ['Key Gen', 'Secure offline password generator.'],
+                'qr': ['QR Studio', 'Link to QR code conversion.']
             };
+
             document.getElementById('current-title').innerText = config[mode][0];
             document.getElementById('current-subtitle').innerText = config[mode][1];
-            document.getElementById('standard-inputs').classList.toggle('hidden', !config[mode][2]);
             document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
+            document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
             document.getElementById('result-card').classList.add('hidden');
             closeSidebarMobile();
         }
@@ -183,56 +173,88 @@
             const resCard = document.getElementById('result-card');
             const preview = document.getElementById('preview-area');
             const loader = document.getElementById('loader-box');
+
             resCard.classList.remove('hidden');
             preview.innerHTML = ""; loader.classList.remove('hidden');
 
             try {
                 if (currentMode === 'ai') {
-                    if(!input) throw "Please describe an image.";
+                    if(!input) throw "Enter prompt";
                     const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?nologo=true`;
-                    preview.innerHTML = `<img src="${url}" class="rounded-xl mb-6 shadow-2xl"><a href="${url}" download class="bg-blue-600 px-10 py-3 rounded-full text-xs font-bold uppercase">Download Art</a>`;
+                    preview.innerHTML = `<img src="${url}" class="rounded-xl shadow-lg mb-4"><a href="${url}" download class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download</a>`;
                 }
                 else if (currentMode === 'resize') {
-                    if(!files[0] || !input) throw "Upload image & enter width.";
+                    if(!files[0] || !input) throw "Need image and Width (px)";
                     const img = new Image(); img.src = await fileToDataURL(files[0]);
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const scale = input / img.width;
                         canvas.width = input; canvas.height = img.height * scale;
                         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                        const data = canvas.toDataURL("image/jpeg", 0.9);
-                        preview.innerHTML = `<img src="${data}" class="mb-4 rounded-lg"><a href="${data}" download="resized.jpg" class="bg-green-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
+                        const res = canvas.toDataURL("image/jpeg");
+                        preview.innerHTML = `<img src="${res}" class="mb-4"><a href="${res}" download="resized.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
                         loader.classList.add('hidden');
-                    };
-                    return;
+                    }; return;
+                }
+                else if (currentMode === 'convert') {
+                    if(!files[0]) throw "Select JPG";
+                    const img = new Image(); img.src = await fileToDataURL(files[0]);
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width; canvas.height = img.height;
+                        canvas.getContext('2d').drawImage(img, 0, 0);
+                        const res = canvas.toDataURL("image/png");
+                        preview.innerHTML = `<a href="${res}" download="converted.png" class="bg-green-600 px-8 py-3 rounded-full text-xs font-bold">Download PNG</a>`;
+                        loader.classList.add('hidden');
+                    }; return;
                 }
                 else if (currentMode === 'merge') {
-                    if (files.length < 2) throw "Select at least 2 PDFs.";
-                    const mergedPdf = await PDFLib.PDFDocument.create();
+                    if (files.length < 2) throw "Select 2+ PDFs";
+                    const merged = await PDFLib.PDFDocument.create();
                     for (const f of files) {
-                        const pdf = await PDFLib.PDFDocument.load(await f.arrayBuffer());
-                        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                        pages.forEach(p => mergedPdf.addPage(p));
+                        const doc = await PDFLib.PDFDocument.load(await f.arrayBuffer());
+                        const pages = await merged.copyPages(doc, doc.getPageIndices());
+                        pages.forEach(p => merged.addPage(p));
                     }
-                    const bytes = await mergedPdf.save();
-                    downloadFile(bytes, "merged.pdf", "application/pdf");
-                    preview.innerHTML = `<p class="text-green-500 font-bold uppercase text-xs">✓ Download Started</p>`;
+                    downloadFile(await merged.save(), "merged.pdf", "application/pdf");
+                    preview.innerHTML = "✓ Downloaded";
+                }
+                else if (currentMode === 'split') {
+                    if (!files[0] || !input) throw "Upload PDF and enter pages (e.g., 1, 2)";
+                    const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+                    const splitDoc = await PDFLib.PDFDocument.create();
+                    // Fix: Handle page indices safely
+                    const totalPages = doc.getPageCount();
+                    const indices = input.split(',')
+                        .map(n => parseInt(n.trim()) - 1)
+                        .filter(n => n >= 0 && n < totalPages);
+                    
+                    if (indices.length === 0) throw "Invalid page numbers";
+                    const pages = await splitDoc.copyPages(doc, indices);
+                    pages.forEach(p => splitDoc.addPage(p));
+                    downloadFile(await splitDoc.save(), "split.pdf", "application/pdf");
+                    preview.innerHTML = "✓ Extracted";
+                }
+                else if (currentMode === 'rotate') {
+                    if (!files[0]) throw "Upload PDF";
+                    const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+                    const pages = doc.getPages();
+                    pages.forEach(p => p.setRotation(PDFLib.degrees((p.getRotation().angle || 0) + 90)));
+                    downloadFile(await doc.save(), "rotated.pdf", "application/pdf");
+                    preview.innerHTML = "✓ Rotated";
                 }
                 else if (currentMode === 'pdf') {
-                    if (!files[0]) throw "Select images.";
                     const { jsPDF } = window.jspdf; const doc = new jsPDF();
                     for (let i = 0; i < files.length; i++) {
-                        const data = await fileToDataURL(files[i]);
                         if (i > 0) doc.addPage();
-                        doc.addImage(data, 'JPEG', 10, 10, 190, 0);
+                        doc.addImage(await fileToDataURL(files[i]), 'JPEG', 10, 10, 190, 0);
                     }
-                    doc.save("studio_file.pdf");
-                    preview.innerHTML = `<p class="text-green-500 font-bold uppercase text-xs">✓ PDF Downloaded</p>`;
+                    doc.save("studio.pdf");
+                    preview.innerHTML = "✓ Downloaded";
                 }
                 else if (currentMode === 'ocr') {
-                    if(!files[0]) throw "Select image.";
                     const ret = await Tesseract.recognize(files[0]);
-                    preview.innerHTML = `<textarea class="w-full h-48 bg-black border border-gray-800 p-4 text-blue-400 text-xs rounded-xl">${ret.data.text}</textarea>`;
+                    preview.innerHTML = `<textarea class="w-full h-40 bg-black p-4 text-xs text-blue-400">${ret.data.text}</textarea>`;
                 }
                 else if (currentMode === 'pass') {
                     const char = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*";
@@ -240,12 +262,10 @@
                     window.crypto.getRandomValues(v);
                     for(let i=0; i<v.length; i++) pass += char[v[i] % char.length];
                     document.getElementById('pass-display-box').innerText = pass;
-                    preview.innerHTML = `<button onclick="navigator.clipboard.writeText('${pass}');alert('Copied!')" class="bg-blue-600 px-10 py-3 rounded-full text-xs font-bold">COPY KEY</button>`;
                 }
                 else if (currentMode === 'qr') {
-                    if(!input) throw "Enter text/URL";
-                    preview.innerHTML = `<div id="q_code" class="bg-white p-4 rounded-xl"></div>`;
-                    new QRCode(document.getElementById("q_code"), { text: input, width: 160, height: 160 });
+                    preview.innerHTML = `<div id="q" class="bg-white p-4"></div>`;
+                    new QRCode(document.getElementById("q"), { text: input, width: 150, height: 150 });
                 }
                 loader.classList.add('hidden');
             } catch (err) { alert(err); resCard.classList.add('hidden'); }
@@ -253,14 +273,6 @@
 
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
         const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.style.backgroundColor !== 'rgb(255, 255, 255)';
-            body.style.backgroundColor = isDark ? '#ffffff' : '#050507';
-            body.style.color = isDark ? '#1a1a1a' : '#f0f0f0';
-            document.getElementById('theme-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        }
-        window.onclick = (e) => { if(e.target.className === 'modal') e.target.style.display = 'none'; }
     </script>
 </body>
 </html>

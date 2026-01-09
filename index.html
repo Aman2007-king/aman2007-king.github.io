@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>AiFileStudio Power | v3.5 Official</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
@@ -48,6 +48,36 @@
             z-index: 40;
         }
         @media (max-width: 768px) { .mobile-header { display: flex; } }
+
+        /* Modal Styling */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #0d0d10;
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #1c1c21;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            color: white;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+        .close-btn:hover { color: white; }
     </style>
 </head>
 <body>
@@ -68,7 +98,10 @@
             <div class="nav-item" onclick="showTab('merge')"><i class="fas fa-layer-group"></i> Merge PDFs</div>
             <div class="nav-item" onclick="showTab('pdf')"><i class="fas fa-file-pdf"></i> JPG to PDF</div>
             <div class="nav-item" onclick="showTab('ocr')"><i class="fas fa-font"></i> OCR Text</div>
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Settings</p>
+            
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Support & Settings</p>
+            <div class="nav-item" onclick="openModal('aboutModal')"><i class="fas fa-info-circle"></i> About Us</div>
+            <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact Us</div>
             <div class="nav-item" onclick="toggleTheme()"><i id="theme-icon" class="fas fa-moon"></i> <span id="theme-text">Dark Mode</span></div>
         </div>
         <div class="p-4 mt-auto border-t border-gray-900">
@@ -110,6 +143,7 @@
                 <div id="preview-area" class="flex flex-col items-center w-full"></div>
             </div>
         </div>
+
         <div class="mt-12 p-6 border-t border-gray-900 text-center">
             <p class="text-xs text-gray-500 mb-4 uppercase tracking-widest">Share this Tool</p>
             <div class="flex justify-center gap-6">
@@ -120,10 +154,44 @@
         </div>
     </main>
 
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('aboutModal')">&times;</span>
+            <h2 class="text-xl font-bold mb-4 text-blue-500">About AiFileStudio</h2>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                AiFileStudio.PRO is a powerful, all-in-one web suite built for creators and professionals. 
+                We provide high-speed local processing for AI image generation, PDF management, and OCR text extraction. 
+                Our mission is to provide professional-grade tools for free, respecting user privacy by keeping processing within your browser whenever possible.
+            </p>
+        </div>
+    </div>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('contactModal')">&times;</span>
+            <h2 class="text-xl font-bold mb-4 text-blue-500">Contact Us</h2>
+            <p class="text-gray-400 text-sm mb-4">Have questions or feedback? We'd love to hear from you.</p>
+            <div class="bg-black p-4 rounded-lg border border-gray-800">
+                <p class="text-xs text-gray-500 uppercase mb-1">Email Support</p>
+                <p class="text-blue-400 font-mono">support@aifilestudio.pro</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentMode = 'ai';
+
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+        
+        // Close modal if user clicks outside the content box
+        window.onclick = function(event) {
+            if (event.target.className === "modal") { event.target.style.display = "none"; }
+        }
+
         function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
         function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
+        
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -136,10 +204,13 @@
                 icon.className = 'fas fa-moon'; text.innerText = 'Dark Mode';
             }
         }
+
         function showTab(mode) {
             currentMode = mode;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(window.event) window.event.currentTarget.classList.add('active');
+            if(window.event && window.event.currentTarget.classList.contains('nav-item')) {
+                window.event.currentTarget.classList.add('active');
+            }
             const titles = {
                 'ai': ['AI Art Studio', 'Generate images from text prompts.'],
                 'resize': ['Image Resizer', 'Change dimensions and shrink file size.'],
@@ -152,6 +223,7 @@
             document.getElementById('result-card').classList.add('hidden');
             closeSidebarMobile();
         }
+
         async function processTask() {
             const input = document.getElementById('main-input').value;
             const files = document.getElementById('main-file').files;

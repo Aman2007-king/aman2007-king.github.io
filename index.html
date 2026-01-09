@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
-    <title>AiFileStudio Power | v3.5 Official</title>
+    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
+    <title>AiFileStudio Power | Official Suite</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,7 +17,7 @@
 
     <style>
         :root { --bg: #050507; --card: #0d0d10; --accent: #3b82f6; --text: #f0f0f0; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; transition: 0.3s; margin: 0; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; transition: background 0.3s; }
         aside { 
             width: 260px; background: #0a0a0c; border-right: 1px solid #1c1c21; 
             display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50;
@@ -32,195 +33,146 @@
         .nav-item.active { background: #16161a; color: var(--accent); border-right: 3px solid var(--accent); }
         main { margin-left: 260px; padding: 40px; min-height: 100vh; }
         .cyber-card { background: var(--card); border: 1px solid #1c1c21; border-radius: 20px; padding: 24px; width: 100%; }
-        #preview-area img { max-width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid #333; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+        .modal-content { background: #0d0d10; margin: 10% auto; padding: 30px; border: 1px solid #1c1c21; width: 90%; max-width: 600px; border-radius: 24px; max-height: 80vh; overflow-y: auto; }
         .loader { border: 3px solid #222; border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .hidden { display: none; }
-        .mobile-header {
-            display: none;
-            background: #0a0a0c;
-            padding: 15px 20px;
-            border-bottom: 1px solid #1c1c21;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 40;
-        }
+        .mobile-header { display: none; background: #0a0a0c; padding: 15px 20px; border-bottom: 1px solid #1c1c21; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; }
         @media (max-width: 768px) { .mobile-header { display: flex; } }
-
-        /* Modal Styling */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 100; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: #0d0d10;
-            margin: 15% auto;
-            padding: 30px;
-            border: 1px solid #1c1c21;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 20px;
-            color: white;
-            position: relative;
-        }
-        .close-btn {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #888;
-        }
-        .close-btn:hover { color: white; }
     </style>
 </head>
 <body>
-    <div class="mobile-header">
-        <h1 class="text-lg font-black italic text-blue-500 tracking-tighter">AiFileStudio<span class="text-white">.PRO</span></h1>
 
+    <div class="mobile-header">
+        <h1 class="text-lg font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
         <button onclick="toggleSidebar()" class="text-white text-xl"><i class="fas fa-bars"></i></button>
     </div>
 
     <aside id="main-sidebar">
         <div class="p-8 border-b border-gray-900 hidden md:block">
-            <h1 class="text-xl font-black italic text-blue-500 tracking-tighter">AiFileStudio<span class="text-white">.PRO</span></h1>
+            <h1 class="text-xl font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
         </div>
         <div class="py-6 flex-1 overflow-y-auto">
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mb-2 tracking-widest">Creative</p>
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mb-2 tracking-widest">Creative Tools</p>
             <div class="nav-item active" onclick="showTab('ai')"><i class="fas fa-magic"></i> AI Generator</div>
-            <div class="nav-item" onclick="showTab('resize')"><i class="fas fa-compress-arrows-alt"></i> Image Resizer</div>
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">PDF Power</p>
+            <div class="nav-item" onclick="showTab('resize')"><i class="fas fa-expand-arrows-alt"></i> Image Resizer</div>
+            
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">PDF & Text</p>
             <div class="nav-item" onclick="showTab('merge')"><i class="fas fa-layer-group"></i> Merge PDFs</div>
             <div class="nav-item" onclick="showTab('pdf')"><i class="fas fa-file-pdf"></i> JPG to PDF</div>
             <div class="nav-item" onclick="showTab('ocr')"><i class="fas fa-font"></i> OCR Text</div>
-            
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Support & Settings</p>
-            <div class="nav-item" onclick="openModal('aboutModal')"><i class="fas fa-info-circle"></i> About Us</div>
+
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Web Utilities</p>
+            <div class="nav-item" onclick="showTab('pass')"><i class="fas fa-shield-halved"></i> Secure Key Gen</div>
+            <div class="nav-item" onclick="showTab('qr')"><i class="fas fa-qrcode"></i> QR Studio</div>
+
+            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-8 mb-2 tracking-widest">Legal & Help</p>
+            <div class="nav-item" onclick="openModal('privacyModal')"><i class="fas fa-lock"></i> Privacy Policy</div>
             <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact Us</div>
-            <div class="nav-item" onclick="toggleTheme()"><i id="theme-icon" class="fas fa-moon"></i> <span id="theme-text">Dark Mode</span></div>
-        </div>
-        <div class="p-4 mt-auto border-t border-gray-900">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1186506015762858"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            <div class="nav-item" onclick="toggleTheme()"><i id="theme-icon" class="fas fa-moon"></i> Change Theme</div>
+
+            <div class="px-4 mt-10">
+                <p class="text-[9px] text-gray-600 uppercase mb-2 text-center">Sponsored</p>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1186506015762858"
+                     data-ad-slot="8734574320"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
         </div>
     </aside>
 
     <main onclick="closeSidebarMobile()">
         <div id="tab-title" class="mb-8">
             <h2 class="text-2xl md:text-3xl font-bold" id="current-title">AI Image Generator</h2>
-            <p class="text-gray-500 text-sm">High-speed local processing.</p>
+            <p class="text-gray-500 text-sm" id="current-subtitle">High-speed local processing.</p>
         </div>
+
         <div class="grid grid-cols-1 gap-8">
             <div class="cyber-card">
-                <div id="input-fields">
+                <div id="standard-inputs">
                     <div id="text-input-box">
-                        <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Text / Prompt</label>
-                        <textarea id="main-input" placeholder="Enter details..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm focus:outline-none focus:border-blue-500 h-20 mb-4 text-white"></textarea>
+                        <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Data / Prompt</label>
+                        <textarea id="main-input" placeholder="Type instructions or paste URL here..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-24"></textarea>
                     </div>
                     <div id="file-input-box">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Select Files</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload Media</label>
                         <input type="file" id="main-file" multiple class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white">
-                        <p id="file-help" class="text-[9px] text-gray-600 mt-2 italic"></p>
                     </div>
                 </div>
-                <button id="action-btn" onclick="processTask()" class="mt-6 w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs">Run Tool</button>
+
+                <div id="password-ui" class="hidden">
+                    <div id="pass-display-box" class="p-6 bg-black rounded-xl text-center text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
+                    <label class="flex justify-between text-[10px] font-bold text-gray-500 uppercase mb-2">Length: <span id="len-val" class="text-blue-500">16</span></label>
+                    <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full h-1 bg-gray-800 accent-blue-500 mb-4" oninput="document.getElementById('len-val').innerText = this.value">
+                </div>
+
+                <button id="action-btn" onclick="processTask()" class="mt-6 w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all shadow-lg">Run Engine</button>
             </div>
-            <div id="result-card" class="cyber-card hidden overflow-hidden">
+
+            <div id="result-card" class="cyber-card hidden">
                 <div id="loader-box" class="flex flex-col items-center py-10">
                     <div class="loader mb-4"></div>
-                    <p class="text-xs font-mono text-gray-500">ENGINE ACTIVE...</p>
+                    <p class="text-xs font-mono text-gray-500 uppercase">Processing Locally...</p>
                 </div>
                 <div id="preview-area" class="flex flex-col items-center w-full"></div>
             </div>
         </div>
-
-        <div class="mt-12 p-6 border-t border-gray-900 text-center">
-            <p class="text-xs text-gray-500 mb-4 uppercase tracking-widest">Share this Tool</p>
-            <div class="flex justify-center gap-6">
-                <a href="https://wa.me/?text=Check out this free AI tool!" target="_blank" class="text-gray-400 hover:text-green-500 transition"><i class="fab fa-whatsapp text-2xl"></i></a>
-                <a href="https://twitter.com/intent/tweet?text=Free AI Image Generator" target="_blank" class="text-gray-400 hover:text-blue-400 transition"><i class="fab fa-twitter text-2xl"></i></a>
-                <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link Copied!')" class="text-gray-400 hover:text-white transition"><i class="fas fa-link text-2xl"></i></button>
-            </div>
-        </div>
     </main>
 
-    <div id="aboutModal" class="modal">
+    <div id="privacyModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('aboutModal')">&times;</span>
-            <h2 class="text-xl font-bold mb-4 text-blue-500">About AiFileStudio</h2>
-            <p class="text-gray-400 text-sm leading-relaxed">
-                AiFileStudio.PRO is a powerful, all-in-one web suite built for creators and professionals. 
-                We provide high-speed local processing for AI image generation, PDF management, and OCR text extraction. 
-                Our mission is to provide professional-grade tools for free, respecting user privacy by keeping processing within your browser whenever possible.
-            </p>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-500">Privacy Policy</h2>
+                <button onclick="closeModal('privacyModal')" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="text-gray-400 text-xs space-y-4 leading-relaxed">
+                <p>At <strong>AiFileStudio.PRO</strong>, we take your privacy seriously. Most of our tools (PDF merging, Resizing, Password Generation) process files locally in your browser. This means your files never reach our servers.</p>
+                <p><strong>Data Collection:</strong> We do not store personal images or documents. We use Google AdSense which may collect cookies to provide personalized ads.</p>
+                <p><strong>Third Parties:</strong> We use Pollinations AI for image generation. Please refer to their terms when using the AI tool.</p>
+            </div>
         </div>
     </div>
 
     <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('contactModal')">&times;</span>
-            <h2 class="text-xl font-bold mb-4 text-blue-500">Contact Us</h2>
-            <p class="text-gray-400 text-sm mb-4">Have questions or feedback? We'd love to hear from you.</p>
-            <div class="bg-black p-4 rounded-lg border border-gray-800">
-                <p class="text-xs text-gray-500 uppercase mb-1">Email Support</p>
-                <p class="text-blue-400 font-mono">ry650506@gmail.com</p>
+        <div class="modal-content text-center">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-500">Contact Us</h2>
+                <button onclick="closeModal('contactModal')" class="text-gray-500 hover:text-white text-2xl">&times;</button>
             </div>
+            <p class="text-blue-400 font-mono text-lg">ry650506@gmail.com</p>
         </div>
     </div>
 
     <script>
+        // Init AdSense
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
         let currentMode = 'ai';
-
-        function openModal(id) { document.getElementById(id).style.display = "block"; }
-        function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        
-        // Close modal if user clicks outside the content box
-        window.onclick = function(event) {
-            if (event.target.className === "modal") { event.target.style.display = "none"; }
-        }
-
         function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
         function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
-        
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
-            if (body.style.backgroundColor === 'rgb(255, 255, 255)') {
-                body.style.backgroundColor = '#050507'; body.style.color = '#f0f0f0';
-                icon.className = 'fas fa-sun'; text.innerText = 'Light Mode';
-            } else {
-                body.style.backgroundColor = '#ffffff'; body.style.color = '#1a1a1a';
-                icon.className = 'fas fa-moon'; text.innerText = 'Dark Mode';
-            }
-        }
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
         function showTab(mode) {
             currentMode = mode;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(window.event && window.event.currentTarget.classList.contains('nav-item')) {
-                window.event.currentTarget.classList.add('active');
-            }
-            const titles = {
-                'ai': ['AI Art Studio', 'Generate images from text prompts.'],
-                'resize': ['Image Resizer', 'Change dimensions and shrink file size.'],
-                'merge': ['PDF Merger', 'Combine multiple PDF files into one.'],
-                'pdf': ['JPG to PDF', 'Convert images into a single PDF document.'],
-                'ocr': ['OCR Engine', 'Extract text from any image or PDF.']
+            if(window.event) window.event.currentTarget.classList.add('active');
+            const config = {
+                'ai': ['AI Art Studio', 'Create images from text descriptions.', true],
+                'resize': ['Image Resizer', 'Enter desired width (px) in the box.', true],
+                'merge': ['PDF Merger', 'Upload 2 or more PDF files to combine.', true],
+                'pdf': ['JPG to PDF', 'Turn your images into a PDF file.', true],
+                'ocr': ['OCR Engine', 'Convert images into editable text.', true],
+                'pass': ['Secure Key Gen', 'Generate 100% private, secure keys.', false],
+                'qr': ['QR Studio', 'Generate QR codes for links/text.', true]
             };
-            document.getElementById('current-title').innerText = titles[mode][0];
-            document.getElementById('tab-title').querySelector('p').innerText = titles[mode][1];
+            document.getElementById('current-title').innerText = config[mode][0];
+            document.getElementById('current-subtitle').innerText = config[mode][1];
+            document.getElementById('standard-inputs').classList.toggle('hidden', !config[mode][2]);
+            document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
             document.getElementById('result-card').classList.add('hidden');
             closeSidebarMobile();
         }
@@ -233,67 +185,82 @@
             const loader = document.getElementById('loader-box');
             resCard.classList.remove('hidden');
             preview.innerHTML = ""; loader.classList.remove('hidden');
+
             try {
                 if (currentMode === 'ai') {
-                    if(!input) throw "Enter a prompt";
+                    if(!input) throw "Please describe an image.";
                     const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?nologo=true`;
-                    preview.innerHTML = `<img src="${url}"><a href="${url}" download="ai.jpg" class="mt-4 inline-block bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download Art</a>`;
+                    preview.innerHTML = `<img src="${url}" class="rounded-xl mb-6 shadow-2xl"><a href="${url}" download class="bg-blue-600 px-10 py-3 rounded-full text-xs font-bold uppercase">Download Art</a>`;
                 }
                 else if (currentMode === 'resize') {
-                    if(!files[0] || !input) throw "Upload image and enter width (px)";
-                    const reader = new FileReader(); reader.readAsDataURL(files[0]);
-                    reader.onload = (e) => {
-                        const img = new Image(); img.src = e.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas'); const scale = input / img.width;
-                            canvas.width = input; canvas.height = img.height * scale;
-                            const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            const data = canvas.toDataURL("image/jpeg", 0.8);
-                            preview.innerHTML = `<img src="${data}"><p class="mt-2 text-[10px] text-gray-500">New Size: ${canvas.width}x${Math.round(canvas.height)}</p><a href="${data}" download="resized.jpg" class="mt-4 inline-block bg-green-600 px-8 py-3 rounded-full text-xs font-bold">Download Resized</a>`;
-                            loader.classList.add('hidden');
-                        };
-                    };
-                    return;
-                }
-                else if (currentMode === 'merge') {
-                    if(files.length < 2) throw "Select at least 2 PDF files";
-                    const mergedPdf = await PDFLib.PDFDocument.create();
-                    for (const file of files) {
-                        const bytes = await file.arrayBuffer(); const pdf = await PDFLib.PDFDocument.load(bytes);
-                        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                        copiedPages.forEach((page) => mergedPdf.addPage(page));
-                    }
-                    const pdfBytes = await mergedPdf.save();
-                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                    const url = URL.createObjectURL(blob);
-                    preview.innerHTML = `<i class="fas fa-file-pdf text-5xl text-red-500 mb-4"></i><p class="text-sm mb-4">Merge Complete!</p><a href="${url}" download="merged.pdf" class="inline-block bg-red-600 px-8 py-3 rounded-full text-xs font-bold">Download PDF</a>`;
-                }
-                else if (currentMode === 'pdf') {
-                    if(!files[0]) throw "Upload an image";
-                    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                    const reader = new FileReader(); reader.readAsDataURL(files[0]);
-                    reader.onload = (e) => {
-                        doc.addImage(e.target.result, 'JPEG', 10, 10, 190, 150); doc.save("file.pdf");
-                        preview.innerHTML = `<p class="text-green-500 font-bold">PDF Exported!</p>`;
+                    if(!files[0] || !input) throw "Upload image & enter width.";
+                    const img = new Image(); img.src = await fileToDataURL(files[0]);
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const scale = input / img.width;
+                        canvas.width = input; canvas.height = img.height * scale;
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const data = canvas.toDataURL("image/jpeg", 0.9);
+                        preview.innerHTML = `<img src="${data}" class="mb-4 rounded-lg"><a href="${data}" download="resized.jpg" class="bg-green-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
                         loader.classList.add('hidden');
                     };
                     return;
                 }
+                else if (currentMode === 'merge') {
+                    if (files.length < 2) throw "Select at least 2 PDFs.";
+                    const mergedPdf = await PDFLib.PDFDocument.create();
+                    for (const f of files) {
+                        const pdf = await PDFLib.PDFDocument.load(await f.arrayBuffer());
+                        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                        pages.forEach(p => mergedPdf.addPage(p));
+                    }
+                    const bytes = await mergedPdf.save();
+                    downloadFile(bytes, "merged.pdf", "application/pdf");
+                    preview.innerHTML = `<p class="text-green-500 font-bold uppercase text-xs">✓ Download Started</p>`;
+                }
+                else if (currentMode === 'pdf') {
+                    if (!files[0]) throw "Select images.";
+                    const { jsPDF } = window.jspdf; const doc = new jsPDF();
+                    for (let i = 0; i < files.length; i++) {
+                        const data = await fileToDataURL(files[i]);
+                        if (i > 0) doc.addPage();
+                        doc.addImage(data, 'JPEG', 10, 10, 190, 0);
+                    }
+                    doc.save("studio_file.pdf");
+                    preview.innerHTML = `<p class="text-green-500 font-bold uppercase text-xs">✓ PDF Downloaded</p>`;
+                }
                 else if (currentMode === 'ocr') {
-                    if(!files[0]) throw "Upload an image";
+                    if(!files[0]) throw "Select image.";
                     const ret = await Tesseract.recognize(files[0]);
-                    preview.innerHTML = `<textarea class="w-full h-48 bg-black border border-gray-800 p-4 text-xs text-green-500 rounded-xl mb-4">${ret.data.text}</textarea><button onclick="window.saveDoc()" class="bg-gray-700 px-6 py-2 rounded-full text-xs">Save .DOC</button>`;
+                    preview.innerHTML = `<textarea class="w-full h-48 bg-black border border-gray-800 p-4 text-blue-400 text-xs rounded-xl">${ret.data.text}</textarea>`;
+                }
+                else if (currentMode === 'pass') {
+                    const char = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*";
+                    let pass = ""; const v = new Uint32Array(document.getElementById('pass-length').value);
+                    window.crypto.getRandomValues(v);
+                    for(let i=0; i<v.length; i++) pass += char[v[i] % char.length];
+                    document.getElementById('pass-display-box').innerText = pass;
+                    preview.innerHTML = `<button onclick="navigator.clipboard.writeText('${pass}');alert('Copied!')" class="bg-blue-600 px-10 py-3 rounded-full text-xs font-bold">COPY KEY</button>`;
+                }
+                else if (currentMode === 'qr') {
+                    if(!input) throw "Enter text/URL";
+                    preview.innerHTML = `<div id="q_code" class="bg-white p-4 rounded-xl"></div>`;
+                    new QRCode(document.getElementById("q_code"), { text: input, width: 160, height: 160 });
                 }
                 loader.classList.add('hidden');
             } catch (err) { alert(err); resCard.classList.add('hidden'); }
         }
-        window.saveDoc = () => {
-            const blob = new Blob([document.querySelector('textarea').value], {type: "application/msword"});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "text.doc"; a.click();
-        };
+
+        const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
+        const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.style.backgroundColor !== 'rgb(255, 255, 255)';
+            body.style.backgroundColor = isDark ? '#ffffff' : '#050507';
+            body.style.color = isDark ? '#1a1a1a' : '#f0f0f0';
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        window.onclick = (e) => { if(e.target.className === 'modal') e.target.style.display = 'none'; }
     </script>
 </body>
 </html>
-
-
-

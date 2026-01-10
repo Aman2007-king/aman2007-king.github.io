@@ -291,9 +291,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
         const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
+        const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
+
+    // Paste here:
+    function showModal(type) {
+        const modal = document.getElementById('legalModal');
+        const content = document.getElementById('modalContent');
+        if(type === 'privacy-policy') {
+            content.innerHTML = `<h2 style="color:#4ea8de">Privacy Policy</h2><p>AiFileStudio uses Google Analytics and AdSense. We do not store your files on our servers.</p>`;
+        } else {
+            content.innerHTML = `<h2 style="color:#4ea8de">Terms of Service</h2><p>Use our tools for legal purposes. We are not liable for data loss during processing.</p>`;
+        }
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('legalModal').style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('legalModal')) { closeModal(); }
+    }
+</script>
     </script>
+    <div id="legalModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.8); overflow-y: auto;">
+    <div style="background-color: #1a1a1a; margin: 5% auto; padding: 30px; border: 1px solid #444; width: 80%; max-width: 700px; border-radius: 10px; color: #ddd;">
+        <span onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        <div id="modalContent"></div>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 

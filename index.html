@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Free AI-powered file tools. Merge PDF, Split PDF, Text to PDF, OCR, and AI Art Generator. No upload required, all processing is 100% local and secure.">
-<meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
-<meta name="author" content="AiFileStudio.PRO">
-<meta name="robots" content="index, follow">
+    <meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
+    <meta name="author" content="AiFileStudio.PRO">
+    <meta name="robots" content="index, follow">
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&lLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
-<meta name="google-adsense-account" content="ca-pub-1186506015762858">
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&lLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
+    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>AiFileStudio Power | Pro Document Suite</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
@@ -46,7 +46,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&lLayer'?'&l='+l:'';j.async=true;j.src=
         .modal-content { background: #0d0d10; margin: 10% auto; padding: 30px; border: 1px solid #1c1c21; width: 90%; max-width: 600px; border-radius: 24px; max-height: 80vh; overflow-y: auto; }
         .loader { border: 3px solid #222; border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .mobile-header { display: none; background: #0a0a0c; padding: 15px 20px; border-bottom: 1px solid #1c1c21; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; }
         @media (max-width: 768px) { .mobile-header { display: flex; } }
     </style>
@@ -169,14 +169,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
+    <div id="ai-chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Inter', sans-serif;">
+        <button onclick="toggleChat()" id="chat-launcher" style="background: #3b82f6; width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: 0.3s;">
+            <i class="fas fa-comment-dots" style="color: white; font-size: 24px;"></i>
+        </button>
+
+        <div id="chat-window" class="hidden" style="position: absolute; bottom: 80px; right: 0; width: 300px; background: #0d0d10; border: 1px solid #1c1c21; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div style="background: #16161a; padding: 15px; border-bottom: 1px solid #1c1c21; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; font-weight: bold; color: #3b82f6; letter-spacing: 1px;">AI ASSISTANT</span>
+                <button onclick="toggleChat()" style="color: #666; background: none; border: none; cursor: pointer; font-size: 20px;">&times;</button>
+            </div>
+            <div id="chat-messages" style="height: 250px; overflow-y: auto; padding: 15px; font-size: 13px; line-height: 1.5; color: #ccc;">
+                <div style="background: #1c1c21; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                    Hello! I'm the AiFileStudio assistant. How can I help you today?
+                </div>
+            </div>
+            <div style="padding: 10px; border-top: 1px solid #1c1c21; background: #0a0a0c;">
+                <div id="chat-options" style="display: flex; flex-wrap: wrap; gap: 5px;">
+                    <button onclick="askChat('ai')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">AI Art?</button>
+                    <button onclick="askChat('pdf')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">PDF Tools?</button>
+                    <button onclick="askChat('ocr')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">OCR Text?</button>
+                    <button onclick="askChat('privacy')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">Is it safe?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({});
         let currentMode = 'ai';
 
+        // --- Chatbot Logic ---
+        function toggleChat() {
+            const chatWin = document.getElementById('chat-window');
+            chatWin.classList.toggle('hidden');
+        }
+
+        function askChat(topic) {
+            const msgArea = document.getElementById('chat-messages');
+            let response = "";
+
+            const data = {
+                'ai': "Our **AI Art Studio** uses Pollinations AI to generate high-quality images from text prompts locally in your browser.",
+                'pdf': "You can **Merge, Split, Rotate, and Convert** PDFs. All processing is 100% local, meaning your private documents never leave your computer.",
+                'ocr': "The **OCR Engine** extracts text from images using Tesseract.js. It works best if you use the 'Enhancement' sliders first!",
+                'privacy': "Yes! We use **Local Processing**. Unlike other sites, we don't upload your files to a server. Your data stays in your browser."
+            };
+
+            response = data[topic] || "I'm here to help you navigate our Pro Document Suite!";
+
+            msgArea.innerHTML += `<div style="text-align: right; margin-bottom: 10px;"><span style="background: #3b82f6; color: white; padding: 8px 12px; border-radius: 10px; display: inline-block;">${topic.toUpperCase()}</span></div>`;
+            
+            setTimeout(() => {
+                msgArea.innerHTML += `<div style="background: #1c1c21; padding: 10px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid #3b82f6;">${response}</div>`;
+                msgArea.scrollTop = msgArea.scrollHeight;
+            }, 400);
+        }
+
+        // --- Original Website Logic ---
         function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
         function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
         
-        // Combined Modal Logic
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModalWindow(id) { 
             const target = id || 'legalModal';
@@ -206,8 +259,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
             document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
             document.getElementById('result-card').classList.add('hidden');
-            
-            // Show/Hide enhancement UI
             document.getElementById('enhancement-ui').classList.toggle('hidden', !['resize', 'ocr'].includes(mode));
 
             closeSidebarMobile();
@@ -231,8 +282,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
                 else if (currentMode === 'resize') {
                     if(!files[0] || !input) throw "Need image and Width (px)";
-                    
-                    // NEW: Batch Processing Logic
                     if (files.length > 1) {
                         const zip = new JSZip();
                         document.getElementById('loader-text').innerText = "BATCH PROCESSING...";
@@ -303,8 +352,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     preview.innerHTML = "✓ Downloaded";
                 }
                 else if (currentMode === 'ocr') {
-                    // NEW: OCR with Pre-Processing
-                    const processedURL = await processImageEnhancement(files[0], 2000); // Higher res for better OCR
+                    const processedURL = await processImageEnhancement(files[0], 2000); 
                     const ret = await Tesseract.recognize(processedURL);
                     preview.innerHTML = `<textarea class="w-full h-40 bg-black p-4 text-xs text-blue-400 border border-gray-800 rounded-xl">${ret.data.text}</textarea>`;
                 }
@@ -323,7 +371,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             } catch (err) { alert(err); resCard.classList.add('hidden'); }
         }
 
-        // NEW: Image Enhancement Processing Function
         async function processImageEnhancement(file, targetWidth) {
             return new Promise(async (resolve) => {
                 const img = new Image();
@@ -340,16 +387,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     canvas.width = targetWidth;
                     canvas.height = img.height * scale;
 
-                    // Apply filters
                     ctx.filter = `brightness(${b}) contrast(${c}) ${upscale ? 'saturate(1.2) contrast(1.1)' : ''}`;
-                    
-                    // Smoothing for Upscale
                     ctx.imageSmoothingEnabled = true;
                     ctx.imageSmoothingQuality = 'high';
-
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                    // Binarization (Scan Mode Logic)
                     if (binarize) {
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         const data = imageData.data;
@@ -360,7 +402,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
                         ctx.putImageData(imageData, 0, 0);
                     }
-
                     resolve(canvas.toDataURL("image/jpeg", 0.9));
                 };
             });
@@ -369,14 +410,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
         const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
 
-        // --- UNIVERSAL MODAL LOGIC ---
-        function openModal(id) { 
-            document.getElementById(id).style.display = "block"; 
-        }
-
-        function closeModal(id) { 
-            document.getElementById(id).style.display = "none"; 
-        }
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
         function showModal(type) {
             const modal = document.getElementById('legalModal');

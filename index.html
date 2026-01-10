@@ -183,7 +183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             };
 
             document.getElementById('current-title').innerText = config[mode][0];
-            document.getElementById('current-subtitle').innerText = config[mode][1];
+           document.getElementById('current-subtitle').innerText = config[mode][1];
             document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
             document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
             document.getElementById('result-card').classList.add('hidden');
@@ -295,25 +295,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
         const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
 
+        // --- UNIQUE LEGAL MODAL FUNCTIONS ---
         function showModal(type) {
             const modal = document.getElementById('legalModal');
             const content = document.getElementById('modalContent');
             if(type === 'privacy-policy') {
-                content.innerHTML = `<h2 style="color:#4ea8de">Privacy Policy</h2><p>AiFileStudio uses Google Analytics and AdSense. We do not store your files on our servers.</p>`;
+                content.innerHTML = `<h2 style="color:#4ea8de; font-size: 22px; margin-bottom: 10px;">Privacy Policy</h2><p style="color:#ccc;">AiFileStudio uses Google Analytics and AdSense. We do not store your files on our servers; all processing is local or transient.</p><button onclick="closeModalWindow()" style="margin-top:20px; background:#444; color:white; padding:8px 20px; border-radius:5px; cursor:pointer;">Close</button>`;
             } else {
-                content.innerHTML = `<h2 style="color:#4ea8de">Terms of Service</h2><p>Use our tools for legal purposes. We are not liable for data loss during processing.</p>`;
+                content.innerHTML = `<h2 style="color:#4ea8de; font-size: 22px; margin-bottom: 10px;">Terms of Service</h2><p style="color:#ccc;">Use our tools for legal purposes. We are not liable for data loss during processing.</p><button onclick="closeModalWindow()" style="margin-top:20px; background:#444; color:white; padding:8px 20px; border-radius:5px; cursor:pointer;">Close</button>`;
             }
-            modal.style.display = "block";
+            modal.style.display = "flex"; // Using flex to help with centering
         }
 
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('legalModal')) { closeModalWindow('legalModal'); }
+        function closeModalWindow() {
+            document.getElementById('legalModal').style.display = "none";
         }
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('legalModal');
+            if (event.target == modal) { closeModalWindow(); }
+        });
     </script>
 
-    <div id="legalModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.8); overflow-y: auto;">
-        <div style="background-color: #1a1a1a; margin: 5% auto; padding: 30px; border: 1px solid #444; width: 80%; max-width: 700px; border-radius: 10px; color: #ddd; position: relative;">
-            <span onclick="closeModalWindow('legalModal')" style="color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+    <div id="legalModal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px;">
+        <div style="background-color: #1a1a1a; padding: 30px; border: 1px solid #444; width: 100%; max-width: 600px; border-radius: 20px; color: #ddd; position: relative; text-align: center;">
+            <span onclick="closeModalWindow()" style="color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
             <div id="modalContent"></div>
         </div>
     </div>

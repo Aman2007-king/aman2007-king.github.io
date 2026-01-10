@@ -6,14 +6,12 @@
 <meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
 <meta name="author" content="AiFileStudio.PRO">
 <meta name="robots" content="index, follow">
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+j=d.createElement(s),dl=l!='dataLayer'?'&lLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
-<!-- End Google Tag Manager -->
-    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
+<meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>AiFileStudio Power | Pro Document Suite</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
@@ -24,6 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
         :root { --bg: #050507; --card: #0d0d10; --accent: #3b82f6; --text: #f0f0f0; }
@@ -53,11 +52,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-    <div class="mobile-header">
+<div class="mobile-header">
         <h1 class="text-lg font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
         <button onclick="toggleSidebar()" class="text-white text-xl"><i class="fas fa-bars"></i></button>
     </div>
@@ -109,6 +106,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Parameter / Prompt</label>
                 <textarea id="main-input" placeholder="Type here..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
                 
+                <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                    <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                            <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                            <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 mt-4">
+                        <label class="flex items-center gap-2 text-xs text-gray-400">
+                            <input type="checkbox" id="doc-binarize"> B&W Mode (Scan)
+                        </label>
+                        <label class="flex items-center gap-2 text-xs text-gray-400">
+                            <input type="checkbox" id="doc-upscale"> Super-Res
+                        </label>
+                    </div>
+                </div>
+
                 <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload Files</label>
                 <input type="file" id="main-file" multiple class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
@@ -124,7 +143,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div id="result-card" class="cyber-card mt-8 hidden text-center">
             <div id="loader-box" class="flex flex-col items-center py-10">
                 <div class="loader mb-4"></div>
-                <p class="text-xs font-mono text-gray-500">ENGINE RUNNING...</p>
+                <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
             </div>
             <div id="preview-area" class="flex flex-col items-center w-full"></div>
         </div>
@@ -183,10 +202,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             };
 
             document.getElementById('current-title').innerText = config[mode][0];
-          document.getElementById('current-subtitle').innerText = config[mode][1];
+            document.getElementById('current-subtitle').innerText = config[mode][1];
             document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
             document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
             document.getElementById('result-card').classList.add('hidden');
+            
+            // Show/Hide enhancement UI
+            document.getElementById('enhancement-ui').classList.toggle('hidden', !['resize', 'ocr'].includes(mode));
+
             closeSidebarMobile();
         }
 
@@ -208,16 +231,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
                 else if (currentMode === 'resize') {
                     if(!files[0] || !input) throw "Need image and Width (px)";
-                    const img = new Image(); img.src = await fileToDataURL(files[0]);
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const scale = input / img.width;
-                        canvas.width = input; canvas.height = img.height * scale;
-                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                        const res = canvas.toDataURL("image/jpeg");
-                        preview.innerHTML = `<img src="${res}" class="mb-4"><a href="${res}" download="resized.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
-                        loader.classList.add('hidden');
-                    }; return;
+                    
+                    // NEW: Batch Processing Logic
+                    if (files.length > 1) {
+                        const zip = new JSZip();
+                        document.getElementById('loader-text').innerText = "BATCH PROCESSING...";
+                        for(let f of files) {
+                            const blob = await processImageEnhancement(f, input);
+                            zip.file(`resized_${f.name}`, blob.split(',')[1], {base64: true});
+                        }
+                        const content = await zip.generateAsync({type:"blob"});
+                        const url = URL.createObjectURL(content);
+                        preview.innerHTML = `<p class='text-xs mb-4'>Processed ${files.length} images</p><a href="${url}" download="batch_resized.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
+                    } else {
+                        const res = await processImageEnhancement(files[0], input);
+                        preview.innerHTML = `<img src="${res}" class="mb-4 rounded-xl border border-gray-800"><a href="${res}" download="resized.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
+                    }
                 }
                 else if (currentMode === 'convert') {
                     if(!files[0]) throw "Select JPG";
@@ -274,8 +303,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     preview.innerHTML = "✓ Downloaded";
                 }
                 else if (currentMode === 'ocr') {
-                    const ret = await Tesseract.recognize(files[0]);
-                    preview.innerHTML = `<textarea class="w-full h-40 bg-black p-4 text-xs text-blue-400">${ret.data.text}</textarea>`;
+                    // NEW: OCR with Pre-Processing
+                    const processedURL = await processImageEnhancement(files[0], 2000); // Higher res for better OCR
+                    const ret = await Tesseract.recognize(processedURL);
+                    preview.innerHTML = `<textarea class="w-full h-40 bg-black p-4 text-xs text-blue-400 border border-gray-800 rounded-xl">${ret.data.text}</textarea>`;
                 }
                 else if (currentMode === 'pass') {
                     const char = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*";
@@ -290,6 +321,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
                 loader.classList.add('hidden');
             } catch (err) { alert(err); resCard.classList.add('hidden'); }
+        }
+
+        // NEW: Image Enhancement Processing Function
+        async function processImageEnhancement(file, targetWidth) {
+            return new Promise(async (resolve) => {
+                const img = new Image();
+                img.src = await fileToDataURL(file);
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const b = document.getElementById('doc-bright').value;
+                    const c = document.getElementById('doc-contrast').value;
+                    const upscale = document.getElementById('doc-upscale').checked;
+                    const binarize = document.getElementById('doc-binarize').checked;
+
+                    const scale = targetWidth / img.width;
+                    canvas.width = targetWidth;
+                    canvas.height = img.height * scale;
+
+                    // Apply filters
+                    ctx.filter = `brightness(${b}) contrast(${c}) ${upscale ? 'saturate(1.2) contrast(1.1)' : ''}`;
+                    
+                    // Smoothing for Upscale
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Binarization (Scan Mode Logic)
+                    if (binarize) {
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const data = imageData.data;
+                        for (let i = 0; i < data.length; i += 4) {
+                            const avg = (data[i] + data[i+1] + data[i+2]) / 3;
+                            const val = avg > 128 ? 255 : 0;
+                            data[i] = data[i+1] = data[i+2] = val;
+                        }
+                        ctx.putImageData(imageData, 0, 0);
+                    }
+
+                    resolve(canvas.toDataURL("image/jpeg", 0.9));
+                };
+            });
         }
 
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
@@ -315,7 +389,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             modal.style.display = "block";
         }
 
-        // Close when clicking outside of any modal
         window.onclick = function(event) {
             if (event.target.className === 'modal' || event.target.id === 'legalModal') {
                 event.target.style.display = "none";
@@ -331,8 +404,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 </body>
 </html>
-
-
-
-
-

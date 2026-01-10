@@ -183,7 +183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             };
 
             document.getElementById('current-title').innerText = config[mode][0];
-           document.getElementById('current-subtitle').innerText = config[mode][1];
+          document.getElementById('current-subtitle').innerText = config[mode][1];
             document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
             document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
             document.getElementById('result-card').classList.add('hidden');
@@ -295,31 +295,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
         const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
 
-        // --- UNIQUE LEGAL MODAL FUNCTIONS ---
+        // --- UNIVERSAL MODAL LOGIC ---
+        function openModal(id) { 
+            document.getElementById(id).style.display = "block"; 
+        }
+
+        function closeModal(id) { 
+            document.getElementById(id).style.display = "none"; 
+        }
+
         function showModal(type) {
             const modal = document.getElementById('legalModal');
             const content = document.getElementById('modalContent');
             if(type === 'privacy-policy') {
-                content.innerHTML = `<h2 style="color:#4ea8de; font-size: 22px; margin-bottom: 10px;">Privacy Policy</h2><p style="color:#ccc;">AiFileStudio uses Google Analytics and AdSense. We do not store your files on our servers; all processing is local or transient.</p><button onclick="closeModalWindow()" style="margin-top:20px; background:#444; color:white; padding:8px 20px; border-radius:5px; cursor:pointer;">Close</button>`;
+                content.innerHTML = `<h2 style="color:#4ea8de; font-size:20px; margin-bottom:10px;">Privacy Policy</h2><p style="color:#ccc; font-size:14px;">AiFileStudio uses Google Analytics and AdSense. Files are processed locally in your browser.</p><button onclick="closeModal('legalModal')" style="margin-top:20px; background:#3b82f6; color:white; padding:8px 20px; border-radius:8px; cursor:pointer; width:100%;">Close</button>`;
             } else {
-                content.innerHTML = `<h2 style="color:#4ea8de; font-size: 22px; margin-bottom: 10px;">Terms of Service</h2><p style="color:#ccc;">Use our tools for legal purposes. We are not liable for data loss during processing.</p><button onclick="closeModalWindow()" style="margin-top:20px; background:#444; color:white; padding:8px 20px; border-radius:5px; cursor:pointer;">Close</button>`;
+                content.innerHTML = `<h2 style="color:#4ea8de; font-size:20px; margin-bottom:10px;">Terms of Service</h2><p style="color:#ccc; font-size:14px;">Use tools for lawful purposes. We are not liable for data loss.</p><button onclick="closeModal('legalModal')" style="margin-top:20px; background:#3b82f6; color:white; padding:8px 20px; border-radius:8px; cursor:pointer; width:100%;">Close</button>`;
             }
-            modal.style.display = "flex"; // Using flex to help with centering
+            modal.style.display = "block";
         }
 
-        function closeModalWindow() {
-            document.getElementById('legalModal').style.display = "none";
+        // Close when clicking outside of any modal
+        window.onclick = function(event) {
+            if (event.target.className === 'modal' || event.target.id === 'legalModal') {
+                event.target.style.display = "none";
+            }
         }
-
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('legalModal');
-            if (event.target == modal) { closeModalWindow(); }
-        });
     </script>
 
-    <div id="legalModal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px;">
-        <div style="background-color: #1a1a1a; padding: 30px; border: 1px solid #444; width: 100%; max-width: 600px; border-radius: 20px; color: #ddd; position: relative; text-align: center;">
-            <span onclick="closeModalWindow()" style="color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+    <div id="legalModal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.9); overflow-y:auto;">
+        <div style="background-color: #0d0d10; margin: 10% auto; padding: 30px; border: 1px solid #1c1c21; width: 90%; max-width: 500px; border-radius: 20px; color: #eee; position: relative;">
+            <span onclick="closeModal('legalModal')" style="color: #666; position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer;">&times;</span>
             <div id="modalContent"></div>
         </div>
     </div>

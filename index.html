@@ -11,18 +11,23 @@
 </script>
     
     <meta charset="UTF-8">
-    <meta name="description" content="Free AI-powered file tools. Merge PDF, Split PDF, Text to PDF, OCR, and AI Art Generator. No upload required, all processing is 100% local and secure.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free PDF and image tools. Merge PDF, Split PDF, OCR, QR codes, and AI Art Generator. Your PDF and image files are processed locally in your browser and never uploaded to a server.">
     <meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
     <meta name="author" content="AiFileStudio.PRO">
     <meta name="robots" content="index, follow">
    <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AiFileStudio.PRO - 100% Private AI & PDF Tools">
-<meta name="twitter:description" content="Process your files locally. No uploads, no servers, total privacy.">
+<meta name="twitter:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
+<meta name="twitter:description" content="PDF and image tools that run in your browser. AI Art generation uses an external API; all other tools process files locally.">
 <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
+<meta property="og:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
+<meta property="og:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aman2007-king.github.io/">
 <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&lLayer'?'&l='+l:'';j.async=true;j.src=
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
@@ -107,7 +112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="nav-item" onclick="showTab('qr')"><i class="fas fa-qrcode"></i> QR Studio</div>
 
             <div class="mt-6 pt-4 border-t border-gray-900">
-                <div class="nav-item" onclick="openModal('privacyModal')"><i class="fas fa-shield-alt"></i> Privacy</div>
+                <div class="nav-item" onclick="window.location.href='privacy.html'"><i class="fas fa-shield-alt"></i> Privacy</div>
                 <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact</div>
             </div>
 
@@ -115,11 +120,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1186506015762858" data-ad-slot="8734574320" data-ad-format="auto" data-full-width-responsive="true"></ins>
             </div>
         </div>
-        <section id="faq" class="...">
         <div style="margin-top: auto; padding: 20px; border-top: 1px solid #333;">
-    <a href="#" onclick="showModal('privacy-policy')" style="color: #888; text-decoration: none; font-size: 12px; display: block; margin-bottom: 10px;">Privacy Policy</a>
-    <a href="#" onclick="showModal('terms-service')" style="color: #888; text-decoration: none; font-size: 12px; display: block;">Terms of Service</a>
-   <a href="#faq" class="text-xs text-gray-500 hover:text-blue-500 mt-4 border-t border-gray-800 pt-2">Help & FAQ</a>
+    <a href="privacy.html" style="color: #888; text-decoration: none; font-size: 12px; display: block; margin-bottom: 10px;">Privacy Policy</a>
+    <a href="#" onclick="openModal('termsModal')" style="color: #888; text-decoration: none; font-size: 12px; display: block;">Terms of Service</a>
+   <a href="#faq" class="text-xs text-gray-500 hover:text-blue-500 mt-4 border-t border-gray-800 pt-2 block">Help & FAQ</a>
 </div>
         
         <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #1c1c21; text-align: center;">
@@ -192,7 +196,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </p>
 
         <p>
-            The primary advantage of local processing is that your files never leave your computer. By using modern JavaScript libraries like <code class="text-blue-400">pdf-lib</code> and <code class="text-blue-400">Tesseract.js</code>, our platform performs complex tasks—such as merging PDFs, OCR text extraction, and image conversion—directly within your web browser. This means your private contracts, financial statements, and personal ID scans remain <strong>100% private</strong>. No server-side storage means there is no risk of data breaches or unauthorized access by third parties.
+            The primary advantage of local processing is that your files aren't uploaded to our servers. By using modern JavaScript libraries like <code class="text-blue-400">pdf-lib</code> and <code class="text-blue-400">Tesseract.js</code>, our platform performs complex tasks—such as merging PDFs, OCR text extraction, and image conversion—directly within your web browser. This means your private contracts, financial statements, and personal ID scans stay on your device rather than being stored on any backend of ours. (The one exception is the AI Art tool, which sends your text prompt to a third-party image-generation service.)
         </p>
 
         
@@ -202,22 +206,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </p>
 
         <p>
-            Choosing a local-first tool like AiFileStudio is not just about convenience; it is about <strong>data sovereignty</strong>. When you process files locally, you are the only one who ever sees your content. This makes it the ideal choice for businesses complying with strict data protection regulations like GDPR or HIPAA. Experience the peace of mind that comes with knowing your files are handled only by you.
+            Choosing a local-first tool like AiFileStudio is not just about convenience; it is about <strong>data sovereignty</strong>. When you process files locally, your file content isn't sent to our servers. This can be a helpful part of a broader data-handling process for businesses navigating regulations like GDPR or HIPAA — though you should always confirm your own compliance requirements with your legal/security team, since this site also uses third-party analytics and advertising scripts. Note: the AI Art tool is the one exception — it sends your text prompt to a third-party image service.
         </p>
     </div>
         </section>
         
     </main>
 
-    <div id="privacyModal" class="modal">
+    <div id="termsModal" class="modal">
         <div class="modal-content">
-            <h2 class="text-xl font-bold text-blue-500 mb-4">Privacy Policy</h2>
+            <h2 class="text-xl font-bold text-blue-500 mb-4">Terms of Service</h2>
             <p class="text-gray-400 text-xs leading-relaxed">
-                At AiFileStudio.PRO, we take your privacy seriously. Most of our tools (PDF merging, Resizing, Password Generation) process files locally in your browser. This means your files never reach our servers.<br><br>
-                Data Collection: We do not store personal images or documents. We use Google AdSense which may collect cookies to provide personalized ads.<br><br>
-                Third Parties: We use Pollinations AI for image generation. Please refer to their terms when using the AI tool.
+                Use AiFileStudio.PRO tools for lawful purposes only. Most tools (PDF merge/split/rotate, resize, JPG↔PNG, OCR, password generation, QR codes) process files locally in your browser and are not uploaded to our servers.<br><br>
+                The AI Art tool sends your text prompt to a third-party service (Pollinations AI) to generate an image; that prompt does leave your device. Please avoid entering sensitive or confidential text into that tool.<br><br>
+                We provide these tools "as is" without warranty and are not liable for any data loss, inaccuracies, or damages arising from their use. See our <a href="privacy.html" class="text-blue-500 underline">Privacy Policy</a> for details on analytics and advertising.
             </p>
-            <button onclick="closeModal('privacyModal')" class="mt-6 text-blue-500 text-sm font-bold">Close</button>
+            <button onclick="closeModal('termsModal')" class="mt-6 text-blue-500 text-sm font-bold">Close</button>
         </div>
     </div>
 
@@ -290,12 +294,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
         function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
         
-        function openModal(id) { document.getElementById(id).style.display = "block"; }
-        function closeModalWindow(id) { 
-            const target = id || 'legalModal';
-            document.getElementById(target).style.display = "none"; 
-        }
-
         function showTab(mode) {
             currentMode = mode;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -342,6 +340,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
                 else if (currentMode === 'resize') {
                     if(!files[0] || !input) throw "Need image and Width (px)";
+                    const widthNum = Number(input);
+                    if (!Number.isFinite(widthNum) || widthNum <= 0) throw "Width must be a positive number (e.g. 800)";
                     if (files.length > 1) {
                         const zip = new JSZip();
                         document.getElementById('loader-text').innerText = "BATCH PROCESSING...";
@@ -473,30 +473,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
-        function showModal(type) {
-            const modal = document.getElementById('legalModal');
-            const content = document.getElementById('modalContent');
-            if(type === 'privacy-policy') {
-                content.innerHTML = `<h2 style="color:#4ea8de; font-size:20px; margin-bottom:10px;">Privacy Policy</h2><p style="color:#ccc; font-size:14px;">AiFileStudio uses Google Analytics and AdSense. Files are processed locally in your browser.</p><button onclick="closeModal('legalModal')" style="margin-top:20px; background:#3b82f6; color:white; padding:8px 20px; border-radius:8px; cursor:pointer; width:100%;">Close</button>`;
-            } else {
-                content.innerHTML = `<h2 style="color:#4ea8de; font-size:20px; margin-bottom:10px;">Terms of Service</h2><p style="color:#ccc; font-size:14px;">Use tools for lawful purposes. We are not liable for data loss.</p><button onclick="closeModal('legalModal')" style="margin-top:20px; background:#3b82f6; color:white; padding:8px 20px; border-radius:8px; cursor:pointer; width:100%;">Close</button>`;
-            }
-            modal.style.display = "block";
-        }
-
         window.onclick = function(event) {
-            if (event.target.className === 'modal' || event.target.id === 'legalModal') {
+            if (event.target.className === 'modal') {
                 event.target.style.display = "none";
             }
         }
     </script>
-
-    <div id="legalModal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.9); overflow-y:auto;">
-        <div style="background-color: #0d0d10; margin: 10% auto; padding: 30px; border: 1px solid #1c1c21; width: 90%; max-width: 500px; border-radius: 20px; color: #eee; position: relative;">
-            <span onclick="closeModal('legalModal')" style="color: #666; position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer;">&times;</span>
-            <div id="modalContent"></div>
-        </div>
-    </div>
     <section class="mt-12 p-8 bg-gray-900/10 border-l-4 border-blue-600 text-gray-400">
     <h2 class="text-2xl font-bold text-white mb-4">Complete Guide to AiFileStudio Tools</h2>
     
@@ -518,16 +500,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div>
             <h3 class="text-white font-bold mb-2">Browser-Based Security</h3>
-            <p>AiFileStudio is built on the philosophy of privacy. By using client-side JavaScript, we ensure that no file is ever sent to our backend. This is the highest level of security available for online document processing tools today.</p>
+            <p>AiFileStudio is built on the philosophy of privacy. For the PDF and image tools, client-side JavaScript means your files are not sent to our backend — a strong, meaningful protection, though no tool can guarantee absolute security, and browser extensions or a compromised device can still pose risks.</p>
         </div>
     </div>
 </section>
-    </div> <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
+    <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions (FAQ)</h3>
         <div class="space-y-6 text-sm">
             <div>
                 <h4 class="text-blue-400 font-bold">How does AiFileStudio protect my privacy?</h4>
-                <p>Unlike other online converters, we process all files locally in your browser. Your data never touches a server, making it 100% secure from data breaches.</p>
+                <p>Unlike many online converters, most of our tools process files locally in your browser rather than uploading them to a server, which removes an entire category of server-side data-breach risk. (The AI Art tool is the exception — it sends your text prompt to a third-party service.)</p>
             </div>
             <div>
                 <h4 class="text-blue-400 font-bold">Is there a file size limit?</h4>
@@ -546,22 +528,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

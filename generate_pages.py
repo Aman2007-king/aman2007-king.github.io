@@ -8,6 +8,7 @@ LIB_SNIPPETS = {
     "tesseract": '<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>',
     "qrcode": '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>',
     "jszip": '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>',
+    "html2canvas": '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>',
 }
 
 TOOLS = [
@@ -103,6 +104,97 @@ TOOLS = [
         faq=[
             ("What image formats can I convert to PDF?", "JPG/JPEG works best; most common image formats your browser can display will also work."),
             ("Can I reorder images after selecting them?", "Currently images are placed in the order your file picker returns them (usually the order you selected/highlighted them in). Re-select files in your desired order if needed."),
+        ],
+    ),
+    dict(
+        mode="deletepages", slug="delete-pdf-pages", nav="Delete Pages",
+        title="Delete PDF Pages", subtitle="Remove specific pages from a PDF.",
+        input_label="Page numbers to delete", input_placeholder="e.g. 2, 4, 7",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        about_heading="Free Tool to Delete PDF Pages",
+        about_html="""<p>Remove one or more pages from a PDF without touching the rest of the document. Enter the page numbers you want gone (comma-separated, e.g. <code class="text-blue-400">2, 4, 7</code>) and AiFileStudio builds a new copy of the PDF with just those pages removed — all processed locally using <code class="text-blue-400">pdf-lib</code>, so the file never leaves your device.</p>
+        <p>Useful for stripping a blank scanned page, a duplicate, or an outdated cover sheet out of a longer document without re-assembling the whole thing.</p>""",
+        faq=[
+            ("Can I delete every page?", "No — at least one page has to remain, otherwise you'd end up with an empty PDF."),
+            ("Does this change the page numbering of the remaining pages?", "The remaining pages shift up to fill the gap (e.g. deleting page 2 makes the old page 3 the new page 2), but their content is otherwise untouched."),
+        ],
+    ),
+    dict(
+        mode="extractpages", slug="extract-pdf-pages", nav="Extract Pages",
+        title="Extract PDF Pages", subtitle="Save specific pages as separate PDF files.",
+        input_label="Pages to extract (range or list)", input_placeholder="e.g. 2-5 or 1, 3, 5",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib", "jszip"],
+        about_heading="Free Tool to Extract PDF Pages",
+        about_html="""<p>Pull pages out of a PDF and save <strong>each one as its own separate PDF file</strong>, delivered together in a ZIP. Enter a range (e.g. <code class="text-blue-400">2-5</code>) or a comma-separated list (e.g. <code class="text-blue-400">1, 3, 5</code>), and AiFileStudio creates one standalone PDF per page you selected.</p>
+        <p>This is different from <a href="/split-pdf/" class="text-blue-500 underline">Split PDF</a>, which combines your selected pages into a single new document — use Extract Pages when you need each page as its own individual file instead.</p>""",
+        faq=[
+            ("How is this different from Split PDF?", "Split PDF combines the pages you choose into one new document. Extract Pages gives you each selected page as its own separate PDF file, bundled in a ZIP."),
+            ("Can I use a range and a list together?", "Currently you use one format per run — either a range like 2-5, or a comma list like 1, 3, 5."),
+        ],
+    ),
+    dict(
+        mode="reorder", slug="reorder-pdf-pages", nav="Reorder Pages",
+        title="Reorder PDF Pages", subtitle="Rearrange the page order of a PDF.",
+        input_label="New page order", input_placeholder="e.g. 3, 1, 2",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        about_heading="Free Tool to Reorder PDF Pages",
+        about_html="""<p>Rearrange the pages of a PDF into a new order — handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a document. Enter every page number in the order you want them, separated by commas (e.g. <code class="text-blue-400">3, 1, 2</code> for a 3-page document).</p>
+        <p>Every original page number must appear exactly once — AiFileStudio checks this and tells you the expected count if something's off, before building the reordered PDF locally in your browser.</p>""",
+        faq=[
+            ("What if I only want to move one page?", "You still need to list every page number, in the full new order — e.g. for a 5-page PDF, moving page 5 to the front is 5, 1, 2, 3, 4."),
+            ("What happens if I leave out a page number?", "You'll get an error telling you how many pages the PDF has — every page must be included exactly once."),
+        ],
+    ),
+    dict(
+        mode="pagenumbers", slug="add-page-numbers", nav="Page Numbers",
+        title="Add Page Numbers to PDF", subtitle="Stamp sequential page numbers onto every page.",
+        input_label="", input_placeholder="",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=False, libs=["pdf-lib"],
+        about_heading="Free Tool to Add Page Numbers to a PDF",
+        about_html="""<p>Stamp a page number at the bottom-center of every page in a PDF — useful before printing or submitting a long document. Numbering starts at 1 and runs through the full document, processed locally with <code class="text-blue-400">pdf-lib</code>.</p>
+        <p>The numbers are added as a new text layer on top of your existing content, so the rest of the page is untouched.</p>""",
+        faq=[
+            ("Can I choose where the page numbers appear?", "Currently they're placed bottom-center on every page. Custom position/style options may be added later."),
+            ("Can I start numbering from something other than 1?", "Not yet — numbering currently always starts at 1 on the first page."),
+        ],
+    ),
+    dict(
+        mode="watermark", slug="watermark-pdf", nav="Watermark",
+        title="Watermark PDF", subtitle="Stamp text diagonally across every page.",
+        input_label="Watermark text", input_placeholder="e.g. CONFIDENTIAL or DRAFT",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        about_heading="Free PDF Watermark Tool",
+        about_html="""<p>Stamp a semi-transparent diagonal text watermark — like "CONFIDENTIAL," "DRAFT," or your company name — across every page of a PDF. Processing happens locally using <code class="text-blue-400">pdf-lib</code>, so the document isn't uploaded anywhere to add the watermark.</p>
+        <p>Useful for marking draft versions of a document before final review, or labeling copies shared for a specific limited purpose.</p>""",
+        faq=[
+            ("Can I change the watermark's color or size?", "Not yet through the interface — the watermark currently renders as gray, semi-transparent, 45-degree text sized to fit the page."),
+            ("Does the watermark cover up my content?", "It's rendered at reduced opacity specifically so the underlying content stays legible underneath."),
+        ],
+    ),
+    dict(
+        mode="txt2pdf", slug="txt-to-pdf", nav="TXT to PDF",
+        title="TXT to PDF Converter", subtitle="Turn plain text into a downloadable PDF.",
+        input_label="Paste your text", input_placeholder="Paste or type your text here...",
+        accept="", multiple=False, needs_file=False, needs_text=True, libs=["jspdf"],
+        about_heading="Free TXT to PDF Converter",
+        about_html="""<p>Paste in plain text and get back a formatted, downloadable PDF — no file upload needed, since you're typing or pasting the text directly. Text wraps automatically to fit the page width using <code class="text-blue-400">jsPDF</code>, running entirely in your browser.</p>
+        <p>Handy for quickly turning notes, a draft, or copied text into a shareable PDF without opening a full word processor.</p>""",
+        faq=[
+            ("Does this preserve text formatting like bold or bullet points?", "No — this converts plain text only. Rich formatting (bold, headings, images) isn't supported; try HTML to PDF if you need that."),
+            ("Is there a length limit?", "No hard limit — very long text will simply flow across multiple pages."),
+        ],
+    ),
+    dict(
+        mode="html2pdf", slug="html-to-pdf", nav="HTML to PDF",
+        title="HTML to PDF Converter", subtitle="Render HTML markup into a downloadable PDF.",
+        input_label="Paste your HTML", input_placeholder="<h1>Hello</h1><p>Some content...</p>",
+        accept="", multiple=False, needs_file=False, needs_text=True, libs=["jspdf", "html2canvas"],
+        about_heading="Free HTML to PDF Converter",
+        about_html="""<p>Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using <code class="text-blue-400">html2canvas</code> and <code class="text-blue-400">jsPDF</code>. Basic tags (headings, paragraphs, lists, inline styles) render as they would in a browser.</p>
+        <p>Note that because this renders through an image capture, the output is a picture of your HTML rather than selectable/searchable PDF text — good for quick visual snapshots, not ideal for long text-heavy documents (use TXT to PDF for that instead).</p>""",
+        faq=[
+            ("Will external CSS or JavaScript in my HTML work?", "External stylesheets and scripts generally won't load in this sandboxed render — stick to inline styles for reliable results."),
+            ("Is the resulting PDF text searchable?", "No — since it's rendered as a captured image, the text in the PDF isn't selectable or searchable. For real text-based PDFs, use TXT to PDF instead."),
         ],
     ),
     dict(
@@ -308,9 +400,12 @@ ICON = {
     "ai": "fa-magic", "resize": "fa-expand", "convert": "fa-sync",
     "merge": "fa-layer-group", "split": "fa-scissors", "rotate": "fa-redo",
     "pdf": "fa-images", "ocr": "fa-font", "pass": "fa-key", "qr": "fa-qrcode",
+    "deletepages": "fa-trash", "extractpages": "fa-file-export", "reorder": "fa-sort",
+    "pagenumbers": "fa-list-ol", "watermark": "fa-stamp", "txt2pdf": "fa-file-lines",
+    "html2pdf": "fa-code",
 }
 
-os.makedirs("/home/claude/site", exist_ok=True)
+os.makedirs(os.path.dirname(os.path.abspath(__file__)), exist_ok=True)
 
 import re as _re
 
@@ -342,7 +437,7 @@ for t in TOOLS:
         mode=t["mode"],
         tool_libs=tool_libs,
     )
-    outdir = f'/home/claude/site/{t["slug"]}'
+    outdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), t["slug"])
     os.makedirs(outdir, exist_ok=True)
     with open(f"{outdir}/index.html", "w", encoding="utf-8") as f:
         f.write(page)

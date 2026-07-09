@@ -6,17 +6,24 @@ const TOOLS = [
     { group: 'Creative', id: 'ai',      name: 'AI Art',        icon: 'fa-magic',       url: '/ai-image-generator/' },
     { group: 'Creative', id: 'resize',  name: 'Resize Image',  icon: 'fa-expand',      url: '/resize-image/' },
     { group: 'Creative', id: 'convert', name: 'JPG to PNG',    icon: 'fa-sync',        url: '/jpg-to-png/' },
-    { group: 'PDF Toolkit', id: 'merge',  name: 'Merge PDF',   icon: 'fa-layer-group', url: '/merge-pdf/' },
-    { group: 'PDF Toolkit', id: 'split',  name: 'Split PDF',   icon: 'fa-scissors',    url: '/split-pdf/' },
-    { group: 'PDF Toolkit', id: 'rotate', name: 'Rotate PDF',  icon: 'fa-redo',        url: '/rotate-pdf/' },
-    { group: 'PDF Toolkit', id: 'pdf',    name: 'JPG to PDF',  icon: 'fa-images',      url: '/jpg-to-pdf/' },
+    { group: 'PDF Toolkit', id: 'merge',        name: 'Merge PDF',      icon: 'fa-layer-group', url: '/merge-pdf/' },
+    { group: 'PDF Toolkit', id: 'split',        name: 'Split PDF',      icon: 'fa-scissors',    url: '/split-pdf/' },
+    { group: 'PDF Toolkit', id: 'rotate',       name: 'Rotate PDF',     icon: 'fa-redo',        url: '/rotate-pdf/' },
+    { group: 'PDF Toolkit', id: 'pdf',          name: 'JPG to PDF',     icon: 'fa-images',      url: '/jpg-to-pdf/' },
+    { group: 'PDF Toolkit', id: 'deletepages',  name: 'Delete Pages',   icon: 'fa-trash',       url: '/delete-pdf-pages/' },
+    { group: 'PDF Toolkit', id: 'extractpages', name: 'Extract Pages',  icon: 'fa-file-export', url: '/extract-pdf-pages/' },
+    { group: 'PDF Toolkit', id: 'reorder',      name: 'Reorder Pages',  icon: 'fa-sort',        url: '/reorder-pdf-pages/' },
+    { group: 'PDF Toolkit', id: 'pagenumbers',  name: 'Page Numbers',   icon: 'fa-list-ol',     url: '/add-page-numbers/' },
+    { group: 'PDF Toolkit', id: 'watermark',    name: 'Watermark PDF',  icon: 'fa-stamp',       url: '/watermark-pdf/' },
+    { group: 'Convert', id: 'txt2pdf',  name: 'TXT to PDF',    icon: 'fa-file-lines',  url: '/txt-to-pdf/' },
+    { group: 'Convert', id: 'html2pdf', name: 'HTML to PDF',   icon: 'fa-code',        url: '/html-to-pdf/' },
     { group: 'Utils', id: 'ocr',  name: 'OCR Text',     icon: 'fa-font',   url: '/image-to-text-ocr/' },
     { group: 'Utils', id: 'pass', name: 'Key Gen',      icon: 'fa-key',    url: '/password-generator/' },
     { group: 'Utils', id: 'qr',   name: 'QR Studio',    icon: 'fa-qrcode', url: '/qr-code-generator/' }
 ];
 
 function renderSidebar(activeId) {
-    const groups = ['Creative', 'PDF Toolkit', 'Utils'];
+    const groups = ['Creative', 'PDF Toolkit', 'Convert', 'Utils'];
     let navHtml = '';
     groups.forEach(g => {
         navHtml += `<p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">${g}</p>`;
@@ -195,8 +202,8 @@ function setupToolUI(mode) {
     if (standardInputsEl) standardInputsEl.classList.toggle('hidden', mode === 'pass');
     if (enhancementEl) enhancementEl.classList.toggle('hidden', !enhancementModes.includes(mode));
 
-    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr'];
-    const noFileInput = ['ai', 'pass', 'qr'];
+    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers'];
+    const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf'];
     if (textFieldWrap) textFieldWrap.classList.toggle('hidden', noTextInput.includes(mode));
     if (fileFieldWrap) fileFieldWrap.classList.toggle('hidden', noFileInput.includes(mode));
 }
@@ -307,6 +314,107 @@ async function processTask() {
             window.crypto.getRandomValues(v);
             for (let i = 0; i < v.length; i++) pass += char[v[i] % char.length];
             document.getElementById('pass-display-box').innerText = pass;
+        }
+        else if (mode === 'deletepages') {
+            if (!files[0] || !input) throw "Upload a PDF and enter the page numbers to delete (e.g., 2, 4, 7).";
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const totalPages = doc.getPageCount();
+            const toDelete = input.split(',')
+                .map(n => parseInt(n.trim()) - 1)
+                .filter(n => n >= 0 && n < totalPages)
+                .sort((a, b) => b - a);
+            if (toDelete.length === 0) throw "Invalid page numbers.";
+            if (toDelete.length >= totalPages) throw "You can't delete every page.";
+            toDelete.forEach(idx => doc.removePage(idx));
+            downloadFile(await doc.save(), "pages_deleted.pdf", "application/pdf");
+            preview.innerHTML = "✓ Pages removed";
+        }
+        else if (mode === 'extractpages') {
+            if (!files[0] || !input) throw "Upload a PDF and enter a page range (e.g., 2-5) or list (e.g., 1, 3, 5).";
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const totalPages = doc.getPageCount();
+            const rangeMatch = input.match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
+            let indices = [];
+            if (rangeMatch) {
+                const start = parseInt(rangeMatch[1]) - 1, end = parseInt(rangeMatch[2]) - 1;
+                for (let i = Math.min(start, end); i <= Math.max(start, end); i++) if (i >= 0 && i < totalPages) indices.push(i);
+            } else {
+                indices = input.split(',').map(n => parseInt(n.trim()) - 1).filter(n => n >= 0 && n < totalPages);
+            }
+            if (indices.length === 0) throw "Invalid page range.";
+            const zip = new JSZip();
+            for (const idx of indices) {
+                const single = await PDFLib.PDFDocument.create();
+                const [copied] = await single.copyPages(doc, [idx]);
+                single.addPage(copied);
+                zip.file(`page_${idx + 1}.pdf`, await single.save());
+            }
+            const content = await zip.generateAsync({ type: "blob" });
+            const url = URL.createObjectURL(content);
+            preview.innerHTML = `<p class='text-xs mb-4'>Extracted ${indices.length} page(s) as separate PDF files</p><a href="${url}" download="extracted_pages.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
+        }
+        else if (mode === 'reorder') {
+            if (!files[0] || !input) throw "Upload a PDF and enter the new page order (e.g., 3, 1, 2).";
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const totalPages = doc.getPageCount();
+            const order = input.split(',').map(n => parseInt(n.trim()) - 1);
+            const validSet = new Set(order);
+            if (order.length !== totalPages || order.some(n => n < 0 || n >= totalPages) || validSet.size !== totalPages) {
+                throw `This PDF has ${totalPages} pages — enter all ${totalPages} page numbers, each exactly once (e.g., ${Array.from({ length: totalPages }, (_, i) => i + 1).join(', ')}).`;
+            }
+            const newDoc = await PDFLib.PDFDocument.create();
+            const pages = await newDoc.copyPages(doc, order);
+            pages.forEach(p => newDoc.addPage(p));
+            downloadFile(await newDoc.save(), "reordered.pdf", "application/pdf");
+            preview.innerHTML = "✓ Reordered";
+        }
+        else if (mode === 'pagenumbers') {
+            if (!files[0]) throw "Upload a PDF.";
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+            doc.getPages().forEach((p, i) => {
+                const { width } = p.getSize();
+                p.drawText(`${i + 1}`, { x: width / 2 - 5, y: 20, size: 10, font, color: PDFLib.rgb(0.4, 0.4, 0.4) });
+            });
+            downloadFile(await doc.save(), "numbered.pdf", "application/pdf");
+            preview.innerHTML = "✓ Page numbers added";
+        }
+        else if (mode === 'watermark') {
+            if (!files[0] || !input) throw "Upload a PDF and enter watermark text.";
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const font = await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+            doc.getPages().forEach(p => {
+                const { width, height } = p.getSize();
+                p.drawText(input, {
+                    x: width / 2 - (input.length * 7), y: height / 2, size: 40, font,
+                    color: PDFLib.rgb(0.6, 0.6, 0.6), opacity: 0.3, rotate: PDFLib.degrees(45)
+                });
+            });
+            downloadFile(await doc.save(), "watermarked.pdf", "application/pdf");
+            preview.innerHTML = "✓ Watermark added";
+        }
+        else if (mode === 'txt2pdf') {
+            if (!input) throw "Paste some text first.";
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            const lines = doc.splitTextToSize(input, 180);
+            doc.text(lines, 10, 10);
+            doc.save("document.pdf");
+            preview.innerHTML = "✓ Downloaded";
+        }
+        else if (mode === 'html2pdf') {
+            if (!input) throw "Paste some HTML first.";
+            const wrap = document.createElement('div');
+            wrap.style.cssText = "position:fixed; left:-9999px; top:0; width:800px; background:#fff; color:#000; padding:20px;";
+            wrap.innerHTML = input;
+            document.body.appendChild(wrap);
+            const canvas = await html2canvas(wrap, { backgroundColor: '#ffffff' });
+            document.body.removeChild(wrap);
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const imgHeight = canvas.height * pageWidth / canvas.width;
+            doc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageWidth, imgHeight);
+            doc.save("webpage.pdf");
+            preview.innerHTML = "✓ Downloaded";
         }
         else if (mode === 'qr') {
             if (!input) throw "Enter text or a URL to encode.";

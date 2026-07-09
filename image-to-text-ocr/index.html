@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Extract editable text from a photo or scanned image using Tesseract.js, an open-source OCR (Optical Character Recognition) engine that runs directly in...">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://aman2007-king.github.io/image-to-text-ocr/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OCR: Image to Text | AiFileStudio.PRO">
+    <meta name="twitter:description" content="Extract editable text from a photo or scanned image using Tesseract.js, an open-source OCR (Optical Character Recognition) engine that runs directly in...">
+    <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
+    <meta property="og:title" content="OCR: Image to Text | AiFileStudio.PRO">
+    <meta property="og:description" content="Extract editable text from a photo or scanned image using Tesseract.js, an open-source OCR (Optical Character Recognition) engine that runs directly in...">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aman2007-king.github.io/image-to-text-ocr/">
+    <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
+    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
+    <title>OCR: Image to Text | AiFileStudio.PRO</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6H0T540P06');
+    </script>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
+    <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+    <div>
+        <a href="/" style="text-decoration:none;"><h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1></a>
+        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
+    </div>
+</div>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="mobile-header" id="mobile-header-slot"></div>
+
+<aside id="main-sidebar"></aside>
+
+<main onclick="closeSidebarMobile()">
+    <div class="mb-8">
+        <nav class="text-xs text-gray-600 mb-3"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">OCR: Image to Text</span></nav>
+        <h2 class="text-3xl font-bold">OCR: Image to Text</h2>
+        <p class="text-gray-500 text-sm">Extract text from images or scanned pages.</p>
+    </div>
+
+    <div class="cyber-card">
+        <div id="standard-inputs">
+            <div id="text-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3"></label>
+                <textarea id="main-input" placeholder="" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
+            </div>
+
+            <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                        <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                        <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-binarize"> B&W Mode (Scan)
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-upscale"> Super-Res
+                    </label>
+                </div>
+            </div>
+
+            <div id="file-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
+                <input type="file" id="main-file"  accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
+            </div>
+        </div>
+
+        <div id="password-ui" class="hidden text-center">
+            <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
+            <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
+        </div>
+
+        <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
+    </div>
+
+    <div id="result-card" class="cyber-card mt-8 hidden text-center">
+        <div id="loader-box" class="flex flex-col items-center py-10">
+            <div class="loader mb-4"></div>
+            <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
+        </div>
+        <div id="preview-area" class="flex flex-col items-center w-full"></div>
+    </div>
+
+    <section class="mt-16 border-t border-gray-900 pt-10">
+        <h2 class="text-2xl font-bold text-blue-500 mb-6">Free OCR Tool — Image to Text</h2>
+        <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
+            <p>Extract editable text from a photo or scanned image using <strong>Tesseract.js</strong>, an open-source OCR (Optical Character Recognition) engine that runs directly in your browser. Upload an image, and AiFileStudio scans it and returns the text it finds in an editable box you can copy from.</p>
+        <p>For scanned documents with low contrast or a slight skew, try the <strong>Document Enhancement</strong> sliders (brightness, contrast, and B&W scan mode) before running OCR — cleaner input generally produces more accurate text extraction.</p>
+        </div>
+    </section>
+
+    <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
+        <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
+        <div class="space-y-6 text-sm">
+            <div><h4 class="text-blue-400 font-bold">How accurate is the OCR?</h4><p>Accuracy depends heavily on image quality — clear, well-lit, high-contrast text recognizes best. Blurry, low-resolution, or heavily stylized text will produce more errors.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Does OCR work on handwriting?</h4><p>Tesseract.js is optimized for printed text; handwriting recognition is unreliable and not recommended.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Is my image uploaded to a server for OCR?</h4><p>No — Tesseract.js runs the recognition model entirely in your browser.</p></div>
+        </div>
+    </section>
+
+    <section class="mt-12">
+        <h3 class="text-lg font-bold text-white mb-4">More Tools</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <a href="/ai-image-generator/" class="tool-card text-center text-xs"><i class="fas fa-magic text-blue-500 text-lg mb-2 block"></i>AI Art</a>
+            <a href="/resize-image/" class="tool-card text-center text-xs"><i class="fas fa-expand text-blue-500 text-lg mb-2 block"></i>Resize Image</a>
+            <a href="/jpg-to-png/" class="tool-card text-center text-xs"><i class="fas fa-sync text-blue-500 text-lg mb-2 block"></i>JPG to PNG</a>
+            <a href="/merge-pdf/" class="tool-card text-center text-xs"><i class="fas fa-layer-group text-blue-500 text-lg mb-2 block"></i>Merge PDF</a>
+            <a href="/split-pdf/" class="tool-card text-center text-xs"><i class="fas fa-scissors text-blue-500 text-lg mb-2 block"></i>Split PDF</a>
+            <a href="/rotate-pdf/" class="tool-card text-center text-xs"><i class="fas fa-redo text-blue-500 text-lg mb-2 block"></i>Rotate PDF</a>
+            <a href="/jpg-to-pdf/" class="tool-card text-center text-xs"><i class="fas fa-images text-blue-500 text-lg mb-2 block"></i>JPG to PDF</a>
+            <a href="/password-generator/" class="tool-card text-center text-xs"><i class="fas fa-key text-blue-500 text-lg mb-2 block"></i>Key Gen</a>
+            <a href="/qr-code-generator/" class="tool-card text-center text-xs"><i class="fas fa-qrcode text-blue-500 text-lg mb-2 block"></i>QR Studio</a>
+        </div>
+    </section>
+
+    <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">© 2026 AiFileStudio.pro</footer>
+</main>
+
+<div id="shared-widgets-slot"></div>
+
+<script>const TOOL_MODE = 'ocr';</script>
+<script src="/assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+import os
+
+SITE = "https://aman2007-king.github.io"
+
+LIB_SNIPPETS = {
+    "pdf-lib": '<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>',
+    "jspdf": '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>',
+    "tesseract": '<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>',
+    "qrcode": '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>',
+    "jszip": '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>',
+}
+
+TOOLS = [
+    dict(
+        mode="ai", slug="ai-image-generator", nav="AI Art",
+        title="AI Image Generator", subtitle="Create images from text descriptions.",
+        input_label="Describe the image you want", input_placeholder="e.g. a lighthouse at sunset, oil painting style",
+        accept="", multiple=False, needs_file=False, needs_text=True, libs=[],
+        about_heading="Free AI Image Generator",
+        about_html="""<p>Type a description and generate an image in seconds. This tool sends your text prompt to <strong>Pollinations AI</strong>, a third-party image-generation service, to produce the artwork — this is the one AiFileStudio tool that isn't fully local, so avoid entering private or sensitive text into the prompt.</p>
+        <p>Useful for mockups, social media graphics, blog headers, or just experimenting with an idea before commissioning real artwork. Generated images are yours to download and use; results vary in quality depending on how descriptive your prompt is — try including a style (e.g. "watercolor," "3D render," "cinematic") for more consistent results.</p>""",
+        faq=[
+            ("Is my prompt private?", "No — unlike our other tools, the AI Art generator sends your text prompt to Pollinations AI to create the image. Don't include confidential information in your prompt."),
+            ("Can I use the generated images commercially?", "Generated images are yours to download. Review Pollinations AI's own terms if you plan to use images commercially, since the model's training data and licensing are outside our control."),
+            ("Why did my image not match my prompt?", "AI image generation is probabilistic — more descriptive prompts (subject, style, lighting, mood) generally produce more consistent, on-target results."),
+        ],
+    ),
+    dict(
+        mode="resize", slug="resize-image", nav="Resize Image",
+        title="Image Resizer", subtitle="Resize images locally, with optional scan enhancement.",
+        input_label="Target width in pixels", input_placeholder="e.g. 800",
+        accept="image/*", multiple=True, needs_file=True, needs_text=True, libs=["jszip"],
+        about_heading="Free Local Image Resizer",
+        about_html="""<p>Resize one or many images at once, entirely in your browser — nothing is uploaded to a server. Enter the target width in pixels and the height scales proportionally to preserve the image's aspect ratio.</p>
+        <p>For scanned documents, the optional <strong>Document Enhancement</strong> panel lets you adjust brightness and contrast, apply a black-and-white "scan mode," and enable a light sharpening pass, so a resized photo of a page reads more clearly. Upload more than one image and AiFileStudio will batch-process them and hand you back a single ZIP file.</p>""",
+        faq=[
+            ("Does resizing upload my images anywhere?", "No. Resizing happens entirely on your device using the HTML5 canvas API — your images never leave your browser."),
+            ("What's the maximum number of images I can resize at once?", "There's no hard-coded limit; it depends on your device's memory. A handful to a few dozen images at a time works comfortably on most modern browsers."),
+            ("What does 'B&W Mode (Scan)' do?", "It converts each pixel to pure black or white based on brightness, which can make scanned text documents look cleaner and more print-like."),
+        ],
+    ),
+    dict(
+        mode="convert", slug="jpg-to-png", nav="JPG to PNG",
+        title="JPG to PNG Converter", subtitle="Convert JPG images to PNG format, locally.",
+        input_label="", input_placeholder="",
+        accept="image/jpeg", multiple=False, needs_file=True, needs_text=False, libs=[],
+        about_heading="Free JPG to PNG Converter",
+        about_html="""<p>Convert a JPG (or JPEG) photo into a PNG file directly in your browser — no upload, no waiting on a server queue. PNG is a lossless format, so it's often preferred for logos, screenshots, and graphics that need transparency or sharp edges, while JPG is better for photographs where smaller file size matters more than pixel-perfect detail.</p>
+        <p>This conversion happens instantly using the browser's built-in canvas rendering, then hands you a download link for the resulting PNG file.</p>""",
+        faq=[
+            ("Will converting to PNG add transparency to my JPG?", "No — JPG files don't store transparency information, so the converted PNG will have the same solid background as the original photo."),
+            ("Does PNG conversion reduce image quality?", "No, PNG is lossless, so no additional compression artifacts are introduced during conversion. The resulting file will typically be larger than the original JPG."),
+        ],
+    ),
+    dict(
+        mode="merge", slug="merge-pdf", nav="Merge PDF",
+        title="Merge PDF", subtitle="Combine multiple PDF files into one.",
+        input_label="", input_placeholder="",
+        accept="application/pdf", multiple=True, needs_file=True, needs_text=False, libs=["pdf-lib"],
+        about_heading="Free PDF Merger — Combine PDFs Locally",
+        about_html="""<p>Select two or more PDF files and AiFileStudio will combine them into a single document, in the order you selected them. All of the merging happens locally using the <code class="text-blue-400">pdf-lib</code> library — your files are never uploaded to a server, which matters if you're combining contracts, statements, or other sensitive paperwork.</p>
+        <p>The merged file preserves each source PDF's pages exactly as they were, appended one after another. Once merging is complete, the combined PDF downloads straight to your device.</p>""",
+        faq=[
+            ("Is there a limit on how many PDFs I can merge?", "No fixed limit, though very large files are bounded by your device's available memory since everything happens in-browser."),
+            ("Does merging affect the quality or formatting of my PDFs?", "No — pages are copied as-is from each source file, so formatting, fonts, and images stay exactly the same."),
+            ("Are my PDFs uploaded to a server?", "No. Merging is done entirely client-side; your files stay on your device throughout."),
+        ],
+    ),
+    dict(
+        mode="split", slug="split-pdf", nav="Split PDF",
+        title="Split PDF", subtitle="Extract specific pages from a PDF.",
+        input_label="Page numbers to extract", input_placeholder="e.g. 1, 3, 5",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        about_heading="Free PDF Splitter — Extract Pages Locally",
+        about_html="""<p>Pull specific pages out of a PDF and save them as a new, smaller document — for example, extracting just the signature page from a long contract, or pulling out one chapter from a report. Enter the page numbers you want (comma-separated, e.g. <code class="text-blue-400">1, 3, 5</code>) and AiFileStudio builds a new PDF containing just those pages, in your browser.</p>
+        <p>Nothing is uploaded to a server — the original PDF and the extracted pages both stay on your device.</p>""",
+        faq=[
+            ("Can I extract a range of pages, like 1 to 5?", "Currently you list individual page numbers separated by commas (e.g. 1, 2, 3, 4, 5). Range syntax (like 1-5) isn't supported yet."),
+            ("What happens if I enter a page number that doesn't exist?", "Invalid page numbers are automatically skipped; if none of the numbers you entered are valid, you'll get an error message instead of an empty file."),
+        ],
+    ),
+    dict(
+        mode="rotate", slug="rotate-pdf", nav="Rotate PDF",
+        title="Rotate PDF", subtitle="Rotate every page in a PDF by 90°.",
+        input_label="", input_placeholder="",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=False, libs=["pdf-lib"],
+        about_heading="Free PDF Rotator",
+        about_html="""<p>Fix a PDF that was scanned sideways or upside down. Upload the file and AiFileStudio rotates every page by 90 degrees, then hands you back the corrected document — all processed locally in your browser, so the file never touches a server.</p>
+        <p>Run the tool again on the result if you need to rotate a full 180 degrees or 270 degrees.</p>""",
+        faq=[
+            ("Can I rotate just one page instead of the whole document?", "Not currently — this tool rotates every page in the PDF by the same amount. Per-page rotation may be added in a future update."),
+            ("Can I rotate in the other direction?", "Running the tool repeatedly rotates 90° further each time, so three passes gets you a 270° rotation, which is equivalent to a single 90° turn the other way."),
+        ],
+    ),
+    dict(
+        mode="pdf", slug="jpg-to-pdf", nav="JPG to PDF",
+        title="JPG to PDF Converter", subtitle="Convert images into a single PDF document.",
+        input_label="", input_placeholder="",
+        accept="image/*", multiple=True, needs_file=True, needs_text=False, libs=["jspdf"],
+        about_heading="Free JPG to PDF Converter",
+        about_html="""<p>Turn one or more photos or scanned images into a single PDF document — handy for submitting scanned forms, assembling a photo packet, or archiving receipts. Select your images in the order you want them to appear, and AiFileStudio places each one on its own page.</p>
+        <p>Conversion happens locally using the <code class="text-blue-400">jsPDF</code> library, so your images aren't uploaded anywhere before becoming a PDF.</p>""",
+        faq=[
+            ("What image formats can I convert to PDF?", "JPG/JPEG works best; most common image formats your browser can display will also work."),
+            ("Can I reorder images after selecting them?", "Currently images are placed in the order your file picker returns them (usually the order you selected/highlighted them in). Re-select files in your desired order if needed."),
+        ],
+    ),
+    dict(
+        mode="ocr", slug="image-to-text-ocr", nav="OCR Text",
+        title="OCR: Image to Text", subtitle="Extract text from images or scanned pages.",
+        input_label="", input_placeholder="",
+        accept="image/*", multiple=False, needs_file=True, needs_text=False, libs=["tesseract"],
+        about_heading="Free OCR Tool — Image to Text",
+        about_html="""<p>Extract editable text from a photo or scanned image using <strong>Tesseract.js</strong>, an open-source OCR (Optical Character Recognition) engine that runs directly in your browser. Upload an image, and AiFileStudio scans it and returns the text it finds in an editable box you can copy from.</p>
+        <p>For scanned documents with low contrast or a slight skew, try the <strong>Document Enhancement</strong> sliders (brightness, contrast, and B&W scan mode) before running OCR — cleaner input generally produces more accurate text extraction.</p>""",
+        faq=[
+            ("How accurate is the OCR?", "Accuracy depends heavily on image quality — clear, well-lit, high-contrast text recognizes best. Blurry, low-resolution, or heavily stylized text will produce more errors."),
+            ("Does OCR work on handwriting?", "Tesseract.js is optimized for printed text; handwriting recognition is unreliable and not recommended."),
+            ("Is my image uploaded to a server for OCR?", "No — Tesseract.js runs the recognition model entirely in your browser."),
+        ],
+    ),
+    dict(
+        mode="pass", slug="password-generator", nav="Key Gen",
+        title="Password Generator", subtitle="Generate strong, random passwords locally.",
+        input_label="", input_placeholder="",
+        accept="", multiple=False, needs_file=False, needs_text=False, libs=[],
+        about_heading="Free Secure Password Generator",
+        about_html="""<p>Generate a strong, random password using your browser's built-in cryptographically secure random number generator (<code class="text-blue-400">window.crypto.getRandomValues</code>) — not a predictable pseudo-random function. Nothing is sent anywhere; the password is generated and displayed entirely on your device.</p>
+        <p>Use the slider to choose a length between 8 and 64 characters. Passwords include upper and lowercase letters, numbers, and symbols, and deliberately exclude visually ambiguous characters (like <code class="text-blue-400">0</code>/<code class="text-blue-400">O</code> or <code class="text-blue-400">l</code>/<code class="text-blue-400">1</code>) to reduce transcription errors.</p>""",
+        faq=[
+            ("Is this password generator actually secure?", "Yes — it uses the Web Crypto API's cryptographically secure random values, generated locally. The password is never transmitted anywhere."),
+            ("How long should my password be?", "Longer is generally better; 16+ characters is a reasonable default for most accounts, and use a unique password per site along with a password manager."),
+        ],
+    ),
+    dict(
+        mode="qr", slug="qr-code-generator", nav="QR Studio",
+        title="QR Code Generator", subtitle="Turn a link or text into a QR code.",
+        input_label="Text or URL to encode", input_placeholder="e.g. https://example.com",
+        accept="", multiple=False, needs_file=False, needs_text=True, libs=["qrcode"],
+        about_heading="Free QR Code Generator",
+        about_html="""<p>Turn any link or short text into a scannable QR code, generated instantly in your browser. Useful for business cards, printed flyers, Wi-Fi sharing, or linking a physical object to a webpage.</p>
+        <p>The QR code is rendered locally using the QRCode.js library — the text you enter isn't sent to a server to generate the code.</p>""",
+        faq=[
+            ("Can I download the QR code as an image?", "Right-click (or long-press on mobile) the generated QR code and choose 'Save image' to download it."),
+            ("Is there a character limit for what I can encode?", "QR codes can technically hold a few thousand characters, but shorter text and URLs produce simpler, more reliably scannable codes."),
+        ],
+    ),
+]
+
+TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{meta_desc}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{canonical}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{title} | AiFileStudio.PRO">
+    <meta name="twitter:description" content="{meta_desc}">
+    <meta name="twitter:image" content="{site}/ag-image.png">
+    <meta property="og:title" content="{title} | AiFileStudio.PRO">
+    <meta property="og:description" content="{meta_desc}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{canonical}">
+    <meta property="og:image" content="{site}/ag-image.png">
+    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
+    <title>{title} | AiFileStudio.PRO</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', 'G-6H0T540P06');
+    </script>
+    <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
+    new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    }})(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/style.css">
+    {tool_libs}
+</head>
+<body>
+<div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
+    <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+    <div>
+        <a href="/" style="text-decoration:none;"><h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1></a>
+        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
+    </div>
+</div>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="mobile-header" id="mobile-header-slot"></div>
+
+<aside id="main-sidebar"></aside>
+
+<main onclick="closeSidebarMobile()">
+    <div class="mb-8">
+        <nav class="text-xs text-gray-600 mb-3"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">{title}</span></nav>
+        <h2 class="text-3xl font-bold">{title}</h2>
+        <p class="text-gray-500 text-sm">{subtitle}</p>
+    </div>
+
+    <div class="cyber-card">
+        <div id="standard-inputs">
+            <div id="text-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">{input_label}</label>
+                <textarea id="main-input" placeholder="{input_placeholder}" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
+            </div>
+
+            <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                        <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                        <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-binarize"> B&W Mode (Scan)
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-upscale"> Super-Res
+                    </label>
+                </div>
+            </div>
+
+            <div id="file-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
+                <input type="file" id="main-file" {multiple_attr} accept="{accept}" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
+            </div>
+        </div>
+
+        <div id="password-ui" class="hidden text-center">
+            <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
+            <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
+        </div>
+
+        <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
+    </div>
+
+    <div id="result-card" class="cyber-card mt-8 hidden text-center">
+        <div id="loader-box" class="flex flex-col items-center py-10">
+            <div class="loader mb-4"></div>
+            <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
+        </div>
+        <div id="preview-area" class="flex flex-col items-center w-full"></div>
+    </div>
+
+    <section class="mt-16 border-t border-gray-900 pt-10">
+        <h2 class="text-2xl font-bold text-blue-500 mb-6">{about_heading}</h2>
+        <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
+            {about_html}
+        </div>
+    </section>
+
+    <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
+        <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
+        <div class="space-y-6 text-sm">
+            {faq_html}
+        </div>
+    </section>
+
+    <section class="mt-12">
+        <h3 class="text-lg font-bold text-white mb-4">More Tools</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {related_html}
+        </div>
+    </section>
+
+    <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">© 2026 AiFileStudio.pro</footer>
+</main>
+
+<div id="shared-widgets-slot"></div>
+
+<script>const TOOL_MODE = '{mode}';</script>
+<script src="/assets/main.js"></script>
+</body>
+</html>
+"""
+
+def build_faq_html(faq):
+    parts = []
+    for q, a in faq:
+        parts.append(f'<div><h4 class="text-blue-400 font-bold">{q}</h4><p>{a}</p></div>')
+    return "\n            ".join(parts)
+
+def build_related_html(current_slug):
+    parts = []
+    for t in TOOLS:
+        if t["slug"] == current_slug:
+            continue
+        parts.append(f'<a href="/{t["slug"]}/" class="tool-card text-center text-xs"><i class="fas {ICON[t["mode"]]} text-blue-500 text-lg mb-2 block"></i>{t["nav"]}</a>')
+    return "\n            ".join(parts)
+
+ICON = {
+    "ai": "fa-magic", "resize": "fa-expand", "convert": "fa-sync",
+    "merge": "fa-layer-group", "split": "fa-scissors", "rotate": "fa-redo",
+    "pdf": "fa-images", "ocr": "fa-font", "pass": "fa-key", "qr": "fa-qrcode",
+}
+
+os.makedirs("/home/claude/site", exist_ok=True)
+
+import re as _re
+
+def plain_desc(about_html):
+    first_p = about_html.split("<p>", 1)[1].split("</p>")[0]
+    text = _re.sub(r'<[^>]+>', '', first_p)
+    text = _re.sub(r'\s+', ' ', text).strip()
+    if len(text) > 155:
+        text = text[:155].rsplit(" ", 1)[0] + "..."
+    return text
+
+for t in TOOLS:
+    tool_libs = "\n    ".join(LIB_SNIPPETS[l] for l in t["libs"])
+    page = TOOL_PAGE_TEMPLATE.format(
+        meta_desc=plain_desc(t["about_html"]),
+        canonical=f'{SITE}/{t["slug"]}/',
+        site=SITE,
+        title=t["title"],
+        subtitle=t["subtitle"],
+        input_label=t["input_label"],
+        input_placeholder=t["input_placeholder"],
+        file_label="Files" if t["multiple"] else "File",
+        multiple_attr="multiple" if t["multiple"] else "",
+        accept=t["accept"],
+        about_heading=t["about_heading"],
+        about_html=t["about_html"],
+        faq_html=build_faq_html(t["faq"]),
+        related_html=build_related_html(t["slug"]),
+        mode=t["mode"],
+        tool_libs=tool_libs,
+    )
+    outdir = f'/home/claude/site/{t["slug"]}'
+    os.makedirs(outdir, exist_ok=True)
+    with open(f"{outdir}/index.html", "w", encoding="utf-8") as f:
+        f.write(page)
+    print("wrote", f"{outdir}/index.html")
+
+print("DONE:", len(TOOLS), "tool pages generated")

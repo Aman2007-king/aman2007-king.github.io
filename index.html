@@ -1,530 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-6H0T540P06');
-</script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free PDF and image tools. Merge PDF, Split PDF, OCR, QR codes, and AI Art Generator. Your PDF and image files are processed locally in your browser and never uploaded to a server.">
+    <meta name="description" content="Free PDF and image tools: merge, split, and rotate PDFs, resize images, convert JPG to PNG or PDF, extract text with OCR, generate QR codes and passwords, and create AI art — all processed locally in your browser.">
     <meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
     <meta name="author" content="AiFileStudio.PRO">
     <meta name="robots" content="index, follow">
-   <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
-<meta name="twitter:description" content="PDF and image tools that run in your browser. AI Art generation uses an external API; all other tools process files locally.">
-<meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
-<meta property="og:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
-<meta property="og:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://aman2007-king.github.io/">
-<meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
+    <link rel="canonical" href="https://aman2007-king.github.io/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
+    <meta name="twitter:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
+    <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
+    <meta property="og:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
+    <meta property="og:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aman2007-king.github.io/">
+    <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
+    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
+    <title>AiFileStudio.PRO | Free PDF, Image & AI Tools</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6H0T540P06');
+    </script>
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
-    <meta name="google-adsense-account" content="ca-pub-1186506015762858">
-    <title>AiFileStudio Power | Pro Document Suite</title>
-    
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-    <style>
-        html {
-    scroll-behavior: smooth;
-}
-        :root { --bg: #050507; --card: #0d0d10; --accent: #3b82f6; --text: #f0f0f0; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; transition: 0.3s; overflow-x: hidden; }
-        aside { 
-            width: 260px; background: #0a0a0c; border-right: 1px solid #1c1c21; 
-            display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50;
-            transition: transform 0.3s ease;
-        }
-        @media (max-width: 768px) {
-            aside { transform: translateX(-100%); }
-            aside.active { transform: translateX(0); }
-            main { margin-left: 0 !important; padding: 20px !important; }
-        }
-        .nav-item { padding: 10px 20px; font-size: 13px; font-weight: 500; color: #888; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .nav-item:hover { background: #16161a; color: white; }
-        .nav-item.active { background: #16161a; color: var(--accent); border-right: 3px solid var(--accent); }
-        main { margin-left: 260px; padding: 40px; min-height: 100vh; }
-        .cyber-card { background: var(--card); border: 1px solid #1c1c21; border-radius: 20px; padding: 24px; width: 100%; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
-        .modal-content { background: #0d0d10; margin: 10% auto; padding: 30px; border: 1px solid #1c1c21; width: 90%; max-width: 600px; border-radius: 24px; max-height: 80vh; overflow-y: auto; }
-        .loader { border: 3px solid #222; border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .hidden { display: none !important; }
-        .mobile-header { display: none; background: #0a0a0c; padding: 15px 20px; border-bottom: 1px solid #1c1c21; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; }
-        @media (max-width: 768px) { .mobile-header { display: flex; } }
-    </style>
+    <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-    <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
-        <img src="ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-        <div>
-            <h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">
-                AiFileStudio<span style="color: #007bff;">.PRO</span>
-            </h1>
-            <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
-        </div>
+<div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
+    <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+    <div>
+        <h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1>
+        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
     </div>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<div class="mobile-header">
-        <h1 class="text-lg font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
-        <button onclick="toggleSidebar()" class="text-white text-xl"><i class="fas fa-bars"></i></button>
-    </div>
-
-    <aside id="main-sidebar">
-        <div class="p-6 border-b border-gray-900 hidden md:block text-center">
-            <h1 class="text-xl font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
-        </div>
-        <div class="py-4 flex-1 overflow-y-auto">
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mb-2 tracking-widest">Creative</p>
-            <div class="nav-item active" onclick="showTab('ai')"><i class="fas fa-magic"></i> AI Art</div>
-            <div class="nav-item" onclick="showTab('resize')"><i class="fas fa-expand"></i> Resize</div>
-            <div class="nav-item" onclick="showTab('convert')"><i class="fas fa-sync"></i> JPG to PNG</div>
-
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">PDF Toolkit</p>
-            <div class="nav-item" onclick="showTab('merge')"><i class="fas fa-layer-group"></i> Merge PDF</div>
-            <div class="nav-item" onclick="showTab('split')"><i class="fas fa-scissors"></i> Split PDF</div>
-            <div class="nav-item" onclick="showTab('rotate')"><i class="fas fa-redo"></i> Rotate PDF</div>
-            <div class="nav-item" onclick="showTab('pdf')"><i class="fas fa-images"></i> JPG to PDF</div>
-
-            <p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">Utils</p>
-            <div class="nav-item" onclick="showTab('ocr')"><i class="fas fa-font"></i> OCR Text</div>
-            <div class="nav-item" onclick="showTab('pass')"><i class="fas fa-key"></i> Key Gen</div>
-            <div class="nav-item" onclick="showTab('qr')"><i class="fas fa-qrcode"></i> QR Studio</div>
-
-            <div class="mt-6 pt-4 border-t border-gray-900">
-                <div class="nav-item" onclick="window.location.href='privacy.html'"><i class="fas fa-shield-alt"></i> Privacy</div>
-                <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact</div>
-            </div>
-
-            <div class="px-4 mt-6">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1186506015762858" data-ad-slot="8734574320" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            </div>
-        </div>
-        <div style="margin-top: auto; padding: 20px; border-top: 1px solid #333;">
-    <a href="privacy.html" style="color: #888; text-decoration: none; font-size: 12px; display: block; margin-bottom: 10px;">Privacy Policy</a>
-    <a href="#" onclick="openModal('termsModal')" style="color: #888; text-decoration: none; font-size: 12px; display: block;">Terms of Service</a>
-   <a href="#faq" class="text-xs text-gray-500 hover:text-blue-500 mt-4 border-t border-gray-800 pt-2 block">Help & FAQ</a>
 </div>
-        
-        <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #1c1c21; text-align: center;">
-    <p style="color: #666; font-size: 11px; margin-bottom: 12px; text-transform: uppercase; tracking-widest: 2px;">Support Development</p>
-    <a href="https://buymeacoffee.com/ry650506z" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: #3b82f6; color: white; padding: 12px 20px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);" onmouseover="this.style.background='#2563eb'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#3b82f6'; this.style.transform='translateY(0)'">
-        <i class="fas fa-coffee"></i>
-        Buy me a coffee $5
-    </a>
-</div>
-    </aside>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-    <main onclick="closeSidebarMobile()">
-        <div class="mb-8">
-            <h2 class="text-3xl font-bold" id="current-title">AI Art Studio</h2>
-            <p class="text-gray-500 text-sm" id="current-subtitle">Local high-speed processing.</p>
-        </div>
+<div class="mobile-header" id="mobile-header-slot"></div>
 
-        <div class="cyber-card">
-            <div id="standard-inputs">
-                <label id="input-label" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Input Parameter / Prompt</label>
-                <textarea id="main-input" placeholder="Type here..." class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
-                
-                <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
-                    <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
-                            <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
-                        </div>
-                        <div>
-                            <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
-                            <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 mt-4">
-                        <label class="flex items-center gap-2 text-xs text-gray-400">
-                            <input type="checkbox" id="doc-binarize"> B&W Mode (Scan)
-                        </label>
-                        <label class="flex items-center gap-2 text-xs text-gray-400">
-                            <input type="checkbox" id="doc-upscale"> Super-Res
-                        </label>
-                    </div>
-                </div>
+<aside id="main-sidebar"></aside>
 
-                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload Files</label>
-                <input type="file" id="main-file" multiple class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
-            </div>
-
-            <div id="password-ui" class="hidden text-center">
-                <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
-                <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
-            </div>
-
-            <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
-        </div>
-
-        <div id="result-card" class="cyber-card mt-8 hidden text-center">
-            <div id="loader-box" class="flex flex-col items-center py-10">
-                <div class="loader mb-4"></div>
-                <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
-            </div>
-            <div id="preview-area" class="flex flex-col items-center w-full"></div>
-        </div>
-        <section class="mt-16 border-t border-gray-900 pt-10">
-    <h2 class="text-2xl font-bold text-blue-500 mb-6">Why Local PDF Processing is Safer Than Online Converters</h2>
-    
-    <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
-        <p>
-            In today's digital age, document security has become a primary concern for professionals and casual users alike. When you use traditional online PDF tools, you are required to <strong>upload your sensitive files</strong> to a remote server. This creates a significant security vulnerability, as you lose control over your data the moment it leaves your device. At <span class="text-white font-bold">AiFileStudio.PRO</span>, we solve this by utilizing <strong>local, browser-side processing</strong>.
-        </p>
-
-        <p>
-            The primary advantage of local processing is that your files aren't uploaded to our servers. By using modern JavaScript libraries like <code class="text-blue-400">pdf-lib</code> and <code class="text-blue-400">Tesseract.js</code>, our platform performs complex tasks—such as merging PDFs, OCR text extraction, and image conversion—directly within your web browser. This means your private contracts, financial statements, and personal ID scans stay on your device rather than being stored on any backend of ours. (The one exception is the AI Art tool, which sends your text prompt to a third-party image-generation service.)
-        </p>
-
-        
-
-        <p>
-            Furthermore, local tools offer superior speed and reliability. Since there is no need to wait for heavy files to upload to a cloud server and download again, the processing time is limited only by your computer’s hardware. This is especially beneficial for users with large documents or slower internet connections. By removing the "middleman" server, you eliminate the risk of your data being intercepted during transit.
-        </p>
-
-        <p>
-            Choosing a local-first tool like AiFileStudio is not just about convenience; it is about <strong>data sovereignty</strong>. When you process files locally, your file content isn't sent to our servers. This can be a helpful part of a broader data-handling process for businesses navigating regulations like GDPR or HIPAA — though you should always confirm your own compliance requirements with your legal/security team, since this site also uses third-party analytics and advertising scripts. Note: the AI Art tool is the one exception — it sends your text prompt to a third-party image service.
-        </p>
+<main onclick="closeSidebarMobile()">
+    <div class="mb-10">
+        <h2 class="text-3xl font-bold">Free PDF, Image & AI Tools</h2>
+        <p class="text-gray-500 text-sm mt-2">Pick a tool below. Most tools run entirely in your browser — files aren't uploaded to a server.</p>
     </div>
-        </section>
-        
-    </main>
 
-    <div id="termsModal" class="modal">
-        <div class="modal-content">
-            <h2 class="text-xl font-bold text-blue-500 mb-4">Terms of Service</h2>
-            <p class="text-gray-400 text-xs leading-relaxed">
-                Use AiFileStudio.PRO tools for lawful purposes only. Most tools (PDF merge/split/rotate, resize, JPG↔PNG, OCR, password generation, QR codes) process files locally in your browser and are not uploaded to our servers.<br><br>
-                The AI Art tool sends your text prompt to a third-party service (Pollinations AI) to generate an image; that prompt does leave your device. Please avoid entering sensitive or confidential text into that tool.<br><br>
-                We provide these tools "as is" without warranty and are not liable for any data loss, inaccuracies, or damages arising from their use. See our <a href="privacy.html" class="text-blue-500 underline">Privacy Policy</a> for details on analytics and advertising.
+    <section class="mb-12">
+        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">Creative</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <a href="/ai-image-generator/" class="tool-card"><i class="fas fa-magic text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">AI Image Generator</span><p class="text-xs text-gray-500 mt-1">Text prompt → image</p></a>
+            <a href="/resize-image/" class="tool-card"><i class="fas fa-expand text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Resize Image</span><p class="text-xs text-gray-500 mt-1">Batch resize, local</p></a>
+            <a href="/jpg-to-png/" class="tool-card"><i class="fas fa-sync text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">JPG to PNG</span><p class="text-xs text-gray-500 mt-1">Convert format, local</p></a>
+        </div>
+
+        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">PDF Toolkit</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <a href="/merge-pdf/" class="tool-card"><i class="fas fa-layer-group text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Merge PDF</span><p class="text-xs text-gray-500 mt-1">Combine files</p></a>
+            <a href="/split-pdf/" class="tool-card"><i class="fas fa-scissors text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Split PDF</span><p class="text-xs text-gray-500 mt-1">Extract pages</p></a>
+            <a href="/rotate-pdf/" class="tool-card"><i class="fas fa-redo text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Rotate PDF</span><p class="text-xs text-gray-500 mt-1">Fix orientation</p></a>
+            <a href="/jpg-to-pdf/" class="tool-card"><i class="fas fa-images text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">JPG to PDF</span><p class="text-xs text-gray-500 mt-1">Images → PDF</p></a>
+        </div>
+
+        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">Utils</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="/image-to-text-ocr/" class="tool-card"><i class="fas fa-font text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">OCR: Image to Text</span><p class="text-xs text-gray-500 mt-1">Extract text</p></a>
+            <a href="/password-generator/" class="tool-card"><i class="fas fa-key text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Password Generator</span><p class="text-xs text-gray-500 mt-1">Secure, offline</p></a>
+            <a href="/qr-code-generator/" class="tool-card"><i class="fas fa-qrcode text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">QR Code Generator</span><p class="text-xs text-gray-500 mt-1">Link → QR code</p></a>
+        </div>
+    </section>
+
+    <section class="mt-16 border-t border-gray-900 pt-10">
+        <h2 class="text-2xl font-bold text-blue-500 mb-6">Why Local Processing Matters</h2>
+        <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
+            <p>
+                Most online PDF and image tools require you to <strong>upload your file</strong> to a remote server before you can use it. That means your document leaves your device and sits on someone else's infrastructure, even briefly. Most AiFileStudio.PRO tools take a different approach: <strong>local, browser-side processing</strong>.
             </p>
-            <button onclick="closeModal('termsModal')" class="mt-6 text-blue-500 text-sm font-bold">Close</button>
+            <p>
+                Using JavaScript libraries like <code class="text-blue-400">pdf-lib</code> and <code class="text-blue-400">Tesseract.js</code>, this site performs tasks — merging PDFs, extracting text via OCR, converting image formats — directly inside your browser. Your files aren't sent to our backend for these tools, and there's no server-side storage of your documents.
+            </p>
+            <p>
+                The one exception is the <strong>AI Art</strong> tool, which sends your text prompt to a third-party image-generation API to create the artwork. Every other tool on this site works fully offline once the page has loaded.
+            </p>
         </div>
-    </div>
+    </section>
 
-    <div id="contactModal" class="modal">
-        <div class="modal-content text-center">
-            <h2 class="text-xl font-bold text-blue-500 mb-4">Contact Us</h2>
-            <p class="text-blue-400 font-mono">ry650506@gmail.com</p>
-            <button onclick="closeModal('contactModal')" class="mt-6 text-gray-500 text-sm">Close</button>
-        </div>
-    </div>
-
-    <div id="ai-chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Inter', sans-serif;">
-        <button onclick="toggleChat()" id="chat-launcher" style="background: #3b82f6; width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: 0.3s;">
-            <i class="fas fa-comment-dots" style="color: white; font-size: 24px;"></i>
-        </button>
-
-        <div id="chat-window" class="hidden" style="position: absolute; bottom: 80px; right: 0; width: 300px; background: #0d0d10; border: 1px solid #1c1c21; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-            <div style="background: #16161a; padding: 15px; border-bottom: 1px solid #1c1c21; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 12px; font-weight: bold; color: #3b82f6; letter-spacing: 1px;">AI ASSISTANT</span>
-                <button onclick="toggleChat()" style="color: #666; background: none; border: none; cursor: pointer; font-size: 20px;">&times;</button>
-            </div>
-            <div id="chat-messages" style="height: 250px; overflow-y: auto; padding: 15px; font-size: 13px; line-height: 1.5; color: #ccc;">
-                <div style="background: #1c1c21; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-                    Hello! I'm the AiFileStudio assistant. How can I help you today?
-                </div>
-            </div>
-            <div style="padding: 10px; border-top: 1px solid #1c1c21; background: #0a0a0c;">
-                <div id="chat-options" style="display: flex; flex-wrap: wrap; gap: 5px;">
-                    <button onclick="askChat('ai')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">AI Art?</button>
-                    <button onclick="askChat('pdf')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">PDF Tools?</button>
-                    <button onclick="askChat('ocr')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">OCR Text?</button>
-                    <button onclick="askChat('privacy')" style="background: #1c1c21; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">Is it safe?</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        let currentMode = 'ai';
-
-        // --- Chatbot Logic ---
-        function toggleChat() {
-            const chatWin = document.getElementById('chat-window');
-            chatWin.classList.toggle('hidden');
-        }
-
-        function askChat(topic) {
-            const msgArea = document.getElementById('chat-messages');
-            let response = "";
-
-            const data = {
-                'ai': "Our **AI Art Studio** uses Pollinations AI to generate high-quality images from text prompts locally in your browser.",
-                'pdf': "You can **Merge, Split, Rotate, and Convert** PDFs. All processing is 100% local, meaning your private documents never leave your computer.",
-                'ocr': "The **OCR Engine** extracts text from images using Tesseract.js. It works best if you use the 'Enhancement' sliders first!",
-                'privacy': "Yes! We use **Local Processing**. Unlike other sites, we don't upload your files to a server. Your data stays in your browser."
-            };
-
-            response = data[topic] || "I'm here to help you navigate our Pro Document Suite!";
-
-            msgArea.innerHTML += `<div style="text-align: right; margin-bottom: 10px;"><span style="background: #3b82f6; color: white; padding: 8px 12px; border-radius: 10px; display: inline-block;">${topic.toUpperCase()}</span></div>`;
-            
-            setTimeout(() => {
-                msgArea.innerHTML += `<div style="background: #1c1c21; padding: 10px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid #3b82f6;">${response}</div>`;
-                msgArea.scrollTop = msgArea.scrollHeight;
-            }, 400);
-        }
-
-        // --- Original Website Logic ---
-        function toggleSidebar() { document.getElementById('main-sidebar').classList.toggle('active'); }
-        function closeSidebarMobile() { if (window.innerWidth <= 768) { document.getElementById('main-sidebar').classList.remove('active'); } }
-        
-        function showTab(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(window.event) window.event.currentTarget.classList.add('active');
-            
-            const config = {
-                'ai': ['AI Art Studio', 'Create images from descriptions.'],
-                'resize': ['Image Resizer', 'Enter Width (px) in the box.'],
-                'convert': ['JPG to PNG', 'Convert format locally.'],
-                'merge': ['Merge PDF', 'Combine multiple PDF files.'],
-                'split': ['Split PDF', 'Enter page numbers to extract (e.g. 1, 2).'],
-                'rotate': ['Rotate PDF', 'Rotates all pages 90 degrees.'],
-                'pdf': ['JPG to PDF', 'Images to PDF document.'],
-                'ocr': ['OCR Engine', 'Extract text from image.'],
-                'pass': ['Key Gen', 'Secure offline password generator.'],
-                'qr': ['QR Studio', 'Link to QR code conversion.']
-            };
-
-            document.getElementById('current-title').innerText = config[mode][0];
-            document.getElementById('current-subtitle').innerText = config[mode][1];
-            document.getElementById('password-ui').classList.toggle('hidden', mode !== 'pass');
-            document.getElementById('standard-inputs').classList.toggle('hidden', mode === 'pass');
-            document.getElementById('result-card').classList.add('hidden');
-            document.getElementById('enhancement-ui').classList.toggle('hidden', !['resize', 'ocr'].includes(mode));
-
-            closeSidebarMobile();
-        }
-
-        async function processTask() {
-            const input = document.getElementById('main-input').value;
-            const files = document.getElementById('main-file').files;
-            const resCard = document.getElementById('result-card');
-            const preview = document.getElementById('preview-area');
-            const loader = document.getElementById('loader-box');
-
-            resCard.classList.remove('hidden');
-            preview.innerHTML = ""; loader.classList.remove('hidden');
-
-            try {
-                if (currentMode === 'ai') {
-                    if(!input) throw "Enter prompt";
-                    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?nologo=true`;
-                    preview.innerHTML = `<img src="${url}" class="rounded-xl shadow-lg mb-4"><a href="${url}" download class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download</a>`;
-                }
-                else if (currentMode === 'resize') {
-                    if(!files[0] || !input) throw "Need image and Width (px)";
-                    const widthNum = Number(input);
-                    if (!Number.isFinite(widthNum) || widthNum <= 0) throw "Width must be a positive number (e.g. 800)";
-                    if (files.length > 1) {
-                        const zip = new JSZip();
-                        document.getElementById('loader-text').innerText = "BATCH PROCESSING...";
-                        for(let f of files) {
-                            const blob = await processImageEnhancement(f, input);
-                            zip.file(`resized_${f.name}`, blob.split(',')[1], {base64: true});
-                        }
-                        const content = await zip.generateAsync({type:"blob"});
-                        const url = URL.createObjectURL(content);
-                        preview.innerHTML = `<p class='text-xs mb-4'>Processed ${files.length} images</p><a href="${url}" download="batch_resized.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
-                    } else {
-                        const res = await processImageEnhancement(files[0], input);
-                        preview.innerHTML = `<img src="${res}" class="mb-4 rounded-xl border border-gray-800"><a href="${res}" download="resized.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
-                    }
-                }
-                else if (currentMode === 'convert') {
-                    if(!files[0]) throw "Select JPG";
-                    const img = new Image(); img.src = await fileToDataURL(files[0]);
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width; canvas.height = img.height;
-                        canvas.getContext('2d').drawImage(img, 0, 0);
-                        const res = canvas.toDataURL("image/png");
-                        preview.innerHTML = `<a href="${res}" download="converted.png" class="bg-green-600 px-8 py-3 rounded-full text-xs font-bold">Download PNG</a>`;
-                        loader.classList.add('hidden');
-                    }; return;
-                }
-                else if (currentMode === 'merge') {
-                    if (files.length < 2) throw "Select 2+ PDFs";
-                    const merged = await PDFLib.PDFDocument.create();
-                    for (const f of files) {
-                        const doc = await PDFLib.PDFDocument.load(await f.arrayBuffer());
-                        const pages = await merged.copyPages(doc, doc.getPageIndices());
-                        pages.forEach(p => merged.addPage(p));
-                    }
-                    downloadFile(await merged.save(), "merged.pdf", "application/pdf");
-                    preview.innerHTML = "✓ Downloaded";
-                }
-                else if (currentMode === 'split') {
-                    if (!files[0] || !input) throw "Upload PDF and enter pages (e.g., 1, 2)";
-                    const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
-                    const splitDoc = await PDFLib.PDFDocument.create();
-                    const totalPages = doc.getPageCount();
-                    const indices = input.split(',')
-                        .map(n => parseInt(n.trim()) - 1)
-                        .filter(n => n >= 0 && n < totalPages);
-                    if (indices.length === 0) throw "Invalid page numbers";
-                    const pages = await splitDoc.copyPages(doc, indices);
-                    pages.forEach(p => splitDoc.addPage(p));
-                    downloadFile(await splitDoc.save(), "split.pdf", "application/pdf");
-                    preview.innerHTML = "✓ Extracted";
-                }
-                else if (currentMode === 'rotate') {
-                    if (!files[0]) throw "Upload PDF";
-                    const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
-                    const pages = doc.getPages();
-                    pages.forEach(p => p.setRotation(PDFLib.degrees((p.getRotation().angle || 0) + 90)));
-                    downloadFile(await doc.save(), "rotated.pdf", "application/pdf");
-                    preview.innerHTML = "✓ Rotated";
-                }
-                else if (currentMode === 'pdf') {
-                    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                    for (let i = 0; i < files.length; i++) {
-                        if (i > 0) doc.addPage();
-                        doc.addImage(await fileToDataURL(files[i]), 'JPEG', 10, 10, 190, 0);
-                    }
-                    doc.save("studio.pdf");
-                    preview.innerHTML = "✓ Downloaded";
-                }
-                else if (currentMode === 'ocr') {
-                    const processedURL = await processImageEnhancement(files[0], 2000); 
-                    const ret = await Tesseract.recognize(processedURL);
-                    preview.innerHTML = `<textarea class="w-full h-40 bg-black p-4 text-xs text-blue-400 border border-gray-800 rounded-xl">${ret.data.text}</textarea>`;
-                }
-                else if (currentMode === 'pass') {
-                    const char = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*";
-                    let pass = ""; const v = new Uint32Array(document.getElementById('pass-length').value);
-                    window.crypto.getRandomValues(v);
-                    for(let i=0; i<v.length; i++) pass += char[v[i] % char.length];
-                    document.getElementById('pass-display-box').innerText = pass;
-                }
-                else if (currentMode === 'qr') {
-                    preview.innerHTML = `<div id="q" class="bg-white p-4"></div>`;
-                    new QRCode(document.getElementById("q"), { text: input, width: 150, height: 150 });
-                }
-                loader.classList.add('hidden');
-            } catch (err) { alert(err); resCard.classList.add('hidden'); }
-        }
-
-        async function processImageEnhancement(file, targetWidth) {
-            return new Promise(async (resolve) => {
-                const img = new Image();
-                img.src = await fileToDataURL(file);
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const b = document.getElementById('doc-bright').value;
-                    const c = document.getElementById('doc-contrast').value;
-                    const upscale = document.getElementById('doc-upscale').checked;
-                    const binarize = document.getElementById('doc-binarize').checked;
-
-                    const scale = targetWidth / img.width;
-                    canvas.width = targetWidth;
-                    canvas.height = img.height * scale;
-
-                    ctx.filter = `brightness(${b}) contrast(${c}) ${upscale ? 'saturate(1.2) contrast(1.1)' : ''}`;
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    if (binarize) {
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        const data = imageData.data;
-                        for (let i = 0; i < data.length; i += 4) {
-                            const avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                            const val = avg > 128 ? 255 : 0;
-                            data[i] = data[i+1] = data[i+2] = val;
-                        }
-                        ctx.putImageData(imageData, 0, 0);
-                    }
-                    resolve(canvas.toDataURL("image/jpeg", 0.9));
-                };
-            });
-        }
-
-        const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
-        const downloadFile = (d, n, t) => { const b = new Blob([d], {type: t}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
-
-        function openModal(id) { document.getElementById(id).style.display = "block"; }
-        function closeModal(id) { document.getElementById(id).style.display = "none"; }
-
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') {
-                event.target.style.display = "none";
-            }
-        }
-    </script>
-    <section class="mt-12 p-8 bg-gray-900/10 border-l-4 border-blue-600 text-gray-400">
-    <h2 class="text-2xl font-bold text-white mb-4">Complete Guide to AiFileStudio Tools</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-        <div>
-            <h3 class="text-white font-bold mb-2">How to Merge PDF Files Locally</h3>
-            <p>Our PDF Merger tool allows you to combine multiple documents into one without uploading them to a server. Simply select your files, arrange the order, and click 'Merge'. This ensures your sensitive documents remain private and secure on your own device.</p>
-        </div>
-        
-        <div>
-            <h3 class="text-white font-bold mb-2">Using AI Image Generation</h3>
-            <p>Generate stunning visuals using our AI Art tool. By entering a descriptive prompt, the AI processes your request to create high-resolution images. This is perfect for designers, social media managers, and creative hobbyists looking for unique content.</p>
-        </div>
-
-        <div>
-            <h3 class="text-white font-bold mb-2">OCR & Text Extraction Technology</h3>
-            <p>Convert images of text into editable digital formats. Our OCR (Optical Character Recognition) engine scans your images or scanned PDFs and extracts the text accurately, saving you hours of manual typing. This is a vital tool for digitizing old paper records.</p>
-        </div>
-
-        <div>
-            <h3 class="text-white font-bold mb-2">Browser-Based Security</h3>
-            <p>AiFileStudio is built on the philosophy of privacy. For the PDF and image tools, client-side JavaScript means your files are not sent to our backend — a strong, meaningful protection, though no tool can guarantee absolute security, and browser extensions or a compromised device can still pose risks.</p>
-        </div>
-    </div>
-</section>
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
-        <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions (FAQ)</h3>
+        <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
             <div>
-                <h4 class="text-blue-400 font-bold">How does AiFileStudio protect my privacy?</h4>
-                <p>Unlike many online converters, most of our tools process files locally in your browser rather than uploading them to a server, which removes an entire category of server-side data-breach risk. (The AI Art tool is the exception — it sends your text prompt to a third-party service.)</p>
+                <h4 class="text-blue-400 font-bold">Do I need to create an account?</h4>
+                <p>No. Every tool works immediately, with no sign-up.</p>
             </div>
             <div>
                 <h4 class="text-blue-400 font-bold">Is there a file size limit?</h4>
-                <p>Since the processing happens on your device, the limit depends on your computer's RAM. Most modern laptops can easily handle PDFs up to 500MB.</p>
+                <p>Since processing happens on your device for most tools, the practical limit depends on your device's memory rather than a server-side cap.</p>
             </div>
             <div>
-                <h4 class="text-blue-400 font-bold">Can I use these tools for professional business contracts?</h4>
-                <p>Yes. Because we use industry-standard libraries like pdf-lib and Tesseract.js, the output is high-quality and suitable for professional use.</p>
+                <h4 class="text-blue-400 font-bold">Which tool sends data anywhere?</h4>
+                <p>Only the AI Image Generator, which sends your text prompt to a third-party service (Pollinations AI) to create the image. All other tools run locally.</p>
             </div>
         </div>
     </section>
 
-    <footer class="p-6 text-center text-gray-600 text-[10px]">
-        © 2026 AiFileStudio.pro
-    </footer>
+    <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">© 2026 AiFileStudio.pro</footer>
+</main>
 
+<div id="shared-widgets-slot"></div>
+
+<script src="/assets/main.js"></script>
 </body>
 </html>

@@ -10,6 +10,8 @@ LIB_URLS = {
     "jszip": "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
     "html2canvas": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
     "pdfjs": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+    "jsbarcode": "https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js",
+    "mediapipe": "https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js",
 }
 
 TOOLS = [
@@ -222,6 +224,45 @@ TOOLS = [
         faq=[
             ("Does this resize my image too?", "No — dimensions stay the same; only the compression quality changes. Use the <a href='/resize-image/' class='text-blue-500 underline'>Resize Image</a> tool if you also want to change dimensions."),
             ("What quality setting should I use?", "60-80 is a reasonable starting point for photos. Go lower for maximum size reduction if some quality loss is acceptable."),
+        ],
+    ),
+    dict(
+        mode="favicon", slug="favicon-generator", nav="Favicon Generator",
+        title="Favicon Generator", subtitle="Turn an image into a full set of favicon sizes.",
+        input_label="", input_placeholder="",
+        accept="image/*", multiple=False, needs_file=True, needs_text=False, libs=["jszip"],
+        about_heading="Free Favicon Generator",
+        about_html="""<p>Upload a logo or image and get back a complete set of favicon sizes — 16×16, 32×32, 48×48, a 180×180 Apple touch icon, and 192×192 / 512×512 Android Chrome icons — plus a ready-to-use <code class="text-blue-400">site.webmanifest</code> file, all bundled in a ZIP. Everything is generated locally on the HTML5 canvas.</p>
+        <p>A square source image (ideally 512×512 or larger) gives the cleanest results — non-square images get stretched to fit each square icon size.</p>""",
+        faq=[
+            ("What size source image should I upload?", "A square image at least 512×512 pixels gives the best results across all generated sizes."),
+            ("How do I actually use these files on my site?", "Drop the generated PNG files into your site's root folder and link them from your HTML <head> (e.g. <link rel=\"icon\" href=\"/favicon-32x32.png\">), or reference the included site.webmanifest for the Android/PWA icons."),
+        ],
+    ),
+    dict(
+        mode="barcode", slug="barcode-generator", nav="Barcode Generator",
+        title="Barcode Generator", subtitle="Turn text or numbers into a scannable barcode.",
+        input_label="Text or number to encode", input_placeholder="e.g. 123456789012",
+        accept="", multiple=False, needs_file=False, needs_text=True, libs=["jsbarcode"],
+        about_heading="Free Barcode Generator",
+        about_html="""<p>Generate a CODE128 barcode from any text or number, rendered locally using the <code class="text-blue-400">JsBarcode</code> library — nothing you type is sent anywhere. CODE128 is a widely supported format that can encode letters, numbers, and most symbols.</p>
+        <p>Useful for inventory labels, asset tags, or any situation where you need a quick scannable code that isn't a QR code.</p>""",
+        faq=[
+            ("Can I generate other barcode formats like EAN-13 or UPC?", "Currently this tool generates CODE128 only, which covers most general-purpose use cases. Other formats may be added later."),
+            ("Is this the same as a QR code?", "No — barcodes here are the traditional 1D striped format (CODE128). For QR codes, use our <a href='/qr-code-generator/' class='text-blue-500 underline'>QR Code Generator</a> instead."),
+        ],
+    ),
+    dict(
+        mode="bgremove", slug="background-remover", nav="Background Remover",
+        title="Background Remover", subtitle="Remove the background from a photo of a person.",
+        input_label="", input_placeholder="",
+        accept="image/*", multiple=False, needs_file=True, needs_text=False, libs=["mediapipe"],
+        about_heading="Free Background Remover (Photos of People)",
+        about_html="""<p><strong>Honest scope:</strong> this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a photo. It's built specifically for photos containing people — it is not a general-purpose object background remover, and results on other subjects (products, animals, landscapes) will likely be poor or unpredictable.</p>
+        <p>The output is a transparent PNG with the background removed, generated entirely on your device — your photo isn't uploaded to a server, though the segmentation model itself is downloaded from Google's CDN the first time you use this tool.</p>""",
+        faq=[
+            ("Will this work on photos of objects or animals?", "Not reliably — this specific tool is built on a person-segmentation model, so it's tuned for human subjects. Results on other subjects can be inconsistent."),
+            ("Why does this take longer than your other tools?", "It downloads and runs a machine learning model in your browser the first time you use it, which takes more time than the simpler canvas-based tools."),
         ],
     ),
     dict(
@@ -485,6 +526,7 @@ ICON = {
     "pagenumbers": "fa-list-ol", "watermark": "fa-stamp", "txt2pdf": "fa-file-lines",
     "html2pdf": "fa-code", "crop": "fa-crop", "compress": "fa-compress",
     "viewer": "fa-eye", "imgcompress": "fa-file-zipper",
+    "favicon": "fa-star", "barcode": "fa-barcode", "bgremove": "fa-person",
 }
 
 os.makedirs(os.path.dirname(os.path.abspath(__file__)), exist_ok=True)

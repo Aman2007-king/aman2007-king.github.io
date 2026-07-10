@@ -17,6 +17,10 @@
     <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>Favicon Generator | AiFileStudio.PRO</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050507">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/icon-192.png" type="image/png">
     <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Favicon Generator | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/favicon-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Upload a logo or image and get back a complete set of favicon sizes \u2014 16\u00d716, 32\u00d732, 48\u00d748, a 180\u00d7180 Apple touch icon, and 192\u00d7192 / 512\u00d7512 Android..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What size source image should I upload?", "acceptedAnswer": {"@type": "Answer", "text": "A square image at least 512\u00d7512 pixels gives the best results across all generated sizes."}}, {"@type": "Question", "name": "How do I actually use these files on my site?", "acceptedAnswer": {"@type": "Answer", "text": "Drop the generated PNG files into your site's root folder and link them from your HTML <head> (e.g. <link rel=\"icon\" href=\"/favicon-32x32.png\">), or reference the included site.webmanifest for the Android/PWA icons."}}]}]</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
@@ -38,10 +42,11 @@
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
     <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
     <div>
-        <a href="/" style="text-decoration:none;"><h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1></a>
+        <a href="/" style="text-decoration:none;"><p style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></p></a>
         <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
     </div>
 </div>
@@ -49,19 +54,19 @@
 
 <div class="mobile-header" id="mobile-header-slot"></div>
 
-<aside id="main-sidebar"></aside>
+<aside id="main-sidebar" aria-label="Tool navigation"></aside>
 
-<main onclick="closeSidebarMobile()">
+<main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
     <div class="mb-8">
-        <nav class="text-xs text-gray-600 mb-3"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Favicon Generator</span></nav>
-        <h2 class="text-3xl font-bold">Favicon Generator</h2>
+        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Favicon Generator</span></nav>
+        <h1 class="text-3xl font-bold">Favicon Generator</h1>
         <p class="text-gray-500 text-sm">Turn an image into a full set of favicon sizes.</p>
     </div>
 
     <div class="cyber-card">
         <div id="standard-inputs">
             <div id="text-field-wrap">
-                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3"></label>
+                <label for="main-input" class="block text-[10px] font-bold text-gray-500 uppercase mb-3"></label>
                 <textarea id="main-input" placeholder="" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
             </div>
 
@@ -69,11 +74,11 @@
                 <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                        <label for="doc-bright" class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
                         <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
                     </div>
                     <div>
-                        <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                        <label for="doc-contrast" class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
                         <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
                     </div>
                 </div>
@@ -87,8 +92,21 @@
                 </div>
             </div>
 
+            <div id="bgcolor-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Background Color</p>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <button type="button" class="bg-swatch" data-color="transparent" style="background-image: repeating-conic-gradient(#666 0% 25%, #333 0% 50%) 50% / 12px 12px;" title="Transparent"></button>
+                    <button type="button" class="bg-swatch" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
+                    <button type="button" class="bg-swatch" data-color="#ff0000" style="background-color:#ff0000;" title="Red"></button>
+                    <button type="button" class="bg-swatch" data-color="#0000ff" style="background-color:#0000ff;" title="Blue"></button>
+                    <button type="button" class="bg-swatch" data-color="#22c55e" style="background-color:#22c55e;" title="Green"></button>
+                    <button type="button" class="bg-swatch" data-color="#000000" style="background-color:#000000;" title="Black"></button>
+                    <input type="color" id="bgcolor-custom" value="#3b82f6" class="w-9 h-9 rounded cursor-pointer border-2 border-gray-700 bg-transparent" title="Custom color">
+                </div>
+            </div>
+
             <div id="file-field-wrap">
-                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
+                <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
                 <input type="file" id="main-file"  accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
         </div>

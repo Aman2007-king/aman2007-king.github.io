@@ -2,6 +2,8 @@
    Loaded on every page. Each tool page sets `const TOOL_MODE = '...'` before
    including this file so the right tool logic and UI wiring gets applied. */
 
+let selectedBgColor = 'transparent';
+
 const TOOLS = [
     { group: 'Creative', id: 'ai',      name: 'AI Art',        icon: 'fa-magic',       url: '/ai-image-generator/' },
     { group: 'Creative', id: 'resize',  name: 'Resize Image',  icon: 'fa-expand',      url: '/resize-image/' },
@@ -283,17 +285,42 @@ function setupToolUI(mode) {
     const passwordUiEl = document.getElementById('password-ui');
     const standardInputsEl = document.getElementById('standard-inputs');
     const enhancementEl = document.getElementById('enhancement-ui');
+    const bgColorEl = document.getElementById('bgcolor-ui');
     const textFieldWrap = document.getElementById('text-field-wrap');
     const fileFieldWrap = document.getElementById('file-field-wrap');
 
     if (passwordUiEl) passwordUiEl.classList.toggle('hidden', mode !== 'pass');
     if (standardInputsEl) standardInputsEl.classList.toggle('hidden', mode === 'pass');
     if (enhancementEl) enhancementEl.classList.toggle('hidden', !enhancementModes.includes(mode));
+    if (bgColorEl) bgColorEl.classList.toggle('hidden', mode !== 'bgremove');
 
     const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer', 'favicon', 'bgremove'];
     const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf', 'barcode'];
     if (textFieldWrap) textFieldWrap.classList.toggle('hidden', noTextInput.includes(mode));
     if (fileFieldWrap) fileFieldWrap.classList.toggle('hidden', noFileInput.includes(mode));
+}
+
+function setupBgColorPicker() {
+    const wrap = document.getElementById('bgcolor-ui');
+    if (!wrap) return;
+    const swatches = wrap.querySelectorAll('.bg-swatch');
+    const customInput = document.getElementById('bgcolor-custom');
+
+    swatches.forEach(sw => {
+        sw.addEventListener('click', () => {
+            swatches.forEach(s => s.classList.remove('selected'));
+            sw.classList.add('selected');
+            selectedBgColor = sw.dataset.color;
+        });
+    });
+    if (customInput) {
+        customInput.addEventListener('input', () => {
+            swatches.forEach(s => s.classList.remove('selected'));
+            selectedBgColor = customInput.value;
+        });
+    }
+    const defaultSwatch = wrap.querySelector('.bg-swatch[data-color="transparent"]');
+    if (defaultSwatch) defaultSwatch.classList.add('selected');
 }
 
 /* --- Main task runner (mode comes from the page's TOOL_MODE) --- */
@@ -641,27 +668,39 @@ async function processTask() {
             });
             selfieSegmentation.setOptions({ modelSelection: 1 });
 
-            const resultCanvas = document.createElement('canvas');
-            resultCanvas.width = img.width; resultCanvas.height = img.height;
-            const resultCtx = resultCanvas.getContext('2d');
+            const cutoutCanvas = document.createElement('canvas');
+            cutoutCanvas.width = img.width; cutoutCanvas.height = img.height;
+            const cutoutCtx = cutoutCanvas.getContext('2d');
 
             await new Promise((resolve, reject) => {
                 selfieSegmentation.onResults((results) => {
                     try {
-                        resultCtx.save();
-                        resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
-                        resultCtx.drawImage(results.segmentationMask, 0, 0, resultCanvas.width, resultCanvas.height);
-                        resultCtx.globalCompositeOperation = 'source-in';
-                        resultCtx.drawImage(results.image, 0, 0, resultCanvas.width, resultCanvas.height);
-                        resultCtx.restore();
+                        cutoutCtx.save();
+                        cutoutCtx.clearRect(0, 0, cutoutCanvas.width, cutoutCanvas.height);
+                        cutoutCtx.drawImage(results.segmentationMask, 0, 0, cutoutCanvas.width, cutoutCanvas.height);
+                        cutoutCtx.globalCompositeOperation = 'source-in';
+                        cutoutCtx.drawImage(results.image, 0, 0, cutoutCanvas.width, cutoutCanvas.height);
+                        cutoutCtx.restore();
                         resolve();
                     } catch (e) { reject(e); }
                 });
                 selfieSegmentation.send({ image: img }).catch(reject);
             });
 
-            const dataUrl = resultCanvas.toDataURL('image/png');
-            preview.innerHTML = `<img src="${dataUrl}" class="mb-4 rounded-xl border border-gray-800 max-w-full" alt="Background removed" style="background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 50% / 20px 20px;"><p class="text-[10px] text-gray-600 mb-2">Works best on clear photos of people — results on other subjects may vary.</p><a href="${dataUrl}" download="no-background.png" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download PNG</a>`;
+            let finalCanvas = cutoutCanvas;
+            const bgColor = selectedBgColor || 'transparent';
+            if (bgColor !== 'transparent') {
+                finalCanvas = document.createElement('canvas');
+                finalCanvas.width = cutoutCanvas.width; finalCanvas.height = cutoutCanvas.height;
+                const fctx = finalCanvas.getContext('2d');
+                fctx.fillStyle = bgColor;
+                fctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+                fctx.drawImage(cutoutCanvas, 0, 0);
+            }
+
+            const dataUrl = finalCanvas.toDataURL('image/png');
+            const checkerStyle = bgColor === 'transparent' ? 'background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 50% / 20px 20px;' : '';
+            preview.innerHTML = `<img src="${dataUrl}" class="mb-4 rounded-xl border border-gray-800 max-w-full" alt="Background removed" style="${checkerStyle}"><p class="text-[10px] text-gray-600 mb-2">Works best on clear photos of people — results on other subjects may vary.</p><a href="${dataUrl}" download="${bgColor === 'transparent' ? 'no-background.png' : 'new-background.png'}" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download PNG</a>`;
         }
         else if (mode === 'qr') {
             if (!input) throw "Enter text or a URL to encode.";
@@ -683,6 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSidebar(TOOL_MODE);
         setupToolUI(TOOL_MODE);
         enhanceDropzone();
+        setupBgColorPicker();
     } else {
         renderSidebar(null);
     }

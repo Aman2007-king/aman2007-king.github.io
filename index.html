@@ -3,35 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free PDF and image tools: merge, split, and rotate PDFs, resize images, convert JPG to PNG or PDF, extract text with OCR, generate QR codes and passwords, and create AI art — all processed locally in your browser.">
-    <meta name="keywords" content="Free PDF tools, AI Image Generator, Merge PDF free, Split PDF online, Image to Text, OCR online, QR code generator, JPG to PDF, AiFileStudio">
-    <meta name="author" content="AiFileStudio.PRO">
+    <meta name="description" content="Honest scope: this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a...">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://aman2007-king.github.io/">
+    <link rel="canonical" href="https://aman2007-king.github.io/background-remover/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
-    <meta name="twitter:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
+    <meta name="twitter:title" content="Background Remover | AiFileStudio.PRO">
+    <meta name="twitter:description" content="Honest scope: this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a...">
     <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
-    <meta property="og:title" content="AiFileStudio.PRO - Free Browser-Based PDF & Image Tools">
-    <meta property="og:description" content="Merge, split, and rotate PDFs, run OCR, generate QR codes, and create AI art — free, in your browser.">
+    <meta property="og:title" content="Background Remover | AiFileStudio.PRO">
+    <meta property="og:description" content="Honest scope: this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a...">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aman2007-king.github.io/">
+    <meta property="og:url" content="https://aman2007-king.github.io/background-remover/">
     <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
-    <title>AiFileStudio.PRO | Free PDF, Image & AI Tools</title>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "AiFileStudio.PRO",
-      "url": "https://aman2007-king.github.io/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://aman2007-king.github.io/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
+    <title>Background Remover | AiFileStudio.PRO</title>
+    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Background Remover | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/background-remover/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Honest scope: this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will this work on photos of objects or animals?", "acceptedAnswer": {"@type": "Answer", "text": "Not reliably \u2014 this specific tool is built on a person-segmentation model, so it's tuned for human subjects. Results on other subjects can be inconsistent."}}, {"@type": "Question", "name": "Can I set a solid color background instead of transparent?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 pick from the White, Red, Blue, Green, or Black swatches, or use the custom color picker, before running the tool. Leave it on the checkered 'Transparent' swatch for a transparent PNG."}}, {"@type": "Question", "name": "Why does this take longer than your other tools?", "acceptedAnswer": {"@type": "Answer", "text": "It downloads and runs a machine learning model in your browser the first time you use it, which takes more time than the simpler canvas-based tools."}}]}]</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
@@ -55,7 +41,7 @@
 <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
     <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
     <div>
-        <h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1>
+        <a href="/" style="text-decoration:none;"><h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1></a>
         <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
     </div>
 </div>
@@ -66,83 +52,119 @@
 <aside id="main-sidebar"></aside>
 
 <main onclick="closeSidebarMobile()">
-    <div class="mb-10">
-        <h2 class="text-3xl font-bold">Free PDF, Image & AI Tools</h2>
-        <p class="text-gray-500 text-sm mt-2">Pick a tool below. Most tools run entirely in your browser — files aren't uploaded to a server.</p>
+    <div class="mb-8">
+        <nav class="text-xs text-gray-600 mb-3"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Background Remover</span></nav>
+        <h2 class="text-3xl font-bold">Background Remover</h2>
+        <p class="text-gray-500 text-sm">Remove or replace the background from a photo of a person.</p>
     </div>
 
-    <section class="mb-12">
-        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">Creative</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <a href="/ai-image-generator/" class="tool-card"><i class="fas fa-magic text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">AI Image Generator</span><p class="text-xs text-gray-500 mt-1">Text prompt → image</p></a>
-            <a href="/resize-image/" class="tool-card"><i class="fas fa-expand text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Resize Image</span><p class="text-xs text-gray-500 mt-1">Batch resize, local</p></a>
-            <a href="/jpg-to-png/" class="tool-card"><i class="fas fa-sync text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">JPG to PNG</span><p class="text-xs text-gray-500 mt-1">Convert format, local</p></a>
-            <a href="/image-compressor/" class="tool-card"><i class="fas fa-file-zipper text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Image Compressor</span><p class="text-xs text-gray-500 mt-1">Shrink file size</p></a>
-            <a href="/background-remover/" class="tool-card"><i class="fas fa-person text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Background Remover</span><p class="text-xs text-gray-500 mt-1">Photos of people</p></a>
+    <div class="cyber-card">
+        <div id="standard-inputs">
+            <div id="text-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3"></label>
+                <textarea id="main-input" placeholder="" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
+            </div>
+
+            <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                        <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                        <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-binarize"> B&W Mode (Scan)
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-400">
+                        <input type="checkbox" id="doc-upscale"> Super-Res
+                    </label>
+                </div>
+            </div>
+
+            <div id="bgcolor-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Background Color</p>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <button type="button" class="bg-swatch" data-color="transparent" style="background-image: repeating-conic-gradient(#666 0% 25%, #333 0% 50%) 50% / 12px 12px;" title="Transparent"></button>
+                    <button type="button" class="bg-swatch" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
+                    <button type="button" class="bg-swatch" data-color="#ff0000" style="background-color:#ff0000;" title="Red"></button>
+                    <button type="button" class="bg-swatch" data-color="#0000ff" style="background-color:#0000ff;" title="Blue"></button>
+                    <button type="button" class="bg-swatch" data-color="#22c55e" style="background-color:#22c55e;" title="Green"></button>
+                    <button type="button" class="bg-swatch" data-color="#000000" style="background-color:#000000;" title="Black"></button>
+                    <input type="color" id="bgcolor-custom" value="#3b82f6" class="w-9 h-9 rounded cursor-pointer border-2 border-gray-700 bg-transparent" title="Custom color">
+                </div>
+            </div>
+
+            <div id="file-field-wrap">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
+                <input type="file" id="main-file"  accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
+            </div>
         </div>
 
-        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">PDF Toolkit</p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <a href="/merge-pdf/" class="tool-card"><i class="fas fa-layer-group text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Merge PDF</span><p class="text-xs text-gray-500 mt-1">Combine files</p></a>
-            <a href="/split-pdf/" class="tool-card"><i class="fas fa-scissors text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Split PDF</span><p class="text-xs text-gray-500 mt-1">Extract pages</p></a>
-            <a href="/rotate-pdf/" class="tool-card"><i class="fas fa-redo text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Rotate PDF</span><p class="text-xs text-gray-500 mt-1">Fix orientation</p></a>
-            <a href="/jpg-to-pdf/" class="tool-card"><i class="fas fa-images text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">JPG to PDF</span><p class="text-xs text-gray-500 mt-1">Images → PDF</p></a>
-            <a href="/delete-pdf-pages/" class="tool-card"><i class="fas fa-trash text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Delete Pages</span><p class="text-xs text-gray-500 mt-1">Remove pages</p></a>
-            <a href="/extract-pdf-pages/" class="tool-card"><i class="fas fa-file-export text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Extract Pages</span><p class="text-xs text-gray-500 mt-1">Pages → separate files</p></a>
-            <a href="/reorder-pdf-pages/" class="tool-card"><i class="fas fa-sort text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Reorder Pages</span><p class="text-xs text-gray-500 mt-1">Rearrange order</p></a>
-            <a href="/add-page-numbers/" class="tool-card"><i class="fas fa-list-ol text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Page Numbers</span><p class="text-xs text-gray-500 mt-1">Stamp numbers</p></a>
-            <a href="/watermark-pdf/" class="tool-card"><i class="fas fa-stamp text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Watermark PDF</span><p class="text-xs text-gray-500 mt-1">Stamp text</p></a>
-            <a href="/crop-pdf/" class="tool-card"><i class="fas fa-crop text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Crop PDF</span><p class="text-xs text-gray-500 mt-1">Trim margins</p></a>
-            <a href="/compress-pdf/" class="tool-card"><i class="fas fa-compress text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Compress PDF</span><p class="text-xs text-gray-500 mt-1">Shrink size</p></a>
-            <a href="/pdf-viewer/" class="tool-card"><i class="fas fa-eye text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">PDF Viewer</span><p class="text-xs text-gray-500 mt-1">View in browser</p></a>
+        <div id="password-ui" class="hidden text-center">
+            <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
+            <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
         </div>
 
-        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">Convert</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <a href="/txt-to-pdf/" class="tool-card"><i class="fas fa-file-lines text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">TXT to PDF</span><p class="text-xs text-gray-500 mt-1">Text → PDF</p></a>
-            <a href="/html-to-pdf/" class="tool-card"><i class="fas fa-code text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">HTML to PDF</span><p class="text-xs text-gray-500 mt-1">Markup → PDF</p></a>
-        </div>
+        <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
+    </div>
 
-        <p class="px-1 text-[10px] font-bold text-gray-600 uppercase mb-3 tracking-widest">Utils</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="/image-to-text-ocr/" class="tool-card"><i class="fas fa-font text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">OCR: Image to Text</span><p class="text-xs text-gray-500 mt-1">Extract text</p></a>
-            <a href="/password-generator/" class="tool-card"><i class="fas fa-key text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Password Generator</span><p class="text-xs text-gray-500 mt-1">Secure, offline</p></a>
-            <a href="/qr-code-generator/" class="tool-card"><i class="fas fa-qrcode text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">QR Code Generator</span><p class="text-xs text-gray-500 mt-1">Link → QR code</p></a>
-            <a href="/favicon-generator/" class="tool-card"><i class="fas fa-star text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Favicon Generator</span><p class="text-xs text-gray-500 mt-1">Image → icon set</p></a>
-            <a href="/barcode-generator/" class="tool-card"><i class="fas fa-barcode text-blue-500 text-xl mb-3 block"></i><span class="font-bold text-sm">Barcode Generator</span><p class="text-xs text-gray-500 mt-1">Text → barcode</p></a>
+    <div id="result-card" class="cyber-card mt-8 hidden text-center">
+        <div id="loader-box" class="flex flex-col items-center py-10">
+            <div class="loader mb-4"></div>
+            <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
         </div>
-    </section>
+        <div id="preview-area" class="flex flex-col items-center w-full"></div>
+    </div>
 
     <section class="mt-16 border-t border-gray-900 pt-10">
-        <h2 class="text-2xl font-bold text-blue-500 mb-6">Why Local Processing Matters</h2>
+        <h2 class="text-2xl font-bold text-blue-500 mb-6">Free Background Remover (Photos of People)</h2>
         <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
-            <p>
-                Most online PDF and image tools require you to <strong>upload your file</strong> to a remote server before you can use it. That means your document leaves your device and sits on someone else's infrastructure, even briefly. Most AiFileStudio.PRO tools take a different approach: <strong>local, browser-side processing</strong>.
-            </p>
-            <p>
-                Using JavaScript libraries like <code class="text-blue-400">pdf-lib</code> and <code class="text-blue-400">Tesseract.js</code>, this site performs tasks — merging PDFs, extracting text via OCR, converting image formats — directly inside your browser. Your files aren't sent to our backend for these tools, and there's no server-side storage of your documents.
-            </p>
-            <p>
-                The one exception is the <strong>AI Art</strong> tool, which sends your text prompt to a third-party image-generation API to create the artwork. Every other tool on this site works fully offline once the page has loaded.
-            </p>
+            <p><strong>Honest scope:</strong> this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a photo. It's built specifically for photos containing people — it is not a general-purpose object background remover, and results on other subjects (products, animals, landscapes) will likely be poor or unpredictable.</p>
+        <p>Once the background is removed, you can leave it transparent or swap in a solid color — white, red, blue, green, black, or any custom color — using the swatches above the upload box. The output is generated entirely on your device — your photo isn't uploaded to a server, though the segmentation model itself is downloaded from Google's CDN the first time you use this tool.</p>
         </div>
     </section>
 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
-            <div>
-                <h4 class="text-blue-400 font-bold">Do I need to create an account?</h4>
-                <p>No. Every tool works immediately, with no sign-up.</p>
-            </div>
-            <div>
-                <h4 class="text-blue-400 font-bold">Is there a file size limit?</h4>
-                <p>Since processing happens on your device for most tools, the practical limit depends on your device's memory rather than a server-side cap.</p>
-            </div>
-            <div>
-                <h4 class="text-blue-400 font-bold">Which tool sends data anywhere?</h4>
-                <p>Only the AI Image Generator, which sends your text prompt to a third-party service (Pollinations AI) to create the image. All other tools run locally.</p>
-            </div>
+            <div><h4 class="text-blue-400 font-bold">Will this work on photos of objects or animals?</h4><p>Not reliably — this specific tool is built on a person-segmentation model, so it's tuned for human subjects. Results on other subjects can be inconsistent.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Can I set a solid color background instead of transparent?</h4><p>Yes — pick from the White, Red, Blue, Green, or Black swatches, or use the custom color picker, before running the tool. Leave it on the checkered 'Transparent' swatch for a transparent PNG.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Why does this take longer than your other tools?</h4><p>It downloads and runs a machine learning model in your browser the first time you use it, which takes more time than the simpler canvas-based tools.</p></div>
+        </div>
+    </section>
+
+    <section class="mt-12">
+        <h3 class="text-lg font-bold text-white mb-4">More Tools</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <a href="/ai-image-generator/" class="tool-card text-center text-xs"><i class="fas fa-magic text-blue-500 text-lg mb-2 block"></i>AI Art</a>
+            <a href="/resize-image/" class="tool-card text-center text-xs"><i class="fas fa-expand text-blue-500 text-lg mb-2 block"></i>Resize Image</a>
+            <a href="/jpg-to-png/" class="tool-card text-center text-xs"><i class="fas fa-sync text-blue-500 text-lg mb-2 block"></i>JPG to PNG</a>
+            <a href="/merge-pdf/" class="tool-card text-center text-xs"><i class="fas fa-layer-group text-blue-500 text-lg mb-2 block"></i>Merge PDF</a>
+            <a href="/split-pdf/" class="tool-card text-center text-xs"><i class="fas fa-scissors text-blue-500 text-lg mb-2 block"></i>Split PDF</a>
+            <a href="/rotate-pdf/" class="tool-card text-center text-xs"><i class="fas fa-redo text-blue-500 text-lg mb-2 block"></i>Rotate PDF</a>
+            <a href="/jpg-to-pdf/" class="tool-card text-center text-xs"><i class="fas fa-images text-blue-500 text-lg mb-2 block"></i>JPG to PDF</a>
+            <a href="/delete-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-trash text-blue-500 text-lg mb-2 block"></i>Delete Pages</a>
+            <a href="/extract-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-file-export text-blue-500 text-lg mb-2 block"></i>Extract Pages</a>
+            <a href="/reorder-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-sort text-blue-500 text-lg mb-2 block"></i>Reorder Pages</a>
+            <a href="/add-page-numbers/" class="tool-card text-center text-xs"><i class="fas fa-list-ol text-blue-500 text-lg mb-2 block"></i>Page Numbers</a>
+            <a href="/watermark-pdf/" class="tool-card text-center text-xs"><i class="fas fa-stamp text-blue-500 text-lg mb-2 block"></i>Watermark</a>
+            <a href="/crop-pdf/" class="tool-card text-center text-xs"><i class="fas fa-crop text-blue-500 text-lg mb-2 block"></i>Crop PDF</a>
+            <a href="/compress-pdf/" class="tool-card text-center text-xs"><i class="fas fa-compress text-blue-500 text-lg mb-2 block"></i>Compress PDF</a>
+            <a href="/pdf-viewer/" class="tool-card text-center text-xs"><i class="fas fa-eye text-blue-500 text-lg mb-2 block"></i>PDF Viewer</a>
+            <a href="/image-compressor/" class="tool-card text-center text-xs"><i class="fas fa-file-zipper text-blue-500 text-lg mb-2 block"></i>Image Compressor</a>
+            <a href="/favicon-generator/" class="tool-card text-center text-xs"><i class="fas fa-star text-blue-500 text-lg mb-2 block"></i>Favicon Generator</a>
+            <a href="/barcode-generator/" class="tool-card text-center text-xs"><i class="fas fa-barcode text-blue-500 text-lg mb-2 block"></i>Barcode Generator</a>
+            <a href="/txt-to-pdf/" class="tool-card text-center text-xs"><i class="fas fa-file-lines text-blue-500 text-lg mb-2 block"></i>TXT to PDF</a>
+            <a href="/html-to-pdf/" class="tool-card text-center text-xs"><i class="fas fa-code text-blue-500 text-lg mb-2 block"></i>HTML to PDF</a>
+            <a href="/image-to-text-ocr/" class="tool-card text-center text-xs"><i class="fas fa-font text-blue-500 text-lg mb-2 block"></i>OCR Text</a>
+            <a href="/password-generator/" class="tool-card text-center text-xs"><i class="fas fa-key text-blue-500 text-lg mb-2 block"></i>Key Gen</a>
+            <a href="/qr-code-generator/" class="tool-card text-center text-xs"><i class="fas fa-qrcode text-blue-500 text-lg mb-2 block"></i>QR Studio</a>
         </div>
     </section>
 
@@ -151,6 +173,7 @@
 
 <div id="shared-widgets-slot"></div>
 
+<script>const TOOL_MODE = 'bgremove'; const TOOL_LIBS = ["https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"];</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>

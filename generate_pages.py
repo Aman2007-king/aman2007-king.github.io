@@ -254,14 +254,15 @@ TOOLS = [
     ),
     dict(
         mode="bgremove", slug="background-remover", nav="Background Remover",
-        title="Background Remover", subtitle="Remove the background from a photo of a person.",
+        title="Background Remover", subtitle="Remove or replace the background from a photo of a person.",
         input_label="", input_placeholder="",
         accept="image/*", multiple=False, needs_file=True, needs_text=False, libs=["mediapipe"],
         about_heading="Free Background Remover (Photos of People)",
         about_html="""<p><strong>Honest scope:</strong> this tool uses Google's MediaPipe Selfie Segmentation model, running locally in your browser, to separate a person from the background of a photo. It's built specifically for photos containing people — it is not a general-purpose object background remover, and results on other subjects (products, animals, landscapes) will likely be poor or unpredictable.</p>
-        <p>The output is a transparent PNG with the background removed, generated entirely on your device — your photo isn't uploaded to a server, though the segmentation model itself is downloaded from Google's CDN the first time you use this tool.</p>""",
+        <p>Once the background is removed, you can leave it transparent or swap in a solid color — white, red, blue, green, black, or any custom color — using the swatches above the upload box. The output is generated entirely on your device — your photo isn't uploaded to a server, though the segmentation model itself is downloaded from Google's CDN the first time you use this tool.</p>""",
         faq=[
             ("Will this work on photos of objects or animals?", "Not reliably — this specific tool is built on a person-segmentation model, so it's tuned for human subjects. Results on other subjects can be inconsistent."),
+            ("Can I set a solid color background instead of transparent?", "Yes — pick from the White, Red, Blue, Green, or Black swatches, or use the custom color picker, before running the tool. Leave it on the checkered 'Transparent' swatch for a transparent PNG."),
             ("Why does this take longer than your other tools?", "It downloads and runs a machine learning model in your browser the first time you use it, which takes more time than the simpler canvas-based tools."),
         ],
     ),
@@ -419,6 +420,19 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
                     <label class="flex items-center gap-2 text-xs text-gray-400">
                         <input type="checkbox" id="doc-upscale"> Super-Res
                     </label>
+                </div>
+            </div>
+
+            <div id="bgcolor-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
+                <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Background Color</p>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <button type="button" class="bg-swatch" data-color="transparent" style="background-image: repeating-conic-gradient(#666 0% 25%, #333 0% 50%) 50% / 12px 12px;" title="Transparent"></button>
+                    <button type="button" class="bg-swatch" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
+                    <button type="button" class="bg-swatch" data-color="#ff0000" style="background-color:#ff0000;" title="Red"></button>
+                    <button type="button" class="bg-swatch" data-color="#0000ff" style="background-color:#0000ff;" title="Blue"></button>
+                    <button type="button" class="bg-swatch" data-color="#22c55e" style="background-color:#22c55e;" title="Green"></button>
+                    <button type="button" class="bg-swatch" data-color="#000000" style="background-color:#000000;" title="Black"></button>
+                    <input type="color" id="bgcolor-custom" value="#3b82f6" class="w-9 h-9 rounded cursor-pointer border-2 border-gray-700 bg-transparent" title="Custom color">
                 </div>
             </div>
 

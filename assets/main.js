@@ -19,6 +19,9 @@ const TOOLS = [
     { group: 'PDF Toolkit', id: 'compress',     name: 'Compress PDF',   icon: 'fa-compress',    url: '/compress-pdf/' },
     { group: 'PDF Toolkit', id: 'viewer',       name: 'PDF Viewer',     icon: 'fa-eye',         url: '/pdf-viewer/' },
     { group: 'Creative', id: 'imgcompress', name: 'Image Compressor', icon: 'fa-file-zipper', url: '/image-compressor/' },
+    { group: 'Creative', id: 'bgremove', name: 'Background Remover', icon: 'fa-person', url: '/background-remover/' },
+    { group: 'Utils', id: 'favicon', name: 'Favicon Generator', icon: 'fa-star', url: '/favicon-generator/' },
+    { group: 'Utils', id: 'barcode', name: 'Barcode Generator', icon: 'fa-barcode', url: '/barcode-generator/' },
     { group: 'Convert', id: 'txt2pdf',  name: 'TXT to PDF',    icon: 'fa-file-lines',  url: '/txt-to-pdf/' },
     { group: 'Convert', id: 'html2pdf', name: 'HTML to PDF',   icon: 'fa-code',        url: '/html-to-pdf/' },
     { group: 'Utils', id: 'ocr',  name: 'OCR Text',     icon: 'fa-font',   url: '/image-to-text-ocr/' },
@@ -287,8 +290,8 @@ function setupToolUI(mode) {
     if (standardInputsEl) standardInputsEl.classList.toggle('hidden', mode === 'pass');
     if (enhancementEl) enhancementEl.classList.toggle('hidden', !enhancementModes.includes(mode));
 
-    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer'];
-    const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf'];
+    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer', 'favicon', 'bgremove'];
+    const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf', 'barcode'];
     if (textFieldWrap) textFieldWrap.classList.toggle('hidden', noTextInput.includes(mode));
     if (fileFieldWrap) fileFieldWrap.classList.toggle('hidden', noFileInput.includes(mode));
 }
@@ -583,6 +586,82 @@ async function processTask() {
                 const afterBytes = Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75);
                 preview.innerHTML = `<img src="${dataUrl}" class="mb-4 rounded-xl border border-gray-800 max-w-full" alt="Compressed image"><p class="text-xs text-gray-500 mb-2">${(before / 1024).toFixed(1)} KB → ~${(afterBytes / 1024).toFixed(1)} KB</p><a href="${dataUrl}" download="compressed.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
             }
+        }
+        else if (mode === 'favicon') {
+            if (!files[0]) throw "Upload an image (a square image works best).";
+            const img = new Image();
+            img.src = await fileToDataURL(files[0]);
+            await new Promise(resolve => { img.onload = resolve; });
+            const sizes = [16, 32, 48, 180, 192, 512];
+            const zip = new JSZip();
+            for (let i = 0; i < sizes.length; i++) {
+                const size = sizes[i];
+                loaderText.innerText = `RENDERING ${size}x${size}...`;
+                const canvas = document.createElement('canvas');
+                canvas.width = size; canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, size, size);
+                const dataUrl = canvas.toDataURL('image/png');
+                const name = size === 180 ? 'apple-touch-icon.png' : size === 192 ? 'android-chrome-192x192.png' : size === 512 ? 'android-chrome-512x512.png' : `favicon-${size}x${size}.png`;
+                zip.file(name, dataUrl.split(',')[1], { base64: true });
+            }
+            zip.file("site.webmanifest", JSON.stringify({
+                name: "My Site", short_name: "Site",
+                icons: [
+                    { src: "android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+                    { src: "android-chrome-512x512.png", sizes: "512x512", type: "image/png" }
+                ],
+                theme_color: "#3b82f6", background_color: "#ffffff", display: "standalone"
+            }, null, 2));
+            const content = await zip.generateAsync({ type: "blob" });
+            const url = URL.createObjectURL(content);
+            preview.innerHTML = `<p class='text-xs mb-4'>Generated ${sizes.length} icon sizes + a web manifest</p><a href="${url}" download="favicons.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
+        }
+        else if (mode === 'barcode') {
+            if (!input) throw "Enter the text or number to encode.";
+            const canvas = document.createElement('canvas');
+            try {
+                JsBarcode(canvas, input, { format: "CODE128", displayValue: true, margin: 10 });
+            } catch (e) {
+                throw "Couldn't generate a barcode for that value — try different characters.";
+            }
+            const dataUrl = canvas.toDataURL('image/png');
+            preview.innerHTML = `<div class="bg-white p-4 rounded-xl mb-4"><img src="${dataUrl}" alt="Barcode"></div><a href="${dataUrl}" download="barcode.png" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
+        }
+        else if (mode === 'bgremove') {
+            if (!files[0]) throw "Upload a photo (this works best on photos of people).";
+            const img = new Image();
+            img.src = await fileToDataURL(files[0]);
+            await new Promise(resolve => { img.onload = resolve; });
+
+            const selfieSegmentation = new SelfieSegmentation({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+            });
+            selfieSegmentation.setOptions({ modelSelection: 1 });
+
+            const resultCanvas = document.createElement('canvas');
+            resultCanvas.width = img.width; resultCanvas.height = img.height;
+            const resultCtx = resultCanvas.getContext('2d');
+
+            await new Promise((resolve, reject) => {
+                selfieSegmentation.onResults((results) => {
+                    try {
+                        resultCtx.save();
+                        resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+                        resultCtx.drawImage(results.segmentationMask, 0, 0, resultCanvas.width, resultCanvas.height);
+                        resultCtx.globalCompositeOperation = 'source-in';
+                        resultCtx.drawImage(results.image, 0, 0, resultCanvas.width, resultCanvas.height);
+                        resultCtx.restore();
+                        resolve();
+                    } catch (e) { reject(e); }
+                });
+                selfieSegmentation.send({ image: img }).catch(reject);
+            });
+
+            const dataUrl = resultCanvas.toDataURL('image/png');
+            preview.innerHTML = `<img src="${dataUrl}" class="mb-4 rounded-xl border border-gray-800 max-w-full" alt="Background removed" style="background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 50% / 20px 20px;"><p class="text-[10px] text-gray-600 mb-2">Works best on clear photos of people — results on other subjects may vary.</p><a href="${dataUrl}" download="no-background.png" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download PNG</a>`;
         }
         else if (mode === 'qr') {
             if (!input) throw "Enter text or a URL to encode.";

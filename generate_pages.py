@@ -353,6 +353,10 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     <meta property="og:image" content="{site}/ag-image.png">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>{title} | AiFileStudio.PRO</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050507">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/icon-192.png" type="image/png">
     <script type="application/ld+json">{schema_json}</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
@@ -374,10 +378,11 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
     <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
     <div>
-        <a href="/" style="text-decoration:none;"><h1 style="color: #ffffff; font-size: 1.8rem; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></h1></a>
+        <a href="/" style="text-decoration:none;"><p style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></p></a>
         <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
     </div>
 </div>
@@ -385,19 +390,19 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 
 <div class="mobile-header" id="mobile-header-slot"></div>
 
-<aside id="main-sidebar"></aside>
+<aside id="main-sidebar" aria-label="Tool navigation"></aside>
 
-<main onclick="closeSidebarMobile()">
+<main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
     <div class="mb-8">
-        <nav class="text-xs text-gray-600 mb-3"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">{title}</span></nav>
-        <h2 class="text-3xl font-bold">{title}</h2>
+        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">{title}</span></nav>
+        <h1 class="text-3xl font-bold">{title}</h1>
         <p class="text-gray-500 text-sm">{subtitle}</p>
     </div>
 
     <div class="cyber-card">
         <div id="standard-inputs">
             <div id="text-field-wrap">
-                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">{input_label}</label>
+                <label for="main-input" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">{input_label}</label>
                 <textarea id="main-input" placeholder="{input_placeholder}" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
             </div>
 
@@ -405,11 +410,11 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
                 <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
+                        <label for="doc-bright" class="text-[9px] text-gray-500 block mb-1">BRIGHTNESS</label>
                         <input type="range" id="doc-bright" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-600">
                     </div>
                     <div>
-                        <label class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
+                        <label for="doc-contrast" class="text-[9px] text-gray-500 block mb-1">CONTRAST</label>
                         <input type="range" id="doc-contrast" min="0.5" max="3" step="0.1" value="1" class="w-full accent-blue-600">
                     </div>
                 </div>
@@ -437,7 +442,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
             </div>
 
             <div id="file-field-wrap">
-                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
+                <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
                 <input type="file" id="main-file" {multiple_attr} accept="{accept}" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
         </div>

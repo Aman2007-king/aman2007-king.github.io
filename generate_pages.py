@@ -2,13 +2,14 @@ import os
 
 SITE = "https://aman2007-king.github.io"
 
-LIB_SNIPPETS = {
-    "pdf-lib": '<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>',
-    "jspdf": '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>',
-    "tesseract": '<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>',
-    "qrcode": '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>',
-    "jszip": '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>',
-    "html2canvas": '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>',
+LIB_URLS = {
+    "pdf-lib": "https://unpkg.com/pdf-lib/dist/pdf-lib.min.js",
+    "jspdf": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+    "tesseract": "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js",
+    "qrcode": "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js",
+    "jszip": "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
+    "html2canvas": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+    "pdfjs": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
 }
 
 TOOLS = [
@@ -172,6 +173,58 @@ TOOLS = [
         ],
     ),
     dict(
+        mode="crop", slug="crop-pdf", nav="Crop PDF",
+        title="Crop PDF", subtitle="Trim margins from every page of a PDF.",
+        input_label="Margins to trim: top, right, bottom, left (%)", input_placeholder="e.g. 5, 5, 5, 5",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        about_heading="Free PDF Cropping Tool",
+        about_html="""<p>Trim excess margins from every page of a PDF by entering how much to cut from each side, as a percentage of the page size — for example <code class="text-blue-400">5, 5, 5, 5</code> trims 5% off the top, right, bottom, and left of every page. This adjusts the PDF's crop box locally using <code class="text-blue-400">pdf-lib</code>, so the file isn't uploaded anywhere.</p>
+        <p>Useful for removing wide scanner margins, cutting off a printer's crop marks, or tightening up a page before printing or presenting.</p>""",
+        faq=[
+            ("Can I crop each side by a different amount?", "Yes — the four numbers you enter correspond to top, right, bottom, and left independently."),
+            ("Does cropping delete the trimmed content permanently?", "Cropping adjusts the PDF's visible crop box; most viewers will only show the cropped area. Content just outside the new boundary is typically no longer visible or printed."),
+        ],
+    ),
+    dict(
+        mode="compress", slug="compress-pdf", nav="Compress PDF",
+        title="Compress PDF", subtitle="Reduce a PDF's file size.",
+        input_label="", input_placeholder="",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=False, libs=["pdf-lib"],
+        about_heading="Free PDF Compressor",
+        about_html="""<p>Shrink a PDF's file size using structural compression (object streams), applied locally with <code class="text-blue-400">pdf-lib</code> — the file isn't uploaded anywhere to be compressed. AiFileStudio shows you the before/after size so you can see exactly how much was saved.</p>
+        <p><strong>Honest limitation:</strong> this doesn't re-encode embedded images, which is usually where most of a PDF's file size comes from. PDFs that are mostly text and vector content will shrink more than PDFs full of high-resolution photos — for those, compressing the images before building the PDF (e.g. with our <a href="/image-compressor/" class="text-blue-500 underline">Image Compressor</a>) will do more.</p>""",
+        faq=[
+            ("Why didn't my PDF get much smaller?", "If your PDF's size mainly comes from embedded high-resolution images, structural compression alone won't reduce it much — image data isn't re-encoded by this tool."),
+            ("Will compression reduce quality?", "No — this method doesn't touch the visual content of your PDF, only the underlying file structure, so there's no quality loss."),
+        ],
+    ),
+    dict(
+        mode="viewer", slug="pdf-viewer", nav="PDF Viewer",
+        title="PDF Viewer", subtitle="View a PDF's pages directly in your browser.",
+        input_label="", input_placeholder="",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=False, libs=["pdfjs"],
+        about_heading="Free Online PDF Viewer",
+        about_html="""<p>Open and view a PDF directly in your browser using <code class="text-blue-400">pdf.js</code> — no software installation, no account, and the file isn't uploaded to a server to be displayed. Every page renders as an image you can scroll through right on this page.</p>
+        <p>Handy for quickly checking the contents of a PDF you don't want to fully download and open in a separate app.</p>""",
+        faq=[
+            ("Can I edit the PDF here?", "No — this tool is read-only viewing. Use the other AiFileStudio PDF tools (merge, split, watermark, etc.) to modify a PDF."),
+            ("Is there a page limit?", "No hard limit, but very long PDFs will take longer to render since every page is drawn to a canvas in your browser."),
+        ],
+    ),
+    dict(
+        mode="imgcompress", slug="image-compressor", nav="Image Compressor",
+        title="Image Compressor", subtitle="Shrink image file size by adjusting quality.",
+        input_label="Quality (1-100, lower = smaller file)", input_placeholder="e.g. 70",
+        accept="image/*", multiple=True, needs_file=True, needs_text=True, libs=["jszip"],
+        about_heading="Free Local Image Compressor",
+        about_html="""<p>Reduce an image's file size by re-encoding it as a JPEG at a quality level you choose — lower quality means a smaller file, at the cost of some visual detail. Processing happens locally on the HTML5 canvas, so images aren't uploaded anywhere. Select multiple images and AiFileStudio batches them into a ZIP.</p>
+        <p>A quality around 60-80 is usually a reasonable balance between file size and visual quality for photos; go lower if file size matters more than appearance.</p>""",
+        faq=[
+            ("Does this resize my image too?", "No — dimensions stay the same; only the compression quality changes. Use the <a href='/resize-image/' class='text-blue-500 underline'>Resize Image</a> tool if you also want to change dimensions."),
+            ("What quality setting should I use?", "60-80 is a reasonable starting point for photos. Go lower for maximum size reduction if some quality loss is acceptable."),
+        ],
+    ),
+    dict(
         mode="txt2pdf", slug="txt-to-pdf", nav="TXT to PDF",
         title="TXT to PDF Converter", subtitle="Turn plain text into a downloadable PDF.",
         input_label="Paste your text", input_placeholder="Paste or type your text here...",
@@ -258,6 +311,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     <meta property="og:image" content="{site}/ag-image.png">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
     <title>{title} | AiFileStudio.PRO</title>
+    <script type="application/ld+json">{schema_json}</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
@@ -276,7 +330,6 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/style.css">
-    {tool_libs}
 </head>
 <body>
 <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
@@ -376,7 +429,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 
 <div id="shared-widgets-slot"></div>
 
-<script>const TOOL_MODE = '{mode}';</script>
+<script>const TOOL_MODE = '{mode}'; const TOOL_LIBS = {tool_libs_json};</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>
@@ -396,18 +449,48 @@ def build_related_html(current_slug):
         parts.append(f'<a href="/{t["slug"]}/" class="tool-card text-center text-xs"><i class="fas {ICON[t["mode"]]} text-blue-500 text-lg mb-2 block"></i>{t["nav"]}</a>')
     return "\n            ".join(parts)
 
+def build_schema_json(t, meta_desc):
+    faq_entities = [
+        {
+            "@type": "Question",
+            "name": q,
+            "acceptedAnswer": {"@type": "Answer", "text": a},
+        }
+        for q, a in t["faq"]
+    ]
+    schema = [
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": f'{t["title"]} | AiFileStudio.PRO',
+            "url": f'{SITE}/{t["slug"]}/',
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Any (runs in browser)",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+            "description": meta_desc,
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faq_entities,
+        },
+    ]
+    return json.dumps(schema)
+
 ICON = {
     "ai": "fa-magic", "resize": "fa-expand", "convert": "fa-sync",
     "merge": "fa-layer-group", "split": "fa-scissors", "rotate": "fa-redo",
     "pdf": "fa-images", "ocr": "fa-font", "pass": "fa-key", "qr": "fa-qrcode",
     "deletepages": "fa-trash", "extractpages": "fa-file-export", "reorder": "fa-sort",
     "pagenumbers": "fa-list-ol", "watermark": "fa-stamp", "txt2pdf": "fa-file-lines",
-    "html2pdf": "fa-code",
+    "html2pdf": "fa-code", "crop": "fa-crop", "compress": "fa-compress",
+    "viewer": "fa-eye", "imgcompress": "fa-file-zipper",
 }
 
 os.makedirs(os.path.dirname(os.path.abspath(__file__)), exist_ok=True)
 
 import re as _re
+import json
 
 def plain_desc(about_html):
     first_p = about_html.split("<p>", 1)[1].split("</p>")[0]
@@ -418,9 +501,10 @@ def plain_desc(about_html):
     return text
 
 for t in TOOLS:
-    tool_libs = "\n    ".join(LIB_SNIPPETS[l] for l in t["libs"])
+    meta_desc = plain_desc(t["about_html"])
+    tool_libs_json = json.dumps([LIB_URLS[l] for l in t["libs"]])
     page = TOOL_PAGE_TEMPLATE.format(
-        meta_desc=plain_desc(t["about_html"]),
+        meta_desc=meta_desc,
         canonical=f'{SITE}/{t["slug"]}/',
         site=SITE,
         title=t["title"],
@@ -435,7 +519,8 @@ for t in TOOLS:
         faq_html=build_faq_html(t["faq"]),
         related_html=build_related_html(t["slug"]),
         mode=t["mode"],
-        tool_libs=tool_libs,
+        tool_libs_json=tool_libs_json,
+        schema_json=build_schema_json(t, meta_desc),
     )
     outdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), t["slug"])
     os.makedirs(outdir, exist_ok=True)

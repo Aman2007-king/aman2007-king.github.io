@@ -8,7 +8,7 @@ const PRECACHE_URLS = [
   '/icon-192.png',
   '/icon-512.png'
 ];
-
+ 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -16,7 +16,7 @@ self.addEventListener('install', (event) => {
       .then(() => self.skipWaiting())
   );
 });
-
+ 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((names) =>
@@ -24,11 +24,11 @@ self.addEventListener('activate', (event) => {
     ).then(() => self.clients.claim())
   );
 });
-
+ 
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
+ 
   // Page navigations: network-first, fall back to cache, then to the cached homepage shell.
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -44,7 +44,7 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
-
+ 
   // Everything else (same-origin assets + cross-origin CDN libraries): cache-first,
   // falling back to network and caching the result for next time.
   event.respondWith(

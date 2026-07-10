@@ -37,19 +37,28 @@ function renderSidebar(activeId) {
     groups.forEach(g => {
         navHtml += `<p class="px-6 text-[10px] font-bold text-gray-600 uppercase mt-6 mb-2 tracking-widest">${g}</p>`;
         TOOLS.filter(t => t.group === g).forEach(t => {
-            navHtml += `<a href="${t.url}" class="nav-item${t.id === activeId ? ' active' : ''}"><i class="fas ${t.icon}"></i> ${t.name}</a>`;
+            const isActive = t.id === activeId;
+            navHtml += `<a href="${t.url}" class="nav-item${isActive ? ' active' : ''}"${isActive ? ' aria-current="page"' : ''}><i class="fas ${t.icon}" aria-hidden="true"></i> ${t.name}</a>`;
         });
     });
 
     const sidebar = `
         <div class="p-6 border-b border-gray-900 hidden md:block text-center">
             <a href="/" style="text-decoration:none;"><h1 class="text-xl font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1></a>
+            <div class="flex items-center gap-2 mt-4">
+                <button type="button" class="cmdk-trigger" onclick="openCommandPalette()" aria-label="Search tools (Ctrl+K)">
+                    <i class="fas fa-search" aria-hidden="true"></i> Search tools <kbd>Ctrl K</kbd>
+                </button>
+                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
-        <div class="py-4 flex-1 overflow-y-auto">
+        <div class="py-4 flex-1 overflow-y-auto" role="navigation" aria-label="Tool categories">
             ${navHtml}
             <div class="mt-6 pt-4 border-t border-gray-900">
-                <a href="/privacy.html" class="nav-item"><i class="fas fa-shield-alt"></i> Privacy</a>
-                <div class="nav-item" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact</div>
+                <a href="/privacy.html" class="nav-item"><i class="fas fa-shield-alt" aria-hidden="true"></i> Privacy</a>
+                <button type="button" class="nav-item w-full text-left" onclick="openModal('contactModal')" style="background:none; border:none;"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</button>
             </div>
             <div class="px-4 mt-6">
                 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1186506015762858" data-ad-slot="8734574320" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -57,7 +66,7 @@ function renderSidebar(activeId) {
         </div>
         <div style="margin-top: auto; padding: 20px; border-top: 1px solid #333;">
             <a href="/privacy.html" style="color: #888; text-decoration: none; font-size: 12px; display: block; margin-bottom: 10px;">Privacy Policy</a>
-            <a href="#" onclick="openModal('termsModal')" style="color: #888; text-decoration: none; font-size: 12px; display: block;">Terms of Service</a>
+            <button type="button" onclick="openModal('termsModal')" style="color: #888; text-decoration: none; font-size: 12px; display: block; background:none; border:none; padding:0; text-align:left; cursor:pointer;">Terms of Service</button>
             <a href="#faq" class="text-xs text-gray-500 hover:text-blue-500 mt-4 border-t border-gray-800 pt-2 block">Help & FAQ</a>
         </div>
         <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #1c1c21; text-align: center;">
@@ -72,8 +81,8 @@ function renderSidebar(activeId) {
     const mobileHeader = document.getElementById('mobile-header-slot');
     if (mobileHeader) {
         mobileHeader.innerHTML = `
-            <h1 class="text-lg font-black italic text-blue-500">AiFileStudio<span class="text-white">.PRO</span></h1>
-            <button onclick="toggleSidebar()" class="text-white text-xl"><i class="fas fa-bars"></i></button>`;
+            <p class="text-lg font-black italic text-blue-500" style="margin:0;">AiFileStudio<span class="text-white">.PRO</span></p>
+            <button onclick="toggleSidebar()" class="text-white text-xl" aria-label="Open menu"><i class="fas fa-bars" aria-hidden="true"></i></button>`;
     }
 
     try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
@@ -83,17 +92,17 @@ function renderModalsAndChat() {
     const slot = document.getElementById('shared-widgets-slot');
     if (!slot) return;
     slot.innerHTML = `
-    <div id="contactModal" class="modal">
+    <div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="contactModal-title">
         <div class="modal-content text-center">
-            <h2 class="text-xl font-bold text-blue-500 mb-4">Contact Us</h2>
+            <h2 id="contactModal-title" class="text-xl font-bold text-blue-500 mb-4">Contact Us</h2>
             <p class="text-blue-400 font-mono">ry650506@gmail.com</p>
             <button onclick="closeModal('contactModal')" class="mt-6 text-gray-500 text-sm">Close</button>
         </div>
     </div>
 
-    <div id="termsModal" class="modal">
+    <div id="termsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="termsModal-title">
         <div class="modal-content">
-            <h2 class="text-xl font-bold text-blue-500 mb-4">Terms of Service</h2>
+            <h2 id="termsModal-title" class="text-xl font-bold text-blue-500 mb-4">Terms of Service</h2>
             <p class="text-gray-400 text-xs leading-relaxed">
                 Use AiFileStudio.PRO tools for lawful purposes only. Most tools (PDF merge/split/rotate, resize, JPG↔PNG, OCR, password generation, QR codes) process files locally in your browser and are not uploaded to our servers.<br><br>
                 The AI Art tool sends your text prompt to a third-party service (Pollinations AI) to generate an image; that prompt does leave your device. Please avoid entering sensitive or confidential text into that tool.<br><br>
@@ -136,6 +145,141 @@ window.addEventListener('click', function (event) {
     if (event.target.className === 'modal') { event.target.style.display = "none"; }
 });
 
+/* --- Theme toggle --- */
+function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    const btn = document.getElementById('theme-toggle-btn');
+    if (btn) btn.innerHTML = theme === 'light' ? '<i class="fas fa-sun" aria-hidden="true"></i>' : '<i class="fas fa-moon" aria-hidden="true"></i>';
+}
+function toggleTheme() {
+    const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    const next = current === 'light' ? 'dark' : 'light';
+    try { localStorage.setItem('afs-theme', next); } catch (e) {}
+    applyTheme(next);
+}
+function initTheme() {
+    let saved = 'dark';
+    try { saved = localStorage.getItem('afs-theme') || 'dark'; } catch (e) {}
+    applyTheme(saved);
+}
+
+/* --- Recently used tools --- */
+function recordRecentTool(mode) {
+    if (!mode) return;
+    let recent = [];
+    try { recent = JSON.parse(localStorage.getItem('afs-recent') || '[]'); } catch (e) {}
+    recent = recent.filter(id => id !== mode);
+    recent.unshift(mode);
+    recent = recent.slice(0, 5);
+    try { localStorage.setItem('afs-recent', JSON.stringify(recent)); } catch (e) {}
+}
+function getRecentTools() {
+    try {
+        const ids = JSON.parse(localStorage.getItem('afs-recent') || '[]');
+        return ids.map(id => TOOLS.find(t => t.id === id)).filter(Boolean);
+    } catch (e) { return []; }
+}
+
+/* --- Command palette (Ctrl/Cmd+K) --- */
+let cmdkActiveIndex = 0;
+function ensureCommandPalette() {
+    if (document.getElementById('cmdk-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'cmdk-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Search tools');
+    overlay.innerHTML = `
+        <div id="cmdk-box">
+            <input id="cmdk-input" type="text" placeholder="Search tools..." autocomplete="off" aria-label="Search tools">
+            <div id="cmdk-results"></div>
+        </div>`;
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeCommandPalette(); });
+    document.getElementById('cmdk-input').addEventListener('input', renderCommandResults);
+    document.getElementById('cmdk-input').addEventListener('keydown', handleCommandKeydown);
+}
+function openCommandPalette() {
+    ensureCommandPalette();
+    const overlay = document.getElementById('cmdk-overlay');
+    overlay.classList.add('open');
+    cmdkActiveIndex = 0;
+    const input = document.getElementById('cmdk-input');
+    input.value = '';
+    renderCommandResults();
+    setTimeout(() => input.focus(), 30);
+}
+function closeCommandPalette() {
+    const overlay = document.getElementById('cmdk-overlay');
+    if (overlay) overlay.classList.remove('open');
+}
+function renderCommandResults() {
+    const query = document.getElementById('cmdk-input').value.trim().toLowerCase();
+    const resultsEl = document.getElementById('cmdk-results');
+    let list;
+    let label = 'All tools';
+    if (!query) {
+        const recent = getRecentTools();
+        list = recent.length ? recent : TOOLS;
+        label = recent.length ? 'Recently used' : 'All tools';
+    } else {
+        list = TOOLS.filter(t => t.name.toLowerCase().includes(query) || t.group.toLowerCase().includes(query));
+        label = 'Results';
+    }
+    cmdkActiveIndex = 0;
+    if (!list.length) {
+        resultsEl.innerHTML = `<div class="cmdk-empty">No tools match "${query}"</div>`;
+        return;
+    }
+    resultsEl.innerHTML = `<p class="cmdk-section-label">${label}</p>` + list.map((t, i) =>
+        `<div class="cmdk-item${i === 0 ? ' active' : ''}" data-url="${t.url}" role="option" aria-selected="${i === 0}"><i class="fas ${t.icon}" aria-hidden="true"></i> ${t.name}</div>`
+    ).join('');
+    resultsEl.querySelectorAll('.cmdk-item').forEach(el => {
+        el.addEventListener('click', () => { window.location.href = el.dataset.url; });
+    });
+}
+function handleCommandKeydown(e) {
+    const items = Array.from(document.querySelectorAll('.cmdk-item'));
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        cmdkActiveIndex = Math.min(cmdkActiveIndex + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        cmdkActiveIndex = Math.max(cmdkActiveIndex - 1, 0);
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        window.location.href = items[cmdkActiveIndex].dataset.url;
+        return;
+    } else {
+        return;
+    }
+    items.forEach((el, i) => {
+        el.classList.toggle('active', i === cmdkActiveIndex);
+        el.setAttribute('aria-selected', i === cmdkActiveIndex);
+    });
+    items[cmdkActiveIndex].scrollIntoView({ block: 'nearest' });
+}
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const overlay = document.getElementById('cmdk-overlay');
+        if (overlay && overlay.classList.contains('open')) closeCommandPalette();
+        else openCommandPalette();
+    } else if (e.key === 'Escape') {
+        closeCommandPalette();
+        document.querySelectorAll('.modal').forEach(m => { if (m.style.display === 'block') m.style.display = 'none'; });
+    }
+});
+
+/* --- PWA: service worker registration --- */
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => { /* offline support just won't be available */ });
+    }
+}
+
 /* --- Chatbot --- */
 function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
 function askChat(topic) {
@@ -160,6 +304,8 @@ function ensureToastStack() {
     if (!stack) {
         stack = document.createElement('div');
         stack.id = 'toast-stack';
+        stack.setAttribute('role', 'status');
+        stack.setAttribute('aria-live', 'polite');
         document.body.appendChild(stack);
     }
     return stack;
@@ -718,11 +864,14 @@ async function processTask() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    registerServiceWorker();
     if (typeof TOOL_MODE !== 'undefined') {
         renderSidebar(TOOL_MODE);
         setupToolUI(TOOL_MODE);
         enhanceDropzone();
         setupBgColorPicker();
+        recordRecentTool(TOOL_MODE);
     } else {
         renderSidebar(null);
     }

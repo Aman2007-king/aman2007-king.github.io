@@ -39,3 +39,7 @@ main { margin-left: 260px; padding: 40px; min-height: 100vh; }
 .dropzone .dz-icon { font-size: 22px; color: #444; margin-bottom: 8px; }
 .dropzone.drag-over .dz-icon { color: var(--accent); }
 .dz-filelist { margin-top: 10px; font-size: 11px; color: #888; text-align: left; }
+
+/* Background color swatches */
+.bg-swatch { width: 34px; height: 34px; border-radius: 8px; border: 2px solid #333; cursor: pointer; padding: 0; }
+.bg-swatch.selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.4); }

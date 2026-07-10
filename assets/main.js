@@ -15,6 +15,10 @@ const TOOLS = [
     { group: 'PDF Toolkit', id: 'reorder',      name: 'Reorder Pages',  icon: 'fa-sort',        url: '/reorder-pdf-pages/' },
     { group: 'PDF Toolkit', id: 'pagenumbers',  name: 'Page Numbers',   icon: 'fa-list-ol',     url: '/add-page-numbers/' },
     { group: 'PDF Toolkit', id: 'watermark',    name: 'Watermark PDF',  icon: 'fa-stamp',       url: '/watermark-pdf/' },
+    { group: 'PDF Toolkit', id: 'crop',         name: 'Crop PDF',       icon: 'fa-crop',        url: '/crop-pdf/' },
+    { group: 'PDF Toolkit', id: 'compress',     name: 'Compress PDF',   icon: 'fa-compress',    url: '/compress-pdf/' },
+    { group: 'PDF Toolkit', id: 'viewer',       name: 'PDF Viewer',     icon: 'fa-eye',         url: '/pdf-viewer/' },
+    { group: 'Creative', id: 'imgcompress', name: 'Image Compressor', icon: 'fa-file-zipper', url: '/image-compressor/' },
     { group: 'Convert', id: 'txt2pdf',  name: 'TXT to PDF',    icon: 'fa-file-lines',  url: '/txt-to-pdf/' },
     { group: 'Convert', id: 'html2pdf', name: 'HTML to PDF',   icon: 'fa-code',        url: '/html-to-pdf/' },
     { group: 'Utils', id: 'ocr',  name: 'OCR Text',     icon: 'fa-font',   url: '/image-to-text-ocr/' },
@@ -145,6 +149,87 @@ function askChat(topic) {
     }, 400);
 }
 
+/* --- Toasts --- */
+function ensureToastStack() {
+    let stack = document.getElementById('toast-stack');
+    if (!stack) {
+        stack = document.createElement('div');
+        stack.id = 'toast-stack';
+        document.body.appendChild(stack);
+    }
+    return stack;
+}
+function showToast(message, type = 'info') {
+    const stack = ensureToastStack();
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = message;
+    stack.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 4500);
+}
+
+/* --- Analytics --- */
+function trackEvent(action, label) {
+    try {
+        if (typeof gtag === 'function') {
+            gtag('event', action, { event_category: 'tool_usage', event_label: label });
+        }
+    } catch (e) { /* analytics should never break the tool */ }
+}
+
+/* --- Lazy library loading --- */
+const _loadedScripts = {};
+function loadScript(url) {
+    if (_loadedScripts[url]) return _loadedScripts[url];
+    _loadedScripts[url] = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = resolve;
+        s.onerror = () => reject(new Error(`Failed to load ${url}`));
+        document.head.appendChild(s);
+    });
+    return _loadedScripts[url];
+}
+async function ensureToolLibsLoaded() {
+    if (typeof TOOL_LIBS === 'undefined' || !TOOL_LIBS.length) return;
+    document.getElementById('loader-text').innerText = "LOADING ENGINE...";
+    await Promise.all(TOOL_LIBS.map(loadScript));
+}
+
+/* --- Drag & drop --- */
+function enhanceDropzone() {
+    const fileInput = document.getElementById('main-file');
+    if (!fileInput) return;
+    const wrap = fileInput.closest('#file-field-wrap');
+    if (!wrap || wrap.querySelector('.dropzone')) return;
+
+    const zone = document.createElement('div');
+    zone.className = 'dropzone';
+    zone.innerHTML = `<i class="fas fa-cloud-upload-alt dz-icon"></i><p class="text-xs text-gray-400">Drag & drop files here, or click to browse</p><div class="dz-filelist"></div>`;
+    fileInput.style.display = 'none';
+    fileInput.parentNode.insertBefore(zone, fileInput);
+
+    const fileListEl = zone.querySelector('.dz-filelist');
+    const renderList = () => {
+        fileListEl.innerHTML = fileInput.files.length
+            ? Array.from(fileInput.files).map(f => `• ${f.name}`).join('<br>')
+            : '';
+    };
+
+    zone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', renderList);
+    ['dragenter', 'dragover'].forEach(evt => zone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation(); zone.classList.add('drag-over');
+    }));
+    ['dragleave', 'drop'].forEach(evt => zone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation(); zone.classList.remove('drag-over');
+    }));
+    zone.addEventListener('drop', e => {
+        fileInput.files = e.dataTransfer.files;
+        renderList();
+    });
+}
+
 /* --- Shared file utilities --- */
 const fileToDataURL = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); });
 const downloadFile = (d, n, t) => { const b = new Blob([d], { type: t }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = n; a.click(); };
@@ -202,7 +287,7 @@ function setupToolUI(mode) {
     if (standardInputsEl) standardInputsEl.classList.toggle('hidden', mode === 'pass');
     if (enhancementEl) enhancementEl.classList.toggle('hidden', !enhancementModes.includes(mode));
 
-    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers'];
+    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer'];
     const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf'];
     if (textFieldWrap) textFieldWrap.classList.toggle('hidden', noTextInput.includes(mode));
     if (fileFieldWrap) fileFieldWrap.classList.toggle('hidden', noFileInput.includes(mode));
@@ -218,11 +303,15 @@ async function processTask() {
     const resCard = document.getElementById('result-card');
     const preview = document.getElementById('preview-area');
     const loader = document.getElementById('loader-box');
+    const loaderText = document.getElementById('loader-text');
 
     resCard.classList.remove('hidden');
     preview.innerHTML = ""; loader.classList.remove('hidden');
 
     try {
+        await ensureToolLibsLoaded();
+        loaderText.innerText = "ENGINE RUNNING...";
+
         if (mode === 'ai') {
             if (!input) throw "Enter a prompt describing the image you want.";
             const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?nologo=true`;
@@ -234,10 +323,10 @@ async function processTask() {
             if (!Number.isFinite(widthNum) || widthNum <= 0) throw "Width must be a positive number (e.g. 800).";
             if (files.length > 1) {
                 const zip = new JSZip();
-                document.getElementById('loader-text').innerText = "BATCH PROCESSING...";
-                for (let f of files) {
-                    const blob = await processImageEnhancement(f, widthNum);
-                    zip.file(`resized_${f.name}`, blob.split(',')[1], { base64: true });
+                for (let i = 0; i < files.length; i++) {
+                    loaderText.innerText = `PROCESSING ${i + 1} OF ${files.length}...`;
+                    const blob = await processImageEnhancement(files[i], widthNum);
+                    zip.file(`resized_${files[i].name}`, blob.split(',')[1], { base64: true });
                 }
                 const content = await zip.generateAsync({ type: "blob" });
                 const url = URL.createObjectURL(content);
@@ -343,11 +432,12 @@ async function processTask() {
             }
             if (indices.length === 0) throw "Invalid page range.";
             const zip = new JSZip();
-            for (const idx of indices) {
+            for (let i = 0; i < indices.length; i++) {
+                loaderText.innerText = `EXTRACTING ${i + 1} OF ${indices.length}...`;
                 const single = await PDFLib.PDFDocument.create();
-                const [copied] = await single.copyPages(doc, [idx]);
+                const [copied] = await single.copyPages(doc, [indices[i]]);
                 single.addPage(copied);
-                zip.file(`page_${idx + 1}.pdf`, await single.save());
+                zip.file(`page_${indices[i] + 1}.pdf`, await single.save());
             }
             const content = await zip.generateAsync({ type: "blob" });
             const url = URL.createObjectURL(content);
@@ -416,15 +506,96 @@ async function processTask() {
             doc.save("webpage.pdf");
             preview.innerHTML = "✓ Downloaded";
         }
+        else if (mode === 'crop') {
+            if (!files[0] || !input) throw "Upload a PDF and enter margins as top,right,bottom,left percentages (e.g. 5,5,5,5).";
+            const parts = input.split(',').map(n => parseFloat(n.trim()));
+            if (parts.length !== 4 || parts.some(n => isNaN(n) || n < 0 || n >= 50)) throw "Enter 4 percentages between 0 and 49, as top,right,bottom,left (e.g. 5,5,5,5).";
+            const [top, right, bottom, left] = parts;
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            doc.getPages().forEach(p => {
+                const { width, height } = p.getSize();
+                const x = width * (left / 100);
+                const y = height * (bottom / 100);
+                const newWidth = width * (1 - (left + right) / 100);
+                const newHeight = height * (1 - (top + bottom) / 100);
+                p.setCropBox(x, y, newWidth, newHeight);
+            });
+            downloadFile(await doc.save(), "cropped.pdf", "application/pdf");
+            preview.innerHTML = "✓ Cropped";
+        }
+        else if (mode === 'compress') {
+            if (!files[0]) throw "Upload a PDF.";
+            const beforeSize = files[0].size;
+            const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+            const bytes = await doc.save({ useObjectStreams: true });
+            const afterSize = bytes.length;
+            const pct = beforeSize > 0 ? Math.round((1 - afterSize / beforeSize) * 100) : 0;
+            downloadFile(bytes, "compressed.pdf", "application/pdf");
+            preview.innerHTML = `<p class="text-xs mb-2">${(beforeSize / 1024).toFixed(1)} KB → ${(afterSize / 1024).toFixed(1)} KB${pct > 0 ? ` (${pct}% smaller)` : ''}</p><p class="text-[10px] text-gray-600 mb-4">This applies structural/stream compression only — it doesn't re-encode embedded images, so image-heavy PDFs may not shrink much.</p><p class="text-sm">✓ Downloaded</p>`;
+        }
+        else if (mode === 'viewer') {
+            if (!files[0]) throw "Upload a PDF to view.";
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            const buf = await files[0].arrayBuffer();
+            const pdfDoc = await pdfjsLib.getDocument({ data: buf }).promise;
+            const container = document.createElement('div');
+            container.className = "space-y-4 w-full";
+            preview.innerHTML = `<p class="text-xs text-gray-500 mb-4">${pdfDoc.numPages} page(s)</p>`;
+            preview.appendChild(container);
+            for (let i = 1; i <= pdfDoc.numPages; i++) {
+                loaderText.innerText = `RENDERING PAGE ${i} OF ${pdfDoc.numPages}...`;
+                const page = await pdfDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 1.2 });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width; canvas.height = viewport.height;
+                canvas.className = "rounded-lg border border-gray-800 mx-auto block max-w-full";
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                container.appendChild(canvas);
+            }
+        }
+        else if (mode === 'imgcompress') {
+            if (!files[0]) throw "Select one or more images.";
+            let quality = parseFloat(input);
+            if (!Number.isFinite(quality) || quality <= 0 || quality > 100) quality = 70;
+            const compressOne = (file) => new Promise(async (resolve) => {
+                const img = new Image();
+                img.src = await fileToDataURL(file);
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width; canvas.height = img.height;
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    resolve(canvas.toDataURL('image/jpeg', quality / 100));
+                };
+            });
+            if (files.length > 1) {
+                const zip = new JSZip();
+                for (let i = 0; i < files.length; i++) {
+                    loaderText.innerText = `COMPRESSING ${i + 1} OF ${files.length}...`;
+                    const dataUrl = await compressOne(files[i]);
+                    zip.file(`compressed_${files[i].name.replace(/\.[^.]+$/, '')}.jpg`, dataUrl.split(',')[1], { base64: true });
+                }
+                const content = await zip.generateAsync({ type: "blob" });
+                const url = URL.createObjectURL(content);
+                preview.innerHTML = `<p class='text-xs mb-4'>Compressed ${files.length} images at ${quality}% quality</p><a href="${url}" download="compressed_images.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
+            } else {
+                const before = files[0].size;
+                const dataUrl = await compressOne(files[0]);
+                const afterBytes = Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75);
+                preview.innerHTML = `<img src="${dataUrl}" class="mb-4 rounded-xl border border-gray-800 max-w-full" alt="Compressed image"><p class="text-xs text-gray-500 mb-2">${(before / 1024).toFixed(1)} KB → ~${(afterBytes / 1024).toFixed(1)} KB</p><a href="${dataUrl}" download="compressed.jpg" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold">Download</a>`;
+            }
+        }
         else if (mode === 'qr') {
             if (!input) throw "Enter text or a URL to encode.";
             preview.innerHTML = `<div id="q" class="bg-white p-4"></div>`;
             new QRCode(document.getElementById("q"), { text: input, width: 150, height: 150 });
         }
         loader.classList.add('hidden');
+        trackEvent('tool_used', mode);
     } catch (err) {
-        preview.innerHTML = `<p class="text-red-400 text-sm">${typeof err === 'string' ? err : 'Something went wrong. Please check your input and try again.'}</p>`;
+        resCard.classList.add('hidden');
         loader.classList.add('hidden');
+        showToast(typeof err === 'string' ? err : 'Something went wrong. Please check your input and try again.', 'error');
+        trackEvent('tool_error', mode);
     }
 }
 
@@ -432,6 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof TOOL_MODE !== 'undefined') {
         renderSidebar(TOOL_MODE);
         setupToolUI(TOOL_MODE);
+        enhanceDropzone();
     } else {
         renderSidebar(null);
     }

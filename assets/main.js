@@ -68,6 +68,7 @@ function renderSidebar(activeId) {
             <a href="/privacy.html" style="color: #888; text-decoration: none; font-size: 12px; display: block; margin-bottom: 10px;">Privacy Policy</a>
             <button type="button" onclick="openModal('termsModal')" style="color: #888; text-decoration: none; font-size: 12px; display: block; background:none; border:none; padding:0; text-align:left; cursor:pointer;">Terms of Service</button>
             <a href="#faq" class="text-xs text-gray-500 hover:text-blue-500 mt-4 border-t border-gray-800 pt-2 block">Help & FAQ</a>
+            <a href="/health-check/" class="text-xs text-gray-600 hover:text-blue-500 mt-2 block">System Status</a>
         </div>
         <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #1c1c21; text-align: center;">
             <p style="color: #666; font-size: 11px; margin-bottom: 12px; text-transform: uppercase;">Support Development</p>

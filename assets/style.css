@@ -45,15 +45,15 @@ main { margin-left: 260px; padding: 40px; min-height: 100vh; }
 /* Sidebar nav scrollbar - hardcoded here (not left to Tailwind's async CDN classes,
    which compile after first paint and cause a flash/race on load) */
 .sidebar-nav-scroll {
-    flex: 1 1 auto;
+    flex: 1 1 0%;
     min-height: 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: #3a3a42 transparent;
+    scrollbar-color: #5a5a68 transparent;
 }
-.sidebar-nav-scroll::-webkit-scrollbar { width: 8px; }
+.sidebar-nav-scroll::-webkit-scrollbar { width: 10px; }
 .sidebar-nav-scroll::-webkit-scrollbar-track { background: transparent; }
-.sidebar-nav-scroll::-webkit-scrollbar-thumb { background-color: #3a3a42; border-radius: 8px; }
+.sidebar-nav-scroll::-webkit-scrollbar-thumb { background-color: #5a5a68; border-radius: 8px; border: 2px solid var(--sidebar-bg); }
 .sidebar-nav-scroll::-webkit-scrollbar-thumb:hover { background-color: var(--accent); }
 
 /* Toasts */

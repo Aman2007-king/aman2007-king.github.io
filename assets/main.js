@@ -336,7 +336,10 @@ function loadScript(url) {
         const s = document.createElement('script');
         s.src = url;
         s.onload = resolve;
-        s.onerror = () => reject(new Error(`Failed to load ${url}`));
+        s.onerror = () => {
+            delete _loadedScripts[url]; // don't permanently cache a failed load — allow retry next time
+            reject(new Error(`Failed to load ${url}`));
+        };
         document.head.appendChild(s);
     });
     return _loadedScripts[url];
@@ -344,7 +347,11 @@ function loadScript(url) {
 async function ensureToolLibsLoaded() {
     if (typeof TOOL_LIBS === 'undefined' || !TOOL_LIBS.length) return;
     document.getElementById('loader-text').innerText = "LOADING ENGINE...";
-    await Promise.all(TOOL_LIBS.map(loadScript));
+    try {
+        await Promise.all(TOOL_LIBS.map(loadScript));
+    } catch (e) {
+        throw "Couldn't load a required component for this tool — check your internet connection, or try disabling any ad-blocker/extension that might be blocking scripts, then try again.";
+    }
 }
 
 /* --- Drag & drop --- */
@@ -858,7 +865,10 @@ async function processTask() {
     } catch (err) {
         resCard.classList.add('hidden');
         loader.classList.add('hidden');
-        showToast(typeof err === 'string' ? err : 'Something went wrong. Please check your input and try again.', 'error');
+        if (typeof err !== 'string') {
+            console.error(`AiFileStudio [${mode}] error:`, err);
+        }
+        showToast(typeof err === 'string' ? err : 'Something went wrong. Please check your input and try again. (Details logged to browser console — press F12.)', 'error');
         trackEvent('tool_error', mode);
     }
 }

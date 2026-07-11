@@ -54,7 +54,7 @@ function renderSidebar(activeId) {
                 </button>
             </div>
         </div>
-        <div class="py-4 flex-1 min-h-0 overflow-y-auto sidebar-nav-scroll" role="navigation" aria-label="Tool categories">
+        <div class="py-4 sidebar-nav-scroll" role="navigation" aria-label="Tool categories">
             ${navHtml}
             <div class="mt-6 pt-4 border-t border-gray-900">
                 <a href="/privacy.html" class="nav-item"><i class="fas fa-shield-alt" aria-hidden="true"></i> Privacy</a>

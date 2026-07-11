@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Internal diagnostic page that checks whether every third-party library AiFileStudio.PRO depends on is loading correctly.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://aman2007-king.github.io/health-check/">
+    <title>Library Health Check | AiFileStudio.PRO</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050507">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/icon-192.png" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to content</a>
+<div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
+    <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+    <div>
+        <a href="/" style="text-decoration:none;"><p style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></p></a>
+        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
+    </div>
+</div>
+
+<div class="mobile-header" id="mobile-header-slot"></div>
+<aside id="main-sidebar" aria-label="Tool navigation"></aside>
+
+<main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
+    <div class="mb-8">
+        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Library Health Check</span></nav>
+        <h1 class="text-3xl font-bold">Library Health Check</h1>
+        <p class="text-gray-500 text-sm mt-2">Tests every third-party library the site depends on — the same way each tool loads it — and reports whether it's actually working right now.</p>
+    </div>
+
+    <div class="cyber-card mb-6">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <div id="hc-summary" class="text-sm text-gray-400">Not run yet.</div>
+            <button onclick="runHealthCheck()" class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs">
+                <i class="fas fa-heart-pulse" aria-hidden="true"></i> Run Check
+            </button>
+        </div>
+        <div id="hc-results" class="space-y-2"></div>
+    </div>
+
+    <section class="text-xs text-gray-600 leading-relaxed">
+        <p>This page loads each library fresh in your browser (not from a shared cache with the tool pages) and checks that the expected global object actually exists afterward — catching both network failures (wrong URL, CDN down, blocked by an extension) and "loaded but broken" cases where the file loads but isn't what's expected.</p>
+        <p class="mt-2">This page is intentionally excluded from search engine indexing — it's a maintenance tool, not a feature for visitors.</p>
+    </section>
+</main>
+
+<div id="shared-widgets-slot"></div>
+
+<script src="/assets/main.js"></script>
+<script>
+const HC_LIBS = [
+    { name: 'pdf-lib', usedBy: 'Merge/Split/Rotate/Crop/Compress/Delete/Extract/Reorder/Watermark/Page Numbers PDF', url: 'https://unpkg.com/pdf-lib/dist/pdf-lib.min.js', check: () => typeof PDFLib !== 'undefined' },
+    { name: 'jsPDF', usedBy: 'JPG to PDF, TXT to PDF, HTML to PDF', url: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', check: () => typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined' },
+    { name: 'Tesseract.js', usedBy: 'OCR: Image to Text', url: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js', check: () => typeof Tesseract !== 'undefined' },
+    { name: 'QRCode.js', usedBy: 'QR Code Generator', url: 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js', check: () => typeof QRCode !== 'undefined' },
+    { name: 'JSZip', usedBy: 'Resize Image, Extract Pages, Image Compressor', url: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js', check: () => typeof JSZip !== 'undefined' },
+    { name: 'html2canvas', usedBy: 'HTML to PDF', url: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', check: () => typeof html2canvas !== 'undefined' },
+    { name: 'pdf.js', usedBy: 'PDF Viewer', url: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', check: () => typeof pdfjsLib !== 'undefined' },
+    { name: 'JsBarcode', usedBy: 'Barcode Generator', url: 'https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js', check: () => typeof JsBarcode !== 'undefined' },
+    { name: 'MediaPipe Selfie Segmentation', usedBy: 'Background Remover', url: 'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js', check: () => typeof SelfieSegmentation !== 'undefined' },
+];
+
+function hcRowHtml(lib, state, detail, ms) {
+    const icon = state === 'pending' ? '<i class="fas fa-circle-notch fa-spin text-gray-500"></i>'
+        : state === 'ok' ? '<i class="fas fa-circle-check text-green-500"></i>'
+        : '<i class="fas fa-circle-xmark text-red-500"></i>';
+    const timeStr = ms !== undefined ? `<span class="text-gray-600">${ms}ms</span>` : '';
+    return `<div class="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-800 bg-black/30">
+        <div>
+            <div class="text-sm font-bold flex items-center gap-2">${icon} ${lib.name}</div>
+            <div class="text-[11px] text-gray-500 mt-1">${lib.usedBy}</div>
+            ${detail ? `<div class="text-[11px] mt-1 ${state === 'fail' ? 'text-red-400' : 'text-gray-600'}">${detail}</div>` : ''}
+        </div>
+        ${timeStr}
+    </div>`;
+}
+
+async function runHealthCheck() {
+    const resultsEl = document.getElementById('hc-results');
+    const summaryEl = document.getElementById('hc-summary');
+    summaryEl.innerText = `Running ${HC_LIBS.length} checks...`;
+    resultsEl.innerHTML = HC_LIBS.map(lib => hcRowHtml(lib, 'pending')).join('');
+
+    let okCount = 0;
+    const rows = resultsEl.children;
+
+    await Promise.all(HC_LIBS.map(async (lib, i) => {
+        const start = performance.now();
+        try {
+            // Fresh load every run — bypass main.js's cache so this reflects the real current state of the CDN.
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = lib.url + (lib.url.includes('?') ? '&' : '?') + 'hc=' + Date.now();
+                s.onload = resolve;
+                s.onerror = () => reject(new Error('Failed to fetch script'));
+                document.head.appendChild(s);
+            });
+            const ms = Math.round(performance.now() - start);
+            if (lib.check()) {
+                okCount++;
+                rows[i].outerHTML = hcRowHtml(lib, 'ok', 'Loaded and initialized correctly.', ms);
+            } else {
+                rows[i].outerHTML = hcRowHtml(lib, 'fail', 'Script loaded but the expected global object was not found — the file may have changed.', ms);
+            }
+        } catch (e) {
+            const ms = Math.round(performance.now() - start);
+            rows[i].outerHTML = hcRowHtml(lib, 'fail', `Failed to load: ${lib.url}`, ms);
+        }
+    }));
+
+    summaryEl.innerHTML = okCount === HC_LIBS.length
+        ? `<span class="text-green-500"><i class="fas fa-circle-check"></i> All ${HC_LIBS.length} libraries healthy</span>`
+        : `<span class="text-red-400"><i class="fas fa-triangle-exclamation"></i> ${HC_LIBS.length - okCount} of ${HC_LIBS.length} libraries failed — see below</span>`;
+    trackEvent('health_check_run', okCount === HC_LIBS.length ? 'all_pass' : `${HC_LIBS.length - okCount}_failed`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // main.js's own DOMContentLoaded listener already handles renderSidebar/renderModalsAndChat/initTheme
+    // for pages with no TOOL_MODE defined - this page just adds the health check run.
+    runHealthCheck();
+});
+</script>
+</body>
+</html>

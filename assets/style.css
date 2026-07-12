@@ -74,6 +74,16 @@ main { margin-left: 260px; padding: 40px; min-height: 100vh; }
 .bg-swatch { width: 34px; height: 34px; border-radius: 8px; border: 2px solid #333; cursor: pointer; padding: 0; }
 .bg-swatch.selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.4); }
 
+/* Page thumbnail picker (Reorder / Delete Pages) */
+.page-thumb { position: relative; border: 2px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; background: #000; transition: border-color 0.15s ease, transform 0.15s ease; }
+.page-thumb:hover { border-color: var(--accent); transform: translateY(-2px); }
+.page-thumb canvas { display: block; width: 100%; height: auto; }
+.page-thumb .page-thumb-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: #ccc; font-size: 10px; text-align: center; padding: 2px 0; }
+.page-thumb .page-thumb-badge { position: absolute; top: 4px; left: 4px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.page-thumb.marked-delete { border-color: #ef4444; opacity: 0.55; }
+.page-thumb.marked-delete::after { content: '\f2ed'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #ef4444; background: rgba(0,0,0,0.4); }
+.page-thumb-loading { display: flex; align-items: center; justify-content: center; aspect-ratio: 0.75; color: var(--muted); font-size: 11px; }
+
 /* Theme toggle */
 .theme-toggle-btn { background: none; border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; }
 .theme-toggle-btn:hover { color: var(--text); border-color: var(--accent); }

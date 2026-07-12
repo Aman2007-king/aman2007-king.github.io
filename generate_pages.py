@@ -113,9 +113,9 @@ TOOLS = [
         mode="deletepages", slug="delete-pdf-pages", nav="Delete Pages",
         title="Delete PDF Pages", subtitle="Remove specific pages from a PDF.",
         input_label="Page numbers to delete", input_placeholder="e.g. 2, 4, 7",
-        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib", "pdfjs"],
         about_heading="Free Tool to Delete PDF Pages",
-        about_html="""<p>Remove one or more pages from a PDF without touching the rest of the document. Enter the page numbers you want gone (comma-separated, e.g. <code class="text-blue-400">2, 4, 7</code>) and AiFileStudio builds a new copy of the PDF with just those pages removed — all processed locally using <code class="text-blue-400">pdf-lib</code>, so the file never leaves your device.</p>
+        about_html="""<p>Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker — no need to count page numbers by hand. All processed locally using <code class="text-blue-400">pdf-lib</code>, so the file never leaves your device.</p>
         <p>Useful for stripping a blank scanned page, a duplicate, or an outdated cover sheet out of a longer document without re-assembling the whole thing.</p>""",
         faq=[
             ("Can I delete every page?", "No — at least one page has to remain, otherwise you'd end up with an empty PDF."),
@@ -139,13 +139,13 @@ TOOLS = [
         mode="reorder", slug="reorder-pdf-pages", nav="Reorder Pages",
         title="Reorder PDF Pages", subtitle="Rearrange the page order of a PDF.",
         input_label="New page order", input_placeholder="e.g. 3, 1, 2",
-        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib", "pdfjs"],
         about_heading="Free Tool to Reorder PDF Pages",
-        about_html="""<p>Rearrange the pages of a PDF into a new order — handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a document. Enter every page number in the order you want them, separated by commas (e.g. <code class="text-blue-400">3, 1, 2</code> for a 3-page document).</p>
-        <p>Every original page number must appear exactly once — AiFileStudio checks this and tells you the expected count if something's off, before building the reordered PDF locally in your browser.</p>""",
+        about_html="""<p>Rearrange the pages of a PDF into a new order — handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a document. Upload a PDF, then click its pages in the visual picker in the order you want them to appear — each click stamps a number on that page so you can see the new order build up as you go.</p>
+        <p>Every original page must be clicked exactly once — AiFileStudio checks this and tells you if something's off, before building the reordered PDF locally in your browser.</p>""",
         faq=[
-            ("What if I only want to move one page?", "You still need to list every page number, in the full new order — e.g. for a 5-page PDF, moving page 5 to the front is 5, 1, 2, 3, 4."),
-            ("What happens if I leave out a page number?", "You'll get an error telling you how many pages the PDF has — every page must be included exactly once."),
+            ("What if I only want to move one page?", "Click through every page in the full new order — e.g. for a 5-page PDF, moving the last page to the front means clicking it first, then pages 1 through 4 in order."),
+            ("What happens if I don't click every page?", "The Execute button will tell you if pages are still unnumbered — every page needs to be clicked exactly once before you can proceed."),
         ],
     ),
     dict(
@@ -189,15 +189,16 @@ TOOLS = [
     ),
     dict(
         mode="compress", slug="compress-pdf", nav="Compress PDF",
-        title="Compress PDF", subtitle="Reduce a PDF's file size.",
-        input_label="", input_placeholder="",
-        accept="application/pdf", multiple=False, needs_file=True, needs_text=False, libs=["pdf-lib"],
+        title="Compress PDF", subtitle="Shrink a PDF by recompressing its JPEG images.",
+        input_label="Image quality (1-100, lower = smaller file)", input_placeholder="e.g. 60",
+        accept="application/pdf", multiple=False, needs_file=True, needs_text=True, libs=["pdf-lib"],
         about_heading="Free PDF Compressor",
-        about_html="""<p>Shrink a PDF's file size using structural compression (object streams), applied locally with <code class="text-blue-400">pdf-lib</code> — the file isn't uploaded anywhere to be compressed. AiFileStudio shows you the before/after size so you can see exactly how much was saved.</p>
-        <p><strong>Honest limitation:</strong> this doesn't re-encode embedded images, which is usually where most of a PDF's file size comes from. PDFs that are mostly text and vector content will shrink more than PDFs full of high-resolution photos — for those, compressing the images before building the PDF (e.g. with our <a href="/image-compressor/" class="text-blue-500 underline">Image Compressor</a>) will do more.</p>""",
+        about_html="""<p>Shrinks a PDF by finding <strong>JPEG images embedded in the file</strong> and re-encoding them at a lower quality you choose, plus applying structural compression on top — both done locally with <code class="text-blue-400">pdf-lib</code>, nothing uploaded anywhere.</p>
+        <p><strong>Honest scope:</strong> this only recompresses images stored as JPEG inside the PDF (the most common case for scanned documents and photos). Images stored in other internal formats are left untouched, and if a PDF has no JPEG images at all, you'll only see the smaller structural-compression gains. If anything about a specific image can't be safely processed, that image is just skipped and left as-is — you'll never end up with a broken or corrupted PDF because of this.</p>""",
         faq=[
-            ("Why didn't my PDF get much smaller?", "If your PDF's size mainly comes from embedded high-resolution images, structural compression alone won't reduce it much — image data isn't re-encoded by this tool."),
-            ("Will compression reduce quality?", "No — this method doesn't touch the visual content of your PDF, only the underlying file structure, so there's no quality loss."),
+            ("Why didn't my PDF get much smaller?", "This tool only recompresses JPEG images. If your PDF's images are stored in a different internal format, or the PDF is mostly text/vector content, you'll mainly see smaller structural-compression gains instead."),
+            ("Will this reduce image quality?", "Yes, intentionally — that's how JPEG compression saves space. Lower quality values (e.g. 40-50) save more space but look softer; higher values (80+) preserve more detail but save less."),
+            ("Could this corrupt my PDF?", "No — each image is processed independently, and any image that can't be safely re-encoded is simply left untouched rather than risking the file."),
         ],
     ),
     dict(
@@ -444,6 +445,14 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
             <div id="file-field-wrap">
                 <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
                 <input type="file" id="main-file" {multiple_attr} accept="{accept}" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
+            </div>
+
+            <div id="page-picker-ui" class="hidden mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p id="page-picker-hint" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter"></p>
+                    <button type="button" onclick="resetPagePicker()" class="text-[10px] text-gray-500 hover:text-red-400 uppercase">Reset</button>
+                </div>
+                <div id="page-picker-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
             </div>
         </div>
 

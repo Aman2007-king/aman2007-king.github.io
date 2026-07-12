@@ -356,6 +356,140 @@ async function ensureToolLibsLoaded() {
 }
 
 /* --- Drag & drop --- */
+/* --- Visual page picker (Reorder / Delete Pages) --- */
+let pagePickerOrder = [];      // reorder mode: array of 0-based page indices, in click order
+let pagePickerDeleted = new Set(); // deletepages mode: set of 0-based page indices marked for deletion
+let pagePickerTotalPages = 0;
+
+function ensurePdfJsWorker() {
+    if (typeof pdfjsLib !== 'undefined' && pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+}
+
+function syncPagePickerToInput() {
+    const inputEl = document.getElementById('main-input');
+    if (!inputEl) return;
+    if (TOOL_MODE === 'reorder') {
+        inputEl.value = pagePickerOrder.map(i => i + 1).join(', ');
+    } else if (TOOL_MODE === 'deletepages') {
+        inputEl.value = Array.from(pagePickerDeleted).sort((a, b) => a - b).map(i => i + 1).join(', ');
+    }
+}
+
+function resetPagePicker() {
+    pagePickerOrder = [];
+    pagePickerDeleted = new Set();
+    syncPagePickerToInput();
+    document.querySelectorAll('.page-thumb').forEach(el => {
+        el.classList.remove('marked-delete');
+        const badge = el.querySelector('.page-thumb-badge');
+        if (badge) badge.remove();
+    });
+    updatePagePickerHint();
+}
+
+function updatePagePickerHint() {
+    const hint = document.getElementById('page-picker-hint');
+    if (!hint || !pagePickerTotalPages) return;
+    if (TOOL_MODE === 'reorder') {
+        hint.textContent = `Click pages in the order you want them (${pagePickerOrder.length} of ${pagePickerTotalPages} placed)`;
+    } else if (TOOL_MODE === 'deletepages') {
+        hint.textContent = `Click pages to mark them for deletion (${pagePickerDeleted.size} marked)`;
+    }
+}
+
+function handlePageThumbClick(el, pageIndex) {
+    if (TOOL_MODE === 'reorder') {
+        const existingPos = pagePickerOrder.indexOf(pageIndex);
+        if (existingPos !== -1) {
+            pagePickerOrder.splice(existingPos, 1);
+        } else {
+            pagePickerOrder.push(pageIndex);
+        }
+        // Re-render all badges since removing a page mid-sequence renumbers everything after it
+        document.querySelectorAll('.page-thumb').forEach(t => {
+            const badge = t.querySelector('.page-thumb-badge');
+            if (badge) badge.remove();
+        });
+        pagePickerOrder.forEach((idx, pos) => {
+            const thumb = document.querySelector(`.page-thumb[data-page-index="${idx}"]`);
+            if (thumb) {
+                const badge = document.createElement('div');
+                badge.className = 'page-thumb-badge';
+                badge.textContent = pos + 1;
+                thumb.appendChild(badge);
+            }
+        });
+    } else if (TOOL_MODE === 'deletepages') {
+        if (pagePickerDeleted.has(pageIndex)) {
+            pagePickerDeleted.delete(pageIndex);
+            el.classList.remove('marked-delete');
+        } else {
+            pagePickerDeleted.add(pageIndex);
+            el.classList.add('marked-delete');
+        }
+    }
+    syncPagePickerToInput();
+    updatePagePickerHint();
+}
+
+async function renderPagePicker(file) {
+    const pickerUi = document.getElementById('page-picker-ui');
+    const grid = document.getElementById('page-picker-grid');
+    if (!pickerUi || !grid) return;
+
+    pagePickerOrder = [];
+    pagePickerDeleted = new Set();
+    pickerUi.classList.remove('hidden');
+    grid.innerHTML = '<div class="page-thumb-loading col-span-full"><i class="fas fa-circle-notch fa-spin mr-2"></i> Loading pages...</div>';
+
+    try {
+        await ensureToolLibsLoaded();
+        ensurePdfJsWorker();
+        const buf = await file.arrayBuffer();
+        const pdfDoc = await pdfjsLib.getDocument({ data: buf }).promise;
+        pagePickerTotalPages = pdfDoc.numPages;
+        grid.innerHTML = '';
+
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+            const page = await pdfDoc.getPage(i);
+            const viewport = page.getViewport({ scale: 0.35 });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+            const thumb = document.createElement('div');
+            thumb.className = 'page-thumb';
+            thumb.dataset.pageIndex = i - 1;
+            thumb.appendChild(canvas);
+            const label = document.createElement('div');
+            label.className = 'page-thumb-label';
+            label.textContent = `Page ${i}`;
+            thumb.appendChild(label);
+            thumb.addEventListener('click', () => handlePageThumbClick(thumb, i - 1));
+            grid.appendChild(thumb);
+        }
+        updatePagePickerHint();
+    } catch (e) {
+        console.error('Page picker render error:', e);
+        grid.innerHTML = '<p class="text-red-400 text-xs col-span-full">Could not preview this PDF\'s pages. You can still type page numbers manually if needed.</p>';
+        showToast("Couldn't generate page previews for this PDF.", 'error');
+    }
+}
+
+function setupPagePicker() {
+    if (TOOL_MODE !== 'reorder' && TOOL_MODE !== 'deletepages') return;
+    const fileInput = document.getElementById('main-file');
+    if (!fileInput) return;
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files[0]) {
+            renderPagePicker(fileInput.files[0]);
+        }
+    });
+}
+
 function enhanceDropzone() {
     const fileInput = document.getElementById('main-file');
     if (!fileInput) return;
@@ -442,13 +576,15 @@ function setupToolUI(mode) {
     const bgColorEl = document.getElementById('bgcolor-ui');
     const textFieldWrap = document.getElementById('text-field-wrap');
     const fileFieldWrap = document.getElementById('file-field-wrap');
+    const pagePickerEl = document.getElementById('page-picker-ui');
 
     if (passwordUiEl) passwordUiEl.classList.toggle('hidden', mode !== 'pass');
     if (standardInputsEl) standardInputsEl.classList.toggle('hidden', mode === 'pass');
     if (enhancementEl) enhancementEl.classList.toggle('hidden', !enhancementModes.includes(mode));
     if (bgColorEl) bgColorEl.classList.toggle('hidden', mode !== 'bgremove');
+    if (pagePickerEl) pagePickerEl.classList.toggle('hidden', mode !== 'reorder' && mode !== 'deletepages');
 
-    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer', 'favicon', 'bgremove'];
+    const noTextInput = ['convert', 'merge', 'rotate', 'pdf', 'ocr', 'pagenumbers', 'viewer', 'favicon', 'bgremove', 'reorder', 'deletepages'];
     const noFileInput = ['ai', 'pass', 'qr', 'txt2pdf', 'html2pdf', 'barcode'];
     if (textFieldWrap) textFieldWrap.classList.toggle('hidden', noTextInput.includes(mode));
     if (fileFieldWrap) fileFieldWrap.classList.toggle('hidden', noFileInput.includes(mode));
@@ -478,6 +614,66 @@ function setupBgColorPicker() {
 }
 
 /* --- Main task runner (mode comes from the page's TOOL_MODE) --- */
+/* --- PDF image recompression (Compress PDF) ---
+   Uses pdf-lib's lower-level object-graph API to find JPEG (DCTDecode) images
+   embedded in a PDF and re-encode them at a lower quality. This is less
+   battle-tested than the rest of this file's pdf-lib usage (which sticks to
+   pdf-lib's documented high-level API). Every image is processed in its own
+   try/catch so one failure just skips that image; the whole pass is also
+   wrapped so if the underlying object-graph API doesn't behave as expected,
+   compression falls back to structural-only instead of breaking the tool. */
+async function recompressPdfImages(pdfDoc, quality) {
+    let imagesProcessed = 0;
+    try {
+        const pages = pdfDoc.getPages();
+        for (const page of pages) {
+            const resources = page.node.Resources && page.node.Resources();
+            if (!resources) continue;
+            const xObjects = resources.lookup(PDFLib.PDFName.of('XObject'), PDFLib.PDFDict);
+            if (!xObjects) continue;
+
+            for (const key of xObjects.keys()) {
+                try {
+                    const xObjectRef = xObjects.get(key);
+                    const xObject = pdfDoc.context.lookup(xObjectRef);
+                    if (!xObject || !xObject.dict) continue;
+
+                    const subtype = xObject.dict.get(PDFLib.PDFName.of('Subtype'));
+                    if (!subtype || subtype.toString() !== '/Image') continue;
+
+                    const filter = xObject.dict.get(PDFLib.PDFName.of('Filter'));
+                    const filterName = filter ? filter.toString() : '';
+                    if (filterName !== '/DCTDecode') continue; // only JPEG images are handled
+
+                    const rawBytes = xObject.contents;
+                    if (!rawBytes || !rawBytes.length) continue;
+
+                    const blob = new Blob([rawBytes], { type: 'image/jpeg' });
+                    const bitmap = await createImageBitmap(blob);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = bitmap.width;
+                    canvas.height = bitmap.height;
+                    canvas.getContext('2d').drawImage(bitmap, 0, 0);
+                    const newDataUrl = canvas.toDataURL('image/jpeg', quality / 100);
+                    const newJpegBytes = Uint8Array.from(atob(newDataUrl.split(',')[1]), c => c.charCodeAt(0));
+
+                    if (newJpegBytes.length < rawBytes.length) {
+                        const newImage = await pdfDoc.embedJpg(newJpegBytes);
+                        xObjects.set(key, newImage.ref);
+                        imagesProcessed++;
+                    }
+                } catch (imgErr) {
+                    console.warn('Compress PDF: skipped one image that could not be safely recompressed:', imgErr);
+                }
+            }
+        }
+    } catch (passErr) {
+        console.warn('Compress PDF: image recompression pass failed, falling back to structural compression only:', passErr);
+        return -1; // signal: recompression pass itself failed, caller should note the fallback
+    }
+    return imagesProcessed;
+}
+
 async function processTask() {
     const mode = TOOL_MODE;
     const inputEl = document.getElementById('main-input');
@@ -589,7 +785,7 @@ async function processTask() {
             document.getElementById('pass-display-box').innerText = pass;
         }
         else if (mode === 'deletepages') {
-            if (!files[0] || !input) throw "Upload a PDF and enter the page numbers to delete (e.g., 2, 4, 7).";
+            if (!files[0] || !input) throw "Upload a PDF, then click the pages you want to delete in the picker above.";
             const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
             const totalPages = doc.getPageCount();
             const toDelete = input.split(',')
@@ -628,13 +824,13 @@ async function processTask() {
             preview.innerHTML = `<p class='text-xs mb-4'>Extracted ${indices.length} page(s) as separate PDF files</p><a href="${url}" download="extracted_pages.zip" class="bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Download ZIP</a>`;
         }
         else if (mode === 'reorder') {
-            if (!files[0] || !input) throw "Upload a PDF and enter the new page order (e.g., 3, 1, 2).";
+            if (!files[0] || !input) throw "Upload a PDF, then click its pages above in the order you want them.";
             const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
             const totalPages = doc.getPageCount();
             const order = input.split(',').map(n => parseInt(n.trim()) - 1);
             const validSet = new Set(order);
             if (order.length !== totalPages || order.some(n => n < 0 || n >= totalPages) || validSet.size !== totalPages) {
-                throw `This PDF has ${totalPages} pages — enter all ${totalPages} page numbers, each exactly once (e.g., ${Array.from({ length: totalPages }, (_, i) => i + 1).join(', ')}).`;
+                throw `This PDF has ${totalPages} pages — click every page above exactly once (${order.length} of ${totalPages} placed so far).`;
             }
             const newDoc = await PDFLib.PDFDocument.create();
             const pages = await newDoc.copyPages(doc, order);
@@ -709,13 +905,28 @@ async function processTask() {
         }
         else if (mode === 'compress') {
             if (!files[0]) throw "Upload a PDF.";
+            let quality = parseFloat(input);
+            if (!Number.isFinite(quality) || quality <= 0 || quality > 100) quality = 60;
             const beforeSize = files[0].size;
             const doc = await PDFLib.PDFDocument.load(await files[0].arrayBuffer());
+
+            loaderText.innerText = "SCANNING IMAGES...";
+            const imagesProcessed = await recompressPdfImages(doc, quality);
+
             const bytes = await doc.save({ useObjectStreams: true });
             const afterSize = bytes.length;
             const pct = beforeSize > 0 ? Math.round((1 - afterSize / beforeSize) * 100) : 0;
             downloadFile(bytes, "compressed.pdf", "application/pdf");
-            preview.innerHTML = `<p class="text-xs mb-2">${(beforeSize / 1024).toFixed(1)} KB → ${(afterSize / 1024).toFixed(1)} KB${pct > 0 ? ` (${pct}% smaller)` : ''}</p><p class="text-[10px] text-gray-600 mb-4">This applies structural/stream compression only — it doesn't re-encode embedded images, so image-heavy PDFs may not shrink much.</p><p class="text-sm">✓ Downloaded</p>`;
+
+            let detail;
+            if (imagesProcessed === -1) {
+                detail = "Image recompression could not run on this PDF — applied structural compression only, your file is unaffected otherwise.";
+            } else if (imagesProcessed > 0) {
+                detail = `Recompressed ${imagesProcessed} JPEG image${imagesProcessed === 1 ? '' : 's'} at ${quality}% quality, plus structural compression.`;
+            } else {
+                detail = "No JPEG images found to recompress — applied structural compression only.";
+            }
+            preview.innerHTML = `<p class="text-xs mb-2">${(beforeSize / 1024).toFixed(1)} KB → ${(afterSize / 1024).toFixed(1)} KB${pct > 0 ? ` (${pct}% smaller)` : ''}</p><p class="text-[10px] text-gray-600 mb-4">${detail}</p><p class="text-sm">✓ Downloaded</p>`;
         }
         else if (mode === 'viewer') {
             if (!files[0]) throw "Upload a PDF to view.";
@@ -881,6 +1092,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSidebar(TOOL_MODE);
         setupToolUI(TOOL_MODE);
         enhanceDropzone();
+        setupPagePicker();
         setupBgColorPicker();
         recordRecentTool(TOOL_MODE);
     } else {

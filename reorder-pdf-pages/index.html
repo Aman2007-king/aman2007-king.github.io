@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#050507">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/icon-192.png" type="image/png">
-    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Reorder PDF Pages | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/reorder-pdf-pages/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Rearrange the pages of a PDF into a new order \u2014 handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What if I only want to move one page?", "acceptedAnswer": {"@type": "Answer", "text": "You still need to list every page number, in the full new order \u2014 e.g. for a 5-page PDF, moving page 5 to the front is 5, 1, 2, 3, 4."}}, {"@type": "Question", "name": "What happens if I leave out a page number?", "acceptedAnswer": {"@type": "Answer", "text": "You'll get an error telling you how many pages the PDF has \u2014 every page must be included exactly once."}}]}]</script>
+    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Reorder PDF Pages | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/reorder-pdf-pages/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Rearrange the pages of a PDF into a new order \u2014 handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What if I only want to move one page?", "acceptedAnswer": {"@type": "Answer", "text": "Click through every page in the full new order \u2014 e.g. for a 5-page PDF, moving the last page to the front means clicking it first, then pages 1 through 4 in order."}}, {"@type": "Question", "name": "What happens if I don't click every page?", "acceptedAnswer": {"@type": "Answer", "text": "The Execute button will tell you if pages are still unnumbered \u2014 every page needs to be clicked exactly once before you can proceed."}}]}]</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
@@ -109,6 +109,14 @@
                 <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
                 <input type="file" id="main-file"  accept="application/pdf" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
+
+            <div id="page-picker-ui" class="hidden mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p id="page-picker-hint" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter"></p>
+                    <button type="button" onclick="resetPagePicker()" class="text-[10px] text-gray-500 hover:text-red-400 uppercase">Reset</button>
+                </div>
+                <div id="page-picker-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+            </div>
         </div>
 
         <div id="password-ui" class="hidden text-center">
@@ -130,16 +138,16 @@
     <section class="mt-16 border-t border-gray-900 pt-10">
         <h2 class="text-2xl font-bold text-blue-500 mb-6">Free Tool to Reorder PDF Pages</h2>
         <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
-            <p>Rearrange the pages of a PDF into a new order — handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a document. Enter every page number in the order you want them, separated by commas (e.g. <code class="text-blue-400">3, 1, 2</code> for a 3-page document).</p>
-        <p>Every original page number must appear exactly once — AiFileStudio checks this and tells you the expected count if something's off, before building the reordered PDF locally in your browser.</p>
+            <p>Rearrange the pages of a PDF into a new order — handy for fixing a scan that came out of sequence, or reordering slides/sections before sharing a document. Upload a PDF, then click its pages in the visual picker in the order you want them to appear — each click stamps a number on that page so you can see the new order build up as you go.</p>
+        <p>Every original page must be clicked exactly once — AiFileStudio checks this and tells you if something's off, before building the reordered PDF locally in your browser.</p>
         </div>
     </section>
 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
-            <div><h4 class="text-blue-400 font-bold">What if I only want to move one page?</h4><p>You still need to list every page number, in the full new order — e.g. for a 5-page PDF, moving page 5 to the front is 5, 1, 2, 3, 4.</p></div>
-            <div><h4 class="text-blue-400 font-bold">What happens if I leave out a page number?</h4><p>You'll get an error telling you how many pages the PDF has — every page must be included exactly once.</p></div>
+            <div><h4 class="text-blue-400 font-bold">What if I only want to move one page?</h4><p>Click through every page in the full new order — e.g. for a 5-page PDF, moving the last page to the front means clicking it first, then pages 1 through 4 in order.</p></div>
+            <div><h4 class="text-blue-400 font-bold">What happens if I don't click every page?</h4><p>The Execute button will tell you if pages are still unnumbered — every page needs to be clicked exactly once before you can proceed.</p></div>
         </div>
     </section>
 
@@ -177,7 +185,7 @@
 
 <div id="shared-widgets-slot"></div>
 
-<script>const TOOL_MODE = 'reorder'; const TOOL_LIBS = ["https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"];</script>
+<script>const TOOL_MODE = 'reorder'; const TOOL_LIBS = ["https://unpkg.com/pdf-lib/dist/pdf-lib.min.js", "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"];</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>

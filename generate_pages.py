@@ -1,7 +1,7 @@
 import os
-
+ 
 SITE = "https://aman2007-king.github.io"
-
+ 
 LIB_URLS = {
     "pdf-lib": "https://unpkg.com/pdf-lib/dist/pdf-lib.min.js",
     "jspdf": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
@@ -13,7 +13,7 @@ LIB_URLS = {
     "jsbarcode": "https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js",
     "mediapipe": "https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js",
 }
-
+ 
 TOOLS = [
     dict(
         mode="ai", slug="ai-image-generator", nav="AI Art",
@@ -286,10 +286,10 @@ TOOLS = [
         input_label="Paste your HTML", input_placeholder="<h1>Hello</h1><p>Some content...</p>",
         accept="", multiple=False, needs_file=False, needs_text=True, libs=["jspdf", "html2canvas"],
         about_heading="Free HTML to PDF Converter",
-        about_html="""<p>Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using <code class="text-blue-400">html2canvas</code> and <code class="text-blue-400">jsPDF</code>. Basic tags (headings, paragraphs, lists, inline styles) render as they would in a browser.</p>
-        <p>Note that because this renders through an image capture, the output is a picture of your HTML rather than selectable/searchable PDF text — good for quick visual snapshots, not ideal for long text-heavy documents (use TXT to PDF for that instead).</p>""",
+        about_html="""<p>Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using <code class="text-blue-400">html2canvas</code> and <code class="text-blue-400">jsPDF</code>. Basic tags (headings, paragraphs, lists, inline styles) render as they would in a browser.</p>
+        <p>The HTML you paste is rendered inside a sandboxed frame with scripts disabled — any <code class="text-blue-400">&lt;script&gt;</code> tags or embedded event handlers in what you paste won't execute. Note that because this renders through an image capture, the output is a picture of your HTML rather than selectable/searchable PDF text — good for quick visual snapshots, not ideal for long text-heavy documents (use TXT to PDF for that instead).</p>""",
         faq=[
-            ("Will external CSS or JavaScript in my HTML work?", "External stylesheets and scripts generally won't load in this sandboxed render — stick to inline styles for reliable results."),
+            ("Will external CSS or JavaScript in my HTML work?", "External stylesheets generally won't load in this sandboxed render, and any JavaScript is intentionally blocked from running — stick to inline styles for reliable results."),
             ("Is the resulting PDF text searchable?", "No — since it's rendered as a captured image, the text in the PDF isn't selectable or searchable. For real text-based PDFs, use TXT to PDF instead."),
         ],
     ),
@@ -334,7 +334,7 @@ TOOLS = [
         ],
     ),
 ]
-
+ 
 TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -359,7 +359,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/icon-192.png" type="image/png">
     <script type="application/ld+json">{schema_json}</script>
-
+ 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -372,7 +372,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     }})(window,document,'script','dataLayer','GTM-T9JJ9N9L');</script>
-
+ 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -388,25 +388,25 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     </div>
 </div>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
+ 
 <div class="mobile-header" id="mobile-header-slot"></div>
-
+ 
 <aside id="main-sidebar" aria-label="Tool navigation"></aside>
-
+ 
 <main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
     <div class="mb-8">
         <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">{title}</span></nav>
         <h1 class="text-3xl font-bold">{title}</h1>
         <p class="text-gray-500 text-sm">{subtitle}</p>
     </div>
-
+ 
     <div class="cyber-card">
         <div id="standard-inputs">
             <div id="text-field-wrap">
                 <label for="main-input" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">{input_label}</label>
                 <textarea id="main-input" placeholder="{input_placeholder}" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
             </div>
-
+ 
             <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
                 <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Document Enhancements</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -428,7 +428,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
                     </label>
                 </div>
             </div>
-
+ 
             <div id="bgcolor-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
                 <p class="text-[10px] font-bold text-blue-500 uppercase mb-4 tracking-tighter">Background Color</p>
                 <div class="flex flex-wrap gap-3 items-center">
@@ -441,12 +441,12 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
                     <input type="color" id="bgcolor-custom" value="#3b82f6" class="w-9 h-9 rounded cursor-pointer border-2 border-gray-700 bg-transparent" title="Custom color">
                 </div>
             </div>
-
+ 
             <div id="file-field-wrap">
                 <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
                 <input type="file" id="main-file" {multiple_attr} accept="{accept}" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
-
+ 
             <div id="page-picker-ui" class="hidden mb-4">
                 <div class="flex items-center justify-between mb-3">
                     <p id="page-picker-hint" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter"></p>
@@ -455,15 +455,15 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
                 <div id="page-picker-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
             </div>
         </div>
-
+ 
         <div id="password-ui" class="hidden text-center">
             <div id="pass-display-box" class="p-6 bg-black rounded-xl text-xl font-mono text-blue-400 border border-blue-900 mb-6">********</div>
             <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
         </div>
-
+ 
         <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
     </div>
-
+ 
     <div id="result-card" class="cyber-card mt-8 hidden text-center">
         <div id="loader-box" class="flex flex-col items-center py-10">
             <div class="loader mb-4"></div>
@@ -471,45 +471,45 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
         </div>
         <div id="preview-area" class="flex flex-col items-center w-full"></div>
     </div>
-
+ 
     <section class="mt-16 border-t border-gray-900 pt-10">
         <h2 class="text-2xl font-bold text-blue-500 mb-6">{about_heading}</h2>
         <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
             {about_html}
         </div>
     </section>
-
+ 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
             {faq_html}
         </div>
     </section>
-
+ 
     <section class="mt-12">
         <h3 class="text-lg font-bold text-white mb-4">More Tools</h3>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
             {related_html}
         </div>
     </section>
-
+ 
     <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">© 2026 AiFileStudio.pro</footer>
 </main>
-
+ 
 <div id="shared-widgets-slot"></div>
-
+ 
 <script>const TOOL_MODE = '{mode}'; const TOOL_LIBS = {tool_libs_json};</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>
 """
-
+ 
 def build_faq_html(faq):
     parts = []
     for q, a in faq:
         parts.append(f'<div><h4 class="text-blue-400 font-bold">{q}</h4><p>{a}</p></div>')
     return "\n            ".join(parts)
-
+ 
 def build_related_html(current_slug):
     parts = []
     for t in TOOLS:
@@ -517,7 +517,7 @@ def build_related_html(current_slug):
             continue
         parts.append(f'<a href="/{t["slug"]}/" class="tool-card text-center text-xs"><i class="fas {ICON[t["mode"]]} text-blue-500 text-lg mb-2 block"></i>{t["nav"]}</a>')
     return "\n            ".join(parts)
-
+ 
 def build_schema_json(t, meta_desc):
     faq_entities = [
         {
@@ -545,7 +545,7 @@ def build_schema_json(t, meta_desc):
         },
     ]
     return json.dumps(schema)
-
+ 
 ICON = {
     "ai": "fa-magic", "resize": "fa-expand", "convert": "fa-sync",
     "merge": "fa-layer-group", "split": "fa-scissors", "rotate": "fa-redo",
@@ -556,12 +556,12 @@ ICON = {
     "viewer": "fa-eye", "imgcompress": "fa-file-zipper",
     "favicon": "fa-star", "barcode": "fa-barcode", "bgremove": "fa-person",
 }
-
+ 
 os.makedirs(os.path.dirname(os.path.abspath(__file__)), exist_ok=True)
-
+ 
 import re as _re
 import json
-
+ 
 def plain_desc(about_html):
     first_p = about_html.split("<p>", 1)[1].split("</p>")[0]
     text = _re.sub(r'<[^>]+>', '', first_p)
@@ -569,7 +569,7 @@ def plain_desc(about_html):
     if len(text) > 155:
         text = text[:155].rsplit(" ", 1)[0] + "..."
     return text
-
+ 
 for t in TOOLS:
     meta_desc = plain_desc(t["about_html"])
     tool_libs_json = json.dumps([LIB_URLS[l] for l in t["libs"]])
@@ -597,5 +597,6 @@ for t in TOOLS:
     with open(f"{outdir}/index.html", "w", encoding="utf-8") as f:
         f.write(page)
     print("wrote", f"{outdir}/index.html")
-
+ 
 print("DONE:", len(TOOLS), "tool pages generated")
+ 

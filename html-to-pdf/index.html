@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using...">
+    <meta name="description" content="Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using html2canvas and jsPDF....">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://aman2007-king.github.io/html-to-pdf/">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="HTML to PDF Converter | AiFileStudio.PRO">
-    <meta name="twitter:description" content="Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using...">
+    <meta name="twitter:description" content="Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using html2canvas and jsPDF....">
     <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
     <meta property="og:title" content="HTML to PDF Converter | AiFileStudio.PRO">
-    <meta property="og:description" content="Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using...">
+    <meta property="og:description" content="Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using html2canvas and jsPDF....">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aman2007-king.github.io/html-to-pdf/">
     <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#050507">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/icon-192.png" type="image/png">
-    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "HTML to PDF Converter | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/html-to-pdf/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will external CSS or JavaScript in my HTML work?", "acceptedAnswer": {"@type": "Answer", "text": "External stylesheets and scripts generally won't load in this sandboxed render \u2014 stick to inline styles for reliable results."}}, {"@type": "Question", "name": "Is the resulting PDF text searchable?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 since it's rendered as a captured image, the text in the PDF isn't selectable or searchable. For real text-based PDFs, use TXT to PDF instead."}}]}]</script>
+    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "HTML to PDF Converter | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/html-to-pdf/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using html2canvas and jsPDF...."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will external CSS or JavaScript in my HTML work?", "acceptedAnswer": {"@type": "Answer", "text": "External stylesheets generally won't load in this sandboxed render, and any JavaScript is intentionally blocked from running \u2014 stick to inline styles for reliable results."}}, {"@type": "Question", "name": "Is the resulting PDF text searchable?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 since it's rendered as a captured image, the text in the PDF isn't selectable or searchable. For real text-based PDFs, use TXT to PDF instead."}}]}]</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
@@ -109,6 +109,14 @@
                 <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload File</label>
                 <input type="file" id="main-file"  accept="" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
+
+            <div id="page-picker-ui" class="hidden mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p id="page-picker-hint" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter"></p>
+                    <button type="button" onclick="resetPagePicker()" class="text-[10px] text-gray-500 hover:text-red-400 uppercase">Reset</button>
+                </div>
+                <div id="page-picker-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+            </div>
         </div>
 
         <div id="password-ui" class="hidden text-center">
@@ -130,15 +138,15 @@
     <section class="mt-16 border-t border-gray-900 pt-10">
         <h2 class="text-2xl font-bold text-blue-500 mb-6">Free HTML to PDF Converter</h2>
         <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
-            <p>Paste in a snippet of HTML and AiFileStudio renders it in your browser, then captures it as an image and places it into a downloadable PDF, using <code class="text-blue-400">html2canvas</code> and <code class="text-blue-400">jsPDF</code>. Basic tags (headings, paragraphs, lists, inline styles) render as they would in a browser.</p>
-        <p>Note that because this renders through an image capture, the output is a picture of your HTML rather than selectable/searchable PDF text — good for quick visual snapshots, not ideal for long text-heavy documents (use TXT to PDF for that instead).</p>
+            <p>Paste in a snippet of HTML and AiFileStudio renders it, then captures it as an image and places it into a downloadable PDF, using <code class="text-blue-400">html2canvas</code> and <code class="text-blue-400">jsPDF</code>. Basic tags (headings, paragraphs, lists, inline styles) render as they would in a browser.</p>
+        <p>The HTML you paste is rendered inside a sandboxed frame with scripts disabled — any <code class="text-blue-400">&lt;script&gt;</code> tags or embedded event handlers in what you paste won't execute. Note that because this renders through an image capture, the output is a picture of your HTML rather than selectable/searchable PDF text — good for quick visual snapshots, not ideal for long text-heavy documents (use TXT to PDF for that instead).</p>
         </div>
     </section>
 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
-            <div><h4 class="text-blue-400 font-bold">Will external CSS or JavaScript in my HTML work?</h4><p>External stylesheets and scripts generally won't load in this sandboxed render — stick to inline styles for reliable results.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Will external CSS or JavaScript in my HTML work?</h4><p>External stylesheets generally won't load in this sandboxed render, and any JavaScript is intentionally blocked from running — stick to inline styles for reliable results.</p></div>
             <div><h4 class="text-blue-400 font-bold">Is the resulting PDF text searchable?</h4><p>No — since it's rendered as a captured image, the text in the PDF isn't selectable or searchable. For real text-based PDFs, use TXT to PDF instead.</p></div>
         </div>
     </section>

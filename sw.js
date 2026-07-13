@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aifilestudio-v2';
+const CACHE_NAME = 'aifilestudio-v3';
 const PRECACHE_URLS = [
   '/',
   '/assets/style.css',
@@ -28,6 +28,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
+  if (!request.url.startsWith('http')) return; // ignore chrome-extension://, data:, blob:, etc. - Cache API can't store these and throws
 
   // Page navigations: network-first, fall back to cache, then to the cached homepage shell.
   if (request.mode === 'navigate') {

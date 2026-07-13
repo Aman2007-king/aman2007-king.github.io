@@ -873,17 +873,32 @@ async function processTask() {
         }
         else if (mode === 'html2pdf') {
             if (!input) throw "Paste some HTML first.";
-            const wrap = document.createElement('div');
-            wrap.style.cssText = "position:fixed; left:-9999px; top:0; width:800px; background:#fff; color:#000; padding:20px;";
-            wrap.innerHTML = input;
-            document.body.appendChild(wrap);
-            const canvas = await html2canvas(wrap, { backgroundColor: '#ffffff' });
-            document.body.removeChild(wrap);
-            const { jsPDF } = window.jspdf; const doc = new jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
+            const iframe = document.createElement('iframe');
+            // sandbox with allow-same-origin but WITHOUT allow-scripts: the sandboxed
+            // document can be read by html2canvas, but any <script>, onerror=, javascript:
+            // URLs, etc. in the pasted HTML are inert and cannot execute. This is the fix
+            // for a real XSS hole where pasted HTML used to run directly on this page.
+            iframe.setAttribute('sandbox', 'allow-same-origin');
+            iframe.style.cssText = "position:fixed; left:-9999px; top:0; width:800px; height:1px; border:0;";
+            document.body.appendChild(iframe);
+            let canvas;
+            try {
+                await new Promise((resolve, reject) => {
+                    iframe.onload = resolve;
+                    iframe.onerror = () => reject(new Error('Could not render the provided HTML.'));
+                    iframe.srcdoc = `<!DOCTYPE html><html><head><style>body{background:#fff;color:#000;margin:0;padding:20px;font-family:sans-serif;}</style></head><body>${input}</body></html>`;
+                });
+                const iframeDoc = iframe.contentDocument;
+                iframe.style.height = Math.max(iframeDoc.body.scrollHeight, 10) + 'px';
+                canvas = await html2canvas(iframeDoc.body, { backgroundColor: '#ffffff' });
+            } finally {
+                document.body.removeChild(iframe);
+            }
+            const { jsPDF } = window.jspdf; const pdfDoc = new jsPDF();
+            const pageWidth = pdfDoc.internal.pageSize.getWidth();
             const imgHeight = canvas.height * pageWidth / canvas.width;
-            doc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageWidth, imgHeight);
-            doc.save("webpage.pdf");
+            pdfDoc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageWidth, imgHeight);
+            pdfDoc.save("webpage.pdf");
             preview.innerHTML = "✓ Downloaded";
         }
         else if (mode === 'crop') {

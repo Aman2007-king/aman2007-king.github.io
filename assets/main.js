@@ -31,6 +31,26 @@ const TOOLS = [
     { group: 'Utils', id: 'qr',   name: 'QR Studio',    icon: 'fa-qrcode', url: '/qr-code-generator/' }
 ];
 
+/* Something outside this site's own code (browser extension or similar - source unconfirmed
+   despite thorough checking) has been observed forcibly setting style="height: auto !important;"
+   directly on #main-sidebar, which no CSS file can ever override due to inline-style priority.
+   This watches for that and strips it back off immediately, every time it happens. */
+let _sidebarHeightGuardActive = false;
+function guardSidebarHeight() {
+    const el = document.getElementById('main-sidebar');
+    if (!el) return;
+    const stripIfForced = () => {
+        if (el.getAttribute('style') && /height/i.test(el.getAttribute('style'))) {
+            el.removeAttribute('style');
+        }
+    };
+    stripIfForced();
+    if (_sidebarHeightGuardActive) return; // only need one observer for the page's lifetime
+    _sidebarHeightGuardActive = true;
+    const observer = new MutationObserver(stripIfForced);
+    observer.observe(el, { attributes: true, attributeFilter: ['style'] });
+}
+
 function renderSidebar(activeId) {
     const groups = ['Creative', 'PDF Toolkit', 'Convert', 'Utils'];
     let navHtml = '';
@@ -78,6 +98,7 @@ function renderSidebar(activeId) {
         </div>`;
 
     document.getElementById('main-sidebar').innerHTML = sidebar;
+    guardSidebarHeight();
 
     const mobileHeader = document.getElementById('mobile-header-slot');
     if (mobileHeader) {

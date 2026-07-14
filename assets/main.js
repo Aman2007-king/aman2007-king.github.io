@@ -354,15 +354,14 @@ function trackEvent(action, label) {
 const _loadedScripts = {};
 function loadScript(lib) {
     const url = typeof lib === 'string' ? lib : lib.url;
-    const integrity = typeof lib === 'string' ? null : lib.integrity;
+    // NOTE: SRI integrity enforcement was attempted here and rolled back - it broke
+    // every tool's library loading in production and could not be safely re-diagnosed
+    // live. Loading without integrity verification for now until this is fixed properly
+    // in a way that's actually been confirmed working.
     if (_loadedScripts[url]) return _loadedScripts[url];
     _loadedScripts[url] = new Promise((resolve, reject) => {
         const s = document.createElement('script');
         s.src = url;
-        if (integrity) {
-            s.integrity = integrity;
-            s.crossOrigin = 'anonymous';
-        }
         s.onload = resolve;
         s.onerror = () => {
             delete _loadedScripts[url]; // don't permanently cache a failed load — allow retry next time

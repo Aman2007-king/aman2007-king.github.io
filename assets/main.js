@@ -352,11 +352,17 @@ function trackEvent(action, label) {
 
 /* --- Lazy library loading --- */
 const _loadedScripts = {};
-function loadScript(url) {
+function loadScript(lib) {
+    const url = typeof lib === 'string' ? lib : lib.url;
+    const integrity = typeof lib === 'string' ? null : lib.integrity;
     if (_loadedScripts[url]) return _loadedScripts[url];
     _loadedScripts[url] = new Promise((resolve, reject) => {
         const s = document.createElement('script');
         s.src = url;
+        if (integrity) {
+            s.integrity = integrity;
+            s.crossOrigin = 'anonymous';
+        }
         s.onload = resolve;
         s.onerror = () => {
             delete _loadedScripts[url]; // don't permanently cache a failed load — allow retry next time

@@ -13,7 +13,8 @@
     <link rel="icon" href="/icon-192.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://image.pollinations.ai https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.google-analytics.com https://region1.google-analytics.com; frame-src https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://*.doubleclick.net; font-src 'self' https://cdnjs.cloudflare.com data:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self';">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
@@ -57,14 +58,14 @@
 <script src="/assets/main.js"></script>
 <script>
 const HC_LIBS = [
-    { name: 'pdf-lib', usedBy: 'Merge/Split/Rotate/Crop/Compress/Delete/Extract/Reorder/Watermark/Page Numbers PDF', url: 'https://unpkg.com/pdf-lib/dist/pdf-lib.min.js', check: () => typeof PDFLib !== 'undefined' },
+    { name: 'pdf-lib', usedBy: 'Merge/Split/Rotate/Crop/Compress/Delete/Extract/Reorder/Watermark/Page Numbers PDF', url: 'https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js', check: () => typeof PDFLib !== 'undefined' },
     { name: 'jsPDF', usedBy: 'JPG to PDF, TXT to PDF, HTML to PDF', url: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', check: () => typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined' },
-    { name: 'Tesseract.js', usedBy: 'OCR: Image to Text', url: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js', check: () => typeof Tesseract !== 'undefined' },
+    { name: 'Tesseract.js', usedBy: 'OCR: Image to Text', url: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js', check: () => typeof Tesseract !== 'undefined' },
     { name: 'QRCode.js', usedBy: 'QR Code Generator', url: 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js', check: () => typeof QRCode !== 'undefined' },
     { name: 'JSZip', usedBy: 'Resize Image, Extract Pages, Image Compressor', url: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js', check: () => typeof JSZip !== 'undefined' },
     { name: 'html2canvas', usedBy: 'HTML to PDF', url: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', check: () => typeof html2canvas !== 'undefined' },
     { name: 'pdf.js', usedBy: 'PDF Viewer', url: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', check: () => typeof pdfjsLib !== 'undefined' },
-    { name: 'JsBarcode', usedBy: 'Barcode Generator', url: 'https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js', check: () => typeof JsBarcode !== 'undefined' },
+    { name: 'JsBarcode', usedBy: 'Barcode Generator', url: 'https://cdn.jsdelivr.net/npm/jsbarcode@3.12.3/dist/JsBarcode.all.min.js', check: () => typeof JsBarcode !== 'undefined' },
     { name: 'MediaPipe Selfie Segmentation', usedBy: 'Background Remover', url: 'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js', check: () => typeof SelfieSegmentation !== 'undefined' },
 ];
 

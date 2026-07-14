@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker —...">
+    <meta name="description" content="Pull pages out of a PDF and save each one as its own separate PDF file, delivered together in a ZIP. Enter a range (e.g. 2-5) or a comma-separated list...">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://aman2007-king.github.io/delete-pdf-pages/">
+    <link rel="canonical" href="https://aman2007-king.github.io/extract-pdf-pages/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Delete PDF Pages | AiFileStudio.PRO">
-    <meta name="twitter:description" content="Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker —...">
+    <meta name="twitter:title" content="Extract PDF Pages | AiFileStudio.PRO">
+    <meta name="twitter:description" content="Pull pages out of a PDF and save each one as its own separate PDF file, delivered together in a ZIP. Enter a range (e.g. 2-5) or a comma-separated list...">
     <meta name="twitter:image" content="https://aman2007-king.github.io/ag-image.png">
-    <meta property="og:title" content="Delete PDF Pages | AiFileStudio.PRO">
-    <meta property="og:description" content="Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker —...">
+    <meta property="og:title" content="Extract PDF Pages | AiFileStudio.PRO">
+    <meta property="og:description" content="Pull pages out of a PDF and save each one as its own separate PDF file, delivered together in a ZIP. Enter a range (e.g. 2-5) or a comma-separated list...">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aman2007-king.github.io/delete-pdf-pages/">
+    <meta property="og:url" content="https://aman2007-king.github.io/extract-pdf-pages/">
     <meta property="og:image" content="https://aman2007-king.github.io/ag-image.png">
     <meta name="google-adsense-account" content="ca-pub-1186506015762858">
-    <title>Delete PDF Pages | AiFileStudio.PRO</title>
+    <title>Extract PDF Pages | AiFileStudio.PRO</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#050507">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/icon-192.png" type="image/png">
-    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Delete PDF Pages | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/delete-pdf-pages/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker \u2014..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I delete every page?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 at least one page has to remain, otherwise you'd end up with an empty PDF."}}, {"@type": "Question", "name": "Does this change the page numbering of the remaining pages?", "acceptedAnswer": {"@type": "Answer", "text": "The remaining pages shift up to fill the gap (e.g. deleting page 2 makes the old page 3 the new page 2), but their content is otherwise untouched."}}]}]</script>
+    <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "Extract PDF Pages | AiFileStudio.PRO", "url": "https://aman2007-king.github.io/extract-pdf-pages/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (runs in browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Pull pages out of a PDF and save each one as its own separate PDF file, delivered together in a ZIP. Enter a range (e.g. 2-5) or a comma-separated list..."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How is this different from Split PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Split PDF combines the pages you choose into one new document. Extract Pages gives you each selected page as its own separate PDF file, bundled in a ZIP."}}, {"@type": "Question", "name": "Can I use a range and a list together?", "acceptedAnswer": {"@type": "Answer", "text": "Currently you use one format per run \u2014 either a range like 2-5, or a comma list like 1, 3, 5."}}]}]</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H0T540P06"></script>
     <script>
@@ -59,16 +59,16 @@
 
 <main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
     <div class="mb-8">
-        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Delete PDF Pages</span></nav>
-        <h1 class="text-3xl font-bold">Delete PDF Pages</h1>
-        <p class="text-gray-500 text-sm">Remove specific pages from a PDF.</p>
+        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">Extract PDF Pages</span></nav>
+        <h1 class="text-3xl font-bold">Extract PDF Pages</h1>
+        <p class="text-gray-500 text-sm">Save specific pages as separate PDF files.</p>
     </div>
 
     <div class="cyber-card">
         <div id="standard-inputs">
             <div id="text-field-wrap">
-                <label for="main-input" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Page numbers to delete</label>
-                <textarea id="main-input" placeholder="e.g. 2, 4, 7" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
+                <label for="main-input" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Pages to extract (range or list)</label>
+                <textarea id="main-input" placeholder="e.g. 2-5 or 1, 3, 5" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm mb-4 text-white focus:outline-none focus:border-blue-500 h-20"></textarea>
             </div>
 
             <div id="enhancement-ui" class="hidden mb-6 p-4 bg-black/40 rounded-xl border border-gray-800">
@@ -137,18 +137,18 @@
     </div>
 
     <section class="mt-16 border-t border-gray-900 pt-10">
-        <h2 class="text-2xl font-bold text-blue-500 mb-6">Free Tool to Delete PDF Pages</h2>
+        <h2 class="text-2xl font-bold text-blue-500 mb-6">Free Tool to Extract PDF Pages</h2>
         <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
-            <p>Remove one or more pages from a PDF without touching the rest of the document. Upload a PDF and click the pages you want gone in the visual page picker — no need to count page numbers by hand. All processed locally using <code class="text-blue-400">pdf-lib</code>, so the file never leaves your device.</p>
-        <p>Useful for stripping a blank scanned page, a duplicate, or an outdated cover sheet out of a longer document without re-assembling the whole thing.</p>
+            <p>Pull pages out of a PDF and save <strong>each one as its own separate PDF file</strong>, delivered together in a ZIP. Enter a range (e.g. <code class="text-blue-400">2-5</code>) or a comma-separated list (e.g. <code class="text-blue-400">1, 3, 5</code>), and AiFileStudio creates one standalone PDF per page you selected.</p>
+        <p>This is different from <a href="/split-pdf/" class="text-blue-500 underline">Split PDF</a>, which combines your selected pages into a single new document — use Extract Pages when you need each page as its own individual file instead.</p>
         </div>
     </section>
 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
         <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
         <div class="space-y-6 text-sm">
-            <div><h4 class="text-blue-400 font-bold">Can I delete every page?</h4><p>No — at least one page has to remain, otherwise you'd end up with an empty PDF.</p></div>
-            <div><h4 class="text-blue-400 font-bold">Does this change the page numbering of the remaining pages?</h4><p>The remaining pages shift up to fill the gap (e.g. deleting page 2 makes the old page 3 the new page 2), but their content is otherwise untouched.</p></div>
+            <div><h4 class="text-blue-400 font-bold">How is this different from Split PDF?</h4><p>Split PDF combines the pages you choose into one new document. Extract Pages gives you each selected page as its own separate PDF file, bundled in a ZIP.</p></div>
+            <div><h4 class="text-blue-400 font-bold">Can I use a range and a list together?</h4><p>Currently you use one format per run — either a range like 2-5, or a comma list like 1, 3, 5.</p></div>
         </div>
     </section>
 
@@ -162,7 +162,7 @@
             <a href="/split-pdf/" class="tool-card text-center text-xs"><i class="fas fa-scissors text-blue-500 text-lg mb-2 block"></i>Split PDF</a>
             <a href="/rotate-pdf/" class="tool-card text-center text-xs"><i class="fas fa-redo text-blue-500 text-lg mb-2 block"></i>Rotate PDF</a>
             <a href="/jpg-to-pdf/" class="tool-card text-center text-xs"><i class="fas fa-images text-blue-500 text-lg mb-2 block"></i>JPG to PDF</a>
-            <a href="/extract-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-file-export text-blue-500 text-lg mb-2 block"></i>Extract Pages</a>
+            <a href="/delete-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-trash text-blue-500 text-lg mb-2 block"></i>Delete Pages</a>
             <a href="/reorder-pdf-pages/" class="tool-card text-center text-xs"><i class="fas fa-sort text-blue-500 text-lg mb-2 block"></i>Reorder Pages</a>
             <a href="/add-page-numbers/" class="tool-card text-center text-xs"><i class="fas fa-list-ol text-blue-500 text-lg mb-2 block"></i>Page Numbers</a>
             <a href="/watermark-pdf/" class="tool-card text-center text-xs"><i class="fas fa-stamp text-blue-500 text-lg mb-2 block"></i>Watermark</a>
@@ -186,7 +186,7 @@
 
 <div id="shared-widgets-slot"></div>
 
-<script>const TOOL_MODE = 'deletepages'; const TOOL_LIBS = [{"url": "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js", "integrity": "sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI"}, {"url": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js", "integrity": "sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e"}];</script>
+<script>const TOOL_MODE = 'extractpages'; const TOOL_LIBS = [{"url": "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js", "integrity": "sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI"}, {"url": "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js", "integrity": "sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG"}];</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>

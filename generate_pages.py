@@ -1,4 +1,5 @@
 import os
+from translations import LANGUAGES, UI_STRINGS, TOOL_TRANSLATIONS
 
 SITE = "https://aman2007-king.github.io"
 
@@ -366,13 +367,14 @@ TOOLS = [
 ]
 
 TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
+<html lang="{lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{meta_desc}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{canonical}">
+    {hreflang_links}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{title} | AiFileStudio.PRO">
     <meta name="twitter:description" content="{meta_desc}">
@@ -405,7 +407,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1186506015762858" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://image.pollinations.ai https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.google-analytics.com https://region1.google-analytics.com; frame-src https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://*.doubleclick.net; font-src 'self' https://cdnjs.cloudflare.com data:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.tailwindcss.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://image.pollinations.ai https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.google-analytics.com https://region1.google-analytics.com; frame-src https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://*.doubleclick.net; font-src 'self' https://cdnjs.cloudflare.com data:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self';">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/style.css">
 </head>
@@ -414,8 +416,8 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 <div style="display: flex; align-items: center; justify-content: center; padding: 15px; background-color: #000; border-bottom: 2px solid #007bff; gap: 20px;">
     <img src="/ag-image.png" alt="AiFileStudio Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
     <div>
-        <a href="/" style="text-decoration:none;"><p style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></p></a>
-        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">Secure. Local. Professional.</p>
+        <a href="{home_url}" style="text-decoration:none;"><p style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 0; line-height: 1;">AiFileStudio<span style="color: #007bff;">.PRO</span></p></a>
+        <p style="color: #888; font-size: 0.8rem; margin: 5px 0 0 0;">{t_tagline}</p>
     </div>
 </div>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T9JJ9N9L" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -426,7 +428,7 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
 
 <main id="main-content" tabindex="-1" onclick="closeSidebarMobile()">
     <div class="mb-8">
-        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="/" class="hover:text-blue-500">Home</a> / <span class="text-gray-400">{title}</span></nav>
+        <nav class="text-xs text-gray-600 mb-3" aria-label="Breadcrumb"><a href="{home_url}" class="hover:text-blue-500">{t_home}</a> / <span class="text-gray-400">{title}</span></nav>
         <h1 class="text-3xl font-bold">{title}</h1>
         <p class="text-gray-500 text-sm">{subtitle}</p>
     </div>
@@ -474,14 +476,14 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
             </div>
 
             <div id="file-field-wrap">
-                <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">Upload {file_label}</label>
+                <label for="main-file" class="block text-[10px] font-bold text-gray-500 uppercase mb-3">{t_upload} {file_label}</label>
                 <input type="file" id="main-file" {multiple_attr} accept="{accept}" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-800 file:text-white mb-4">
             </div>
 
             <div id="page-picker-ui" class="hidden mb-4">
                 <div class="flex items-center justify-between mb-3">
                     <p id="page-picker-hint" class="text-[10px] font-bold text-blue-500 uppercase tracking-tighter"></p>
-                    <button type="button" onclick="resetPagePicker()" class="text-[10px] text-gray-500 hover:text-red-400 uppercase">Reset</button>
+                    <button type="button" onclick="resetPagePicker()" class="text-[10px] text-gray-500 hover:text-red-400 uppercase">{t_reset}</button>
                 </div>
                 <div id="page-picker-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
             </div>
@@ -492,13 +494,13 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
             <input type="range" id="pass-length" min="8" max="64" value="16" class="w-full mb-4">
         </div>
 
-        <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">Execute Task</button>
+        <button onclick="processTask()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">{t_execute}</button>
     </div>
 
     <div id="result-card" class="cyber-card mt-8 hidden text-center">
         <div id="loader-box" class="flex flex-col items-center py-10">
             <div class="loader mb-4"></div>
-            <p class="text-xs font-mono text-gray-500" id="loader-text">ENGINE RUNNING...</p>
+            <p class="text-xs font-mono text-gray-500" id="loader-text">{t_engine_running}</p>
         </div>
         <div id="preview-area" class="flex flex-col items-center w-full"></div>
     </div>
@@ -511,25 +513,25 @@ TOOL_PAGE_TEMPLATE = """<!DOCTYPE html>
     </section>
 
     <section id="faq" class="mt-12 p-8 bg-gray-900/20 border border-gray-800 rounded-2xl text-gray-400">
-        <h3 class="text-xl font-bold text-white mb-6">Frequently Asked Questions</h3>
+        <h3 class="text-xl font-bold text-white mb-6">{t_faq_heading}</h3>
         <div class="space-y-6 text-sm">
             {faq_html}
         </div>
     </section>
 
     <section class="mt-12">
-        <h3 class="text-lg font-bold text-white mb-4">More Tools</h3>
+        <h3 class="text-lg font-bold text-white mb-4">{t_more_tools}</h3>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
             {related_html}
         </div>
     </section>
 
-    <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">© 2026 AiFileStudio.pro</footer>
+    <footer class="p-6 text-center text-gray-600 text-[10px] mt-12">{t_footer}</footer>
 </main>
 
 <div id="shared-widgets-slot"></div>
 
-<script>const TOOL_MODE = '{mode}'; const TOOL_LIBS = {tool_libs_json};</script>
+<script>const TOOL_MODE = '{mode}'; const PAGE_LANG = '{lang}'; const TOOL_LIBS = {tool_libs_json};</script>
 <script src="/assets/main.js"></script>
 </body>
 </html>
